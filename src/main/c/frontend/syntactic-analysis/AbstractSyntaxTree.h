@@ -18,11 +18,13 @@ typedef enum ExpressionType ExpressionType;
 typedef enum FactorType FactorType;
 typedef enum NumberType NumberType;
 
+typedef enum DefinitionType DefinitionType;
 typedef enum SentenceType SentenceType;
 typedef enum PatternSentenceType PatternSentenceType;
 typedef enum PatternType PatternType;
 typedef enum InlinePatternType InlinePatternType;
 typedef enum ChordType ChordType;
+typedef enum PlayBlockType PlayBlockType;
 
 typedef struct Constant Constant;
 typedef struct Expression Expression;
@@ -90,6 +92,12 @@ enum SentenceType {
 	TEMPO
 };
 
+enum DefinitionType {
+	CONFIG,
+	PATTERN_DEF,
+	TRACK_DEF
+};
+
 enum PatternSentenceType {
 	INLINE_SENTENCE,
 	BLOCK_SENTENCE,
@@ -120,6 +128,11 @@ enum NumberType {
 enum ChordType {
 	PATTERN_CHORD,
 	NOTE_CHORD
+};
+
+enum PlayBlockType {
+	TRACKS,
+	ALL
 };
 
 struct Constant {
@@ -154,7 +167,8 @@ struct Expression {
 };
 
 struct Program {
-	Expression * expression;
+	Definitions * definitions;
+	Play * playBlock;
 };
 
 struct Definitions {
@@ -162,8 +176,18 @@ struct Definitions {
 	Definitions * next;
 };
 
+struct Definition {
+	union {
+		ConfigSentence * config;
+		PatternDefinition * pattern;
+		Track * track;
+	};
+	DefinitionType type;
+};
+
 struct Play {
-	TrackIDs * tracks; // TODO: ALL
+	TrackIDs * tracks;
+	PlayBlockType type; // Si esta en all, tracks es ignorado.
 };
 
 struct ID {
