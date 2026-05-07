@@ -14,17 +14,17 @@
  * @see https://westes.github.io/flex/manual/Definitions-Section.html#Definitions-Section
  */
 
+extern CompilationStatus KeywordLexemeAction(TokenLabel label);
+extern CompilationStatus LiteralFloatLexemeAction();
+extern CompilationStatus LiteralIntegerLexemeAction();
+extern CompilationStatus LiteralNoteLexemeAction();
+extern CompilationStatus LiteralStringLexemeAction();
+extern CompilationStatus NamingLexemeAction();
 extern CompilationStatus ArithmeticOperatorLexemeAction(TokenLabel label);
-extern CompilationStatus EnterImportExpressionLexemeAction(FlexContext context);
-extern CompilationStatus EnterMultilineCommentLexemeAction(FlexContext context);
-extern CompilationStatus EOFLexemeAction();
+extern CompilationStatus StructureOperatorLexemeAction(TokenLabel label);
 extern CompilationStatus IgnoredLexemeAction();
-extern CompilationStatus IntegerLexemeAction();
-extern CompilationStatus LeaveImportExpressionLexemeAction();
-extern CompilationStatus LeaveMultilineCommentLexemeAction();
-extern CompilationStatus ParenthesisLexemeAction(TokenLabel label);
-extern CompilationStatus SubexpressionLexemeAction();
 extern CompilationStatus UnknownLexemeAction();
+extern CompilationStatus EOFLexemeAction();
 
 %}
 
