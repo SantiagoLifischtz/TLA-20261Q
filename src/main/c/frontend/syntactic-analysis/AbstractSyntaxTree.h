@@ -135,7 +135,7 @@ enum PlayBlockType {
 	ALL
 };
 
-struct Number { // TODO: reemplazar constant por esto en todos lados
+struct Number {
 	union {
 		int intValue;
 		float floatValue;
@@ -382,8 +382,44 @@ struct Degree {
 
 void destroyExpression(Expression * expression);
 void destroyFactor(Factor * factor);
+void destroyNumber(Number * number);
 void destroyProgram(Program * program);
-
-// TODO add destroy functions
+void destroyDefinitions(Definitions * definitions);
+void destroyDefinition(Definition * definition);
+void destroyPlay(Play * play);
+void destroyID(ID * id);
+void destroyTrackIDs(TrackIDs * trackIDs);
+void destroyConfigSentence(ConfigSentence * configSentence);
+void destroyTempo(Tempo * tempo);
+void destroyKey(Key * key);
+void destroyMode(Mode * mode);
+void destroyNoteID(NoteID * noteID);
+void destroyTrack(Track * track);
+void destroyInstrument(Instrument * instrument);
+void destroySentences(Sentences * sentences);
+void destroySentence(Sentence * sentence);
+void destroyPatternDefinition(PatternDefinition * patternDefinition);
+void destroyPatternSentence(PatternSentence * patternSentence);
+void destroyPattern(Pattern * pattern);
+void destroyBlock(Block * block);
+void destroyWait(Wait * wait);
+void destroyInlinePattern(InlinePattern * inlinePattern);
+void destroyNote(Note * note);
+void destroyNoteAndOctave(NoteAndOctave * noteAndOctave);
+void destroyDuration(Duration * duration);
+void destroyRest(Rest * rest);
+void destroyRepeat(Repeat * repeat);
+void destroyStep(Step * step);
+void destroyStepBlock(StepBlock * stepBlock);
+void destroyNoWaitSentences(NoWaitSentences * noWaitSentences);
+void destroyNoWaitSentence(NoWaitSentence * noWaitSentence);
+void destroyChord(Chord * chord);
+void destroyPatternChord(PatternChord * patternChord);
+void destroyNoteChord(NoteChord * noteChord);
+void destroyCommaSeparatedPatterns(CommaSeparatedPatterns * commaSeparatedPatterns);
+void destroyCommaSeparatedNotes(CommaSeparatedNotes * commaSeparatedNotes);
+void destroyStrum(Strum * strum);
+void destroyArpeggio(Arpeggio * arpeggio);
+void destroyDegree(Degree * degree);
 
 #endif

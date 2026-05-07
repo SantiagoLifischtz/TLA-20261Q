@@ -33,10 +33,47 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 
 	/** Non-terminals. */
 
-	Constant * constant;
+	Number * number;
 	Expression * expression;
 	Factor * factor;
 	Program * program;
+	Definitions * definitions;
+	Definition * definition;
+	Play * play;
+	TrackIDs * trackIDs;
+	ConfigSentence * configSentence;
+	Tempo * tempo;
+	Key * key;
+	Mode * mode;
+	NoteID * noteID;
+	Track * track;
+	Instrument * instrument;
+	Sentences * sentences;
+	Sentence * sentence;
+	PatternDefinition * patternDefinition;
+	PatternSentence * patternSentence;
+	Pattern * pattern;
+	Wait * wait;
+	InlinePattern * inlinePattern;
+	Note * note;
+	NoteAndOctave * noteAndOctave;
+	Duration * duration;
+	Rest * rest;
+	Repeat * repeat;
+	Step * step;
+	StepBlock * stepBlock;
+	NoWaitSentences * noWaitSentences;
+	NoWaitSentence * noWaitSentence;
+	Block * block;
+	Chord * chord;
+	PatternChord * patternChord;
+	CommaSeparatedPatterns * commaSeparatedPatterns;
+	NoteChord * noteChord;
+	CommaSeparatedNotes * commaSeparatedNotes;
+	Strum * strum;
+	Arpeggio * arpeggio;
+	Degree * degree;
+	ID * id;
 }
 
 /**
@@ -47,9 +84,47 @@ void yyerror(const YYLTYPE * location, const char * message) {}
  *
  * @see https://www.gnu.org/software/bison/manual/html_node/Destructor-Decl.html
  */
-%destructor { destroyConstant($$); } <constant>
+%destructor { destroyNumber($$); } <number>
 %destructor { destroyExpression($$); } <expression>
 %destructor { destroyFactor($$); } <factor>
+%destructor { destroyProgram($$); } <program>
+%destructor { destroyDefinitions($$); } <definitions>
+%destructor { destroyDefinition($$); } <definition>
+%destructor { destroyPlay($$); } <play>
+%destructor { destroyTrackIDs($$); } <trackIDs>
+%destructor { destroyConfigSentence($$); } <configSentence>
+%destructor { destroyTempo($$); } <tempo>
+%destructor { destroyKey($$); } <key>
+%destructor { destroyMode($$); } <mode>
+%destructor { destroyNoteID($$); } <noteID>
+%destructor { destroyTrack($$); } <track>
+%destructor { destroyInstrument($$); } <instrument>
+%destructor { destroySentences($$); } <sentences>
+%destructor { destroySentence($$); } <sentence>
+%destructor { destroyPatternDefinition($$); } <patternDefinition>
+%destructor { destroyPatternSentence($$); } <patternSentence>
+%destructor { destroyPattern($$); } <pattern>
+%destructor { destroyWait($$); } <wait>
+%destructor { destroyInlinePattern($$); } <inlinePattern>
+%destructor { destroyNote($$); } <note>
+%destructor { destroyNoteAndOctave($$); } <noteAndOctave>
+%destructor { destroyDuration($$); } <duration>
+%destructor { destroyRest($$); } <rest>
+%destructor { destroyRepeat($$); } <repeat>
+%destructor { destroyStep($$); } <step>
+%destructor { destroyStepBlock($$); } <stepBlock>
+%destructor { destroyNoWaitSentences($$); } <noWaitSentences>
+%destructor { destroyNoWaitSentence($$); } <noWaitSentence>
+%destructor { destroyBlock($$); } <block>
+%destructor { destroyChord($$); } <chord>
+%destructor { destroyPatternChord($$); } <patternChord>
+%destructor { destroyCommaSeparatedPatterns($$); } <commaSeparatedPatterns>
+%destructor { destroyNoteChord($$); } <noteChord>
+%destructor { destroyCommaSeparatedNotes($$); } <commaSeparatedNotes>
+%destructor { destroyStrum($$); } <strum>
+%destructor { destroyArpeggio($$); } <arpeggio>
+%destructor { destroyDegree($$); } <degree>
+%destructor { destroyID($$); } <id>
 
 /** Terminals. */
 %token <integer> INTEGER
@@ -94,7 +169,7 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 %token <floatValue> DURATION_BUILTIN
 
 /** Non-terminals. */
-%type <constant> constant
+%type <number> number
 %type <expression> expression
 %type <factor> factor
 %type <program> program
@@ -112,7 +187,7 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 
 // IMPORTANT: To use λ in the following grammar, use the %empty symbol.
 
-program: expression											{ $$ = ExpressionProgramSemanticAction($1); }
+program: expression 										{ $$ = ExpressionProgramSemanticAction($1); }
 	;
 
 expression: expression[left] ADD expression[right]			{ $$ = ArithmeticExpressionSemanticAction($left, $right, ADDITION); }
@@ -122,11 +197,11 @@ expression: expression[left] ADD expression[right]			{ $$ = ArithmeticExpression
 	| factor												{ $$ = FactorExpressionSemanticAction($1); }
 	;
 
-factor: OPEN_PARENTHESIS expression CLOSE_PARENTHESIS		{ $$ = ExpressionFactorSemanticAction($2); }
-	| constant												{ $$ = ConstantFactorSemanticAction($1); }
+factor: OPEN_PARENTHESIS expression CLOSE_PARENTHESIS 		{ $$ = ExpressionFactorSemanticAction($2); }
+	| number 												{ $$ = ConstantFactorSemanticAction($1); }
 	;
 
-constant: INTEGER | FLOAT											{ $$ = IntegerConstantSemanticAction($1); }
+number: INTEGER | FLOAT | DURATION_BUILTIN					{ $$ = IntegerConstantSemanticAction($1); }
 	;
 
 %%
