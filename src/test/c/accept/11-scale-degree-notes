@@ -1,0 +1,7 @@
+key C major;
+track piano {
+    instrument "Acoustic Grand";
+    degree 1 q;
+    degree 3 q;
+    degree 5 h;
+}

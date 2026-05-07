@@ -1,0 +1,11 @@
+tempo 120;
+pattern motif {
+ C4 q;
+ D4 q;
+ E4 q;
+ F4 q;
+
+track voice1 {
+ instrument “Violin”;
+ motif;
+}

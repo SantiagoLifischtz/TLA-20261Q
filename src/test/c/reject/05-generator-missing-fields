@@ -1,0 +1,2 @@
+tempo 120;
+arpeggio(degree 1, degree 3, degree 5);

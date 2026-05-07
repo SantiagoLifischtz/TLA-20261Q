@@ -1,0 +1,4 @@
+track piano {
+    instrument "Acoustic Grand";
+    [C4, E4, G4] half;
+}
