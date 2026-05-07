@@ -1,0 +1,15 @@
+tempo 128;
+key C major;
+
+track piano {
+    instrument "Acoustic Grand";
+    C4 q;
+    E4 q;
+}
+
+track bass {
+    instrument "Electric Bass";
+    C2 h;
+}
+
+play { all }

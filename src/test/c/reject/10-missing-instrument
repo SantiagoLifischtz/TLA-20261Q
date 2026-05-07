@@ -1,0 +1,7 @@
+tempo 120;
+key C major;
+
+track piano {
+    C4 q;
+    E4 q;
+}

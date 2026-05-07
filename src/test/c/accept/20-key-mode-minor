@@ -1,0 +1,9 @@
+tempo 95;
+key A minor;
+
+track strings {
+    instrument "Violin";
+    degree 1 q;
+    degree 3 q;
+    degree 5 h;
+}

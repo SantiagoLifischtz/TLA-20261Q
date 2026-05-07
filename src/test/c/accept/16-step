@@ -1,0 +1,10 @@
+tempo 120;
+key D minor;
+
+track piano {
+    instrument "Acoustic Grand";
+    step e {
+        F#3 eighth;
+        A3 e;
+    }
+}
