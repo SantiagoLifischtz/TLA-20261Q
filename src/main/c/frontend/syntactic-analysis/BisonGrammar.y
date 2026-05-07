@@ -51,6 +51,10 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 %destructor { destroyExpression($$); } <expression>
 %destructor { destroyFactor($$); } <factor>
 
+/* Extra. */
+%token <token> IGNORED
+%token <token> UNKNOWN
+
 /** Terminals. */
 %token <integer> INTEGER
 %token <floatValue> FLOAT
