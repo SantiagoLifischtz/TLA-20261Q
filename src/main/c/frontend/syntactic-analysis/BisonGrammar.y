@@ -201,7 +201,7 @@ factor: OPEN_PARENTHESIS expression CLOSE_PARENTHESIS 		{ $$ = ExpressionFactorS
 	| number 												{ $$ = ConstantFactorSemanticAction($1); }
 	;
 
-number: INTEGER | FLOAT | DURATION_BUILTIN					{ $$ = IntegerConstantSemanticAction($1); }
+number: INTEGER												{ $$ = IntegerConstantSemanticAction($1); }
 	;
 
 %%

@@ -36,6 +36,11 @@ static void _logSyntacticAnalyzerAction(const char * functionName) {
 
 /* PUBLIC FUNCTIONS */
 
+/* TEMP
+_logSyntacticAnalyzerAction(__FUNCTION__);
+	= calloc(1, sizeof());
+*/
+
 Number * IntegerSemanticAction(const int value) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Number * number = calloc(1, sizeof(Number));
@@ -90,4 +95,120 @@ Factor * ExpressionFactorSemanticAction(Expression * expression) {
 	factor->expression = expression;
 	factor->type = EXPRESSION;
 	return factor;
+}
+
+Program * ProgramSemanticAction(Definitions * definitions, Play * playBlock) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Program * program = calloc(1, sizeof(Program));
+	program->definitions = definitions;
+	program->playBlock = playBlock;
+	return program;
+}
+
+Definitions * DefinitionListSemanticAction(Definition * newDefinition, Definitions * otherDefinitions) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Definitions * definitions = calloc(1, sizeof(Definitions));
+	definitions->def = newDefinition;
+	definitions->next = otherDefinitions;
+	return definitions;
+}
+
+Definition * ConfigDefinitionSemanticAction(ConfigSentence * configDef) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Definition * definition = calloc(1, sizeof(Definition));
+	definition->config = configDef;
+	definition->type = CONFIG;
+	return definition;
+}
+
+Definition * TrackDefinitionSemanticAction(Track * trackDef) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Definition * definition = calloc(1, sizeof(Definition));
+	definition->track = trackDef;
+	definition->type = TRACK_DEF;
+	return definition;
+}
+
+Definition * PatternDefinitionSemanticAction(PatternDefinition * patternDef) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Definition * definition = calloc(1, sizeof(Definition));
+	definition->pattern = patternDef;
+	definition->type = PATTERN_DEF;
+	return definition;
+}
+
+Play * PlayTracksSemanticAction(TrackIDs * tracks) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Play * play = calloc(1, sizeof(Play));
+	play->tracks = tracks;
+	play->type = TRACKS;
+	return play;
+}
+
+Play * PlayAllSemanticAction() {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Play * play = calloc(1, sizeof(Play));
+	play->type = ALL;
+	return play;
+}
+
+TrackIDs * TrackListSemanticAction(ID * newID, TrackIDs * otherIDs) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	TrackIDs * tracks = calloc(1, sizeof(TrackIDs));
+	tracks->id = newID;
+	tracks->next = otherIDs;
+	return tracks;
+}
+
+ConfigSentence * GlobalTempoSemanticAction(Tempo * tempo) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	ConfigSentence * sentence = calloc(1, sizeof(ConfigSentence));
+	sentence->tempo = tempo;
+	sentence->type = TEMPO;
+	return sentence;
+}
+
+ConfigSentence * GlobalKeySemanticAction(Key * key) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	ConfigSentence * sentence = calloc(1, sizeof(ConfigSentence));
+	sentence->key = key;
+	sentence->type = KEY;
+	return sentence;
+}
+
+Tempo * TempoSemanticAction(const float value) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Tempo * tempo = calloc(1, sizeof(Tempo));
+	tempo->value = value;
+	return tempo; // Are you rushing or dragging
+}
+
+Key * KeySemanticAction(NoteID * noteID, Mode * mode) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Key * key = calloc(1, sizeof(Key));
+	key->note = noteID;
+	key->mode = mode;
+	return key;
+}
+
+NoteID * NoteIDSemanticAction(const char value) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	NoteID * note = calloc(1, sizeof(NoteID));
+	note->value = value;
+	return note;
+}
+
+Mode * ModeSemanticAction(const char value) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Mode * mode = calloc(1, sizeof(Mode));
+	mode->value = value;
+	return mode;
+}
+
+Track * TrackSemanticAction(Instrument * instrument, Sentences * sentences) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Track * track = calloc(1, sizeof(Track));
+	track->instrument = instrument;
+	track->sentences = sentences;
+	return track;
 }
