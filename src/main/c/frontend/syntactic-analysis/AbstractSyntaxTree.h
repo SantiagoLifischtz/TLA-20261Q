@@ -17,9 +17,12 @@ ModuleDestructor initializeAbstractSyntaxTreeModule();
 typedef enum ExpressionType ExpressionType;
 typedef enum FactorType FactorType;
 
+typedef enum ConfigSentenceType ConfigSentenceType;
+
 typedef struct Constant Constant;
 typedef struct Expression Expression;
 typedef struct Factor Factor;
+typedef struct ID ID;
 
 typedef struct Program Program;
 typedef struct Definitions Definitions;
@@ -76,6 +79,11 @@ enum FactorType {
 	EXPRESSION
 };
 
+enum ConfigSentenceType {
+	KEY,
+	TEMPO
+};
+
 struct Constant {
 	int value;
 };
@@ -101,6 +109,53 @@ struct Expression {
 
 struct Program {
 	Expression * expression;
+};
+
+struct Definitions {
+	Definition * def;
+	Definitions * otherDefs;
+};
+
+struct Play {
+	TrackIDs * tracks;
+};
+
+struct ID {
+	char * name;
+};
+
+struct TrackIDs {
+	ID * id;
+	TrackIDs * ids;
+};
+
+struct ConfigSentence {
+	ConfigSentenceContent * content;
+};
+
+struct ConfigSentenceContent {
+	union {
+		Key * key;
+		Tempo * tempo;
+	};
+	ConfigSentenceType type;
+};
+
+struct Tempo {
+	float value;
+};
+
+struct Key {
+	Pitch * pitch;
+	Mode * mode;
+};
+
+struct Mode {
+	char value; // 0 - 6
+};
+
+struct Pitch {
+	int noteNumber;
 };
 
 /**
