@@ -238,7 +238,7 @@ struct Sentences {
 
 struct Sentence {
 	union {
-		Pattern * pattern;
+		PatternSentence * patternSentence;
 		Tempo * tempo;
 		Key * key;
 	};
@@ -252,12 +252,11 @@ struct PatternDefinition {
 struct PatternSentence {
 	union {
 		struct {
-			InlinePattern * inlinePattern;
-			Wait * inlineWait;
-		};
-		struct {
-			Block * block;
-			Wait * blockWait;
+			union {
+				InlinePattern * inlinePattern;
+				Block * block;
+			};
+			Wait * wait;
 		};
 		Repeat * repeat;
 		Step * step;

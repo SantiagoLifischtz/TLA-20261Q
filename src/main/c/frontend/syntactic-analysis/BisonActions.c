@@ -137,6 +137,13 @@ Definition * PatternDefinitionSemanticAction(PatternDefinition * patternDef) {
 	return definition;
 }
 
+PatternDefinition * PatternDeclarationSemanticAction(Block * block) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	PatternDefinition * def = calloc(1, sizeof(PatternDefinition));
+	def->block = block;
+	return def;
+}
+
 Play * PlayTracksSemanticAction(TrackIDs * tracks) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Play * play = calloc(1, sizeof(Play));
@@ -211,4 +218,81 @@ Track * TrackSemanticAction(Instrument * instrument, Sentences * sentences) {
 	track->instrument = instrument;
 	track->sentences = sentences;
 	return track;
+}
+
+Instrument * InstrumentSemanticAction(const char* name) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Instrument * instrument = calloc(1, sizeof(Instrument));
+	int length = strlen(name);
+	instrument->name = malloc((length+1)*sizeof(char));
+	strcpy(instrument->name, name);
+	return instrument;
+}
+
+Sentences * SentenceListSemanticAction(Sentence * newSentence, Sentences * otherSentences) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Sentences * sentences = calloc(1, sizeof(Sentences));
+	sentences->sentence = newSentence;
+	sentences->next = otherSentences;
+	return sentences;
+}
+
+Sentence * PatternSentenceSemanticAction(PatternSentence * ps) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Sentence * sentence = calloc(1, sizeof(Sentence));
+	sentence->patternSentence = ps;
+	sentence->type = PATTERN;
+	return sentence;
+}
+
+Sentence * TempoSentenceSemanticAction(Tempo * tempo) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Sentence * sentence = calloc(1, sizeof(Sentence));
+	sentence->tempo = tempo;
+	sentence->type = TEMPO;
+	return sentence;
+}
+
+Sentence * KeySentenceSemanticAction(Key * key) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Sentence * sentence = calloc(1, sizeof(Sentence));
+	sentence->key = key;
+	sentence->type = KEY;
+	return sentence;
+}
+
+PatternSentence * InlinePSSemanticAction(InlinePattern * pattern, Wait * wait) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	PatternSentence * ps = calloc(1, sizeof(PatternSentence));
+	ps->inlinePattern = pattern;
+	ps->wait = wait;
+	ps->type = INLINE_SENTENCE;
+	return ps;
+}
+
+PatternSentence * BlockPSSemanticAction(Block * block, Wait * wait) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	PatternSentence * ps = calloc(1, sizeof(PatternSentence));
+	ps->block = block;
+	ps->wait = wait;
+	ps->type = BLOCK_SENTENCE;
+	return ps;
+}
+
+PatternSentence * RepeatPSSemanticAction(Repeat * repeat, Wait * wait) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	PatternSentence * ps = calloc(1, sizeof(PatternSentence));
+	ps->repeat = repeat;
+	ps->wait = wait;
+	ps->type = REPEAT;
+	return ps;
+}
+
+PatternSentence * StepPSSemanticAction(Step * step, Wait * wait) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	PatternSentence * ps = calloc(1, sizeof(PatternSentence));
+	ps->step = step;
+	ps->wait = wait;
+	ps->type = STEP;
+	return ps;
 }
