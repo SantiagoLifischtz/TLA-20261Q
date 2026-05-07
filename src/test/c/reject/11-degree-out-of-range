@@ -1,0 +1,7 @@
+tempo 120;
+key C major;
+
+track piano {
+    instrument "Acoustic Grand";
+    degree 8 q;
+}
