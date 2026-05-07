@@ -1,10 +1,10 @@
-program -> definitions
+program -> definitions play
 
 definitions -> definition definitions | %empty
 
-definition -> config_sentence | pattern_definition | track | play
+definition -> config_sentence | pattern_definition | track
 
-play -> OPEN_BRACE track_ids SEMICOLON CLOSE_BRACE | ALL SEMICOLON
+play -> PLAY OPEN_BRACE track_ids SEMICOLON CLOSE_BRACE | ALL SEMICOLON
 
 track_ids -> ID | ID COMMA track_ids
 
