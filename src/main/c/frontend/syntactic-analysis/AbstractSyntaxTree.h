@@ -26,7 +26,7 @@ typedef enum InlinePatternType InlinePatternType;
 typedef enum ChordType ChordType;
 typedef enum PlayBlockType PlayBlockType;
 
-typedef struct Constant Constant;
+typedef struct Number Number;
 typedef struct Expression Expression;
 typedef struct Factor Factor;
 typedef struct ID ID;
@@ -82,7 +82,7 @@ enum ExpressionType {
 };
 
 enum FactorType {
-	CONSTANT,
+	NUMBER,
 	EXPRESSION
 };
 
@@ -135,10 +135,6 @@ enum PlayBlockType {
 	ALL
 };
 
-struct Constant {
-	int value;
-};
-
 struct Number { // TODO: reemplazar constant por esto en todos lados
 	union {
 		int intValue;
@@ -149,7 +145,7 @@ struct Number { // TODO: reemplazar constant por esto en todos lados
 
 struct Factor {
 	union {
-		Constant * constant;
+		Number * number;
 		Expression * expression;
 	};
 	FactorType type;
@@ -384,7 +380,6 @@ struct Degree {
  * Node recursive super-duper-trambolik-destructors.
  */
 
-void destroyConstant(Constant * constant);
 void destroyExpression(Expression * expression);
 void destroyFactor(Factor * factor);
 void destroyProgram(Program * program);
