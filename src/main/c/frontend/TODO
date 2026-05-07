@@ -1,0 +1,8 @@
+
+El flujo de datos es el siguiente:
+
+FlexPatterns.l -> FlexActions.c -> BisonGrammar.y -> BisonActions.c -> AbstractSyntaxTree.c
+
+Desde la teórica se mencionó que recomendaban empezar por la gramática (Bison)
+
+Flex/Bison funcionan de manera análoga, se define lo que consumen (patrón/token) y código C en los {} en sus respectivos *Actions.C
