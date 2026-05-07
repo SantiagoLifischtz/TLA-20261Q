@@ -56,7 +56,7 @@ digit               [0-9]
 %}
 
 // Keywords {}
-"pattern"                           { return KeywordLexemeAction(TEMPO); }
+"pattern"                           { return KeywordLexemeAction(PATTERN); }
 "repeat"                            { return KeywordLexemeAction(REPEAT); }
 "step"                              { return KeywordLexemeAction(STEP); }
 "track"                             { return KeywordLexemeAction(TRACK); }
@@ -78,7 +78,7 @@ digit               [0-9]
 "whole"|"w"                         { return KeywordLexemeAction(WHOLE); }
 "half"|"h"                          { return KeywordLexemeAction(HALF); }
 "quarter"|"q"                       { return KeywordLexemeAction(QUARTER); }
-"eighth"|"e"                        { return KeywordLexemeAction(EIGTH); }
+"eighth"|"e"                        { return KeywordLexemeAction(EIGHT); }
 "sixteenth"|"s"                     { return KeywordLexemeAction(SIXTEENTH); }
 "thirtysecond"|"ths"                { return KeywordLexemeAction(THIRTYSECOND); }
 "sixtyfourth"|"sxf"                 { return KeywordLexemeAction(SIXTYFOURTH); }
