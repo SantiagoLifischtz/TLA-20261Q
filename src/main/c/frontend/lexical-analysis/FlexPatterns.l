@@ -17,7 +17,7 @@
 extern CompilationStatus KeywordLexemeAction(TokenLabel label);
 extern CompilationStatus LiteralFloatLexemeAction();
 extern CompilationStatus LiteralIntegerLexemeAction();
-extern CompilationStatus LiteralNoteLexemeAction();
+extern CompilationStatus LiteralNoteIdLexemeAction();
 extern CompilationStatus LiteralStringLexemeAction();
 extern CompilationStatus NamingLexemeAction();
 extern CompilationStatus ArithmeticOperatorLexemeAction(TokenLabel label);
@@ -98,7 +98,7 @@ digit               [0-9]
 // Literals
 {digit}+"."{digit}+                 { return LiteralFloatLexemeAction(); }
 {digit}+                            { return LiteralIntegerLexemeAction(); }
-[A-G](#|b)?[0-9]+                   { return LiteralNoteLexemeAction(); }
+[A-G](#|b)?[0-9]+                   { return LiteralNoteIdLexemeAction(); }
 \"([^\\\"]|\\.)*\"                  { return LiteralStringLexemeAction(); }
 
 // Identifier (naming and percussion)
