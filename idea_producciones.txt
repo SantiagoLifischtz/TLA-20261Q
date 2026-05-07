@@ -36,9 +36,9 @@ wait_after_block -> duration SEMICOLON | %empty
 
 inline_pattern -> note | rest | chord | strum | arpeggio | degree | ID
 
-note -> note_octave duration
+note -> note_and_octave duration
 
-note_octave -> NOTE_ID integer
+note_and_octave -> NOTE_ID integer
 
 duration -> expression
 
@@ -64,7 +64,7 @@ note_chord -> OPEN_SQUARE comma_separated_notes CLOSE_SQUARE duration
 
 comma_separated_patterns -> pattern | pattern COMMA comma_separated_patterns
 
-comma_separated_notes -> note_octave | note_octave COMMA comma_separated_notes
+comma_separated_notes -> note_and_octave | note_and_octave COMMA comma_separated_notes
 
 strum -> STRUM OPEN_PARENTHESIS comma_separated_notes COMMA duration COMMA duration CLOSE_PARENTHESIS
 

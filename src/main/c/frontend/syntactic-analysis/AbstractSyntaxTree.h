@@ -16,9 +16,13 @@ ModuleDestructor initializeAbstractSyntaxTreeModule();
 
 typedef enum ExpressionType ExpressionType;
 typedef enum FactorType FactorType;
+typedef enum NumberType NumberType;
 
 typedef enum SentenceType SentenceType;
+typedef enum PatternSentenceType PatternSentenceType;
 typedef enum PatternType PatternType;
+typedef enum InlinePatternType InlinePatternType;
+typedef enum ChordType ChordType;
 
 typedef struct Constant Constant;
 typedef struct Expression Expression;
@@ -40,15 +44,19 @@ typedef struct Instrument Instrument;
 typedef struct Sentences Sentences;
 typedef struct Sentence Sentence;
 typedef struct PatternDefinition PatternDefinition;
+typedef struct PatternSentence PatternSentence;
 typedef struct Pattern Pattern;
 typedef struct Wait Wait;
 typedef struct InlinePattern InlinePattern;
 typedef struct Note Note;
-typedef struct NoteOctave NoteOctave;
+typedef struct NoteAndOctave NoteAndOctave;
 typedef struct Duration Duration;
 typedef struct Rest Rest;
 typedef struct Repeat Repeat;
 typedef struct Step Step;
+typedef struct StepBlock StepBlock;
+typedef struct NoWaitSentences NoWaitSentences;
+typedef struct NoWaitSentence NoWaitSentence;
 typedef struct Block Block;
 typedef struct Chord Chord;
 typedef struct PatternChord PatternChord;
@@ -82,15 +90,48 @@ enum SentenceType {
 	TEMPO
 };
 
-enum PatternType {
-	INLINE,
-	BLOCK,
+enum PatternSentenceType {
+	INLINE_SENTENCE,
+	BLOCK_SENTENCE,
 	REPEAT,
 	STEP
 };
 
+enum PatternType {
+	INLINE,
+	BLOCK
+};
+
+enum InlinePatternType {
+	NOTE,
+	REST,
+	CHORD,
+	STRUM,
+	ARPEGGIO,
+	DEGREE,
+	PATTERN_ID
+};
+
+enum NumberType {
+	INTEGER,
+	FLOAT
+};
+
+enum ChordType {
+	PATTERN_CHORD,
+	NOTE_CHORD
+};
+
 struct Constant {
 	int value;
+};
+
+struct Number { // TODO: reemplazar constant por esto en todos lados
+	union {
+		int intValue;
+		float floatValue;
+	};
+	NumberType type;
 };
 
 struct Factor {
@@ -186,7 +227,7 @@ struct PatternDefinition {
 	Block * block;
 };
 
-struct Pattern {
+struct PatternSentence {
 	union {
 		struct {
 			InlinePattern * inlinePattern;
@@ -196,8 +237,123 @@ struct Pattern {
 			Block * block;
 			Wait * blockWait;
 		};
+		Repeat * repeat;
+		Step * step;
+	};
+	PatternSentenceType type;
+};
+
+struct Pattern {
+	union {
+		InlinePattern * inlinePattern;
+		Block * block;
 	};
 	PatternType type;
+};
+
+struct Block {
+	Sentences * sentences;
+};
+
+struct Wait {
+	float value;
+};
+
+struct InlinePattern {
+	union {
+		Note * note;
+		Rest * rest;
+		Chord * chord;
+		Strum * strum;
+		Arpeggio * arpeggio;
+		Degree * degree;
+		ID * id;
+	};
+	InlinePatternType type;
+};
+
+struct Note {
+	NoteAndOctave * noteAndOctave;
+	Duration * duration;
+};
+
+struct NoteAndOctave {
+	NoteID * note;
+	char octave; // midi value = note->value + 12 * octave
+};
+
+struct Duration {
+	Expression * expression;
+};
+
+struct Rest {
+	Duration * duration;
+};
+
+struct Repeat {
+	int count;
+	PatternSentence sentence;
+};
+
+struct Step {
+	Duration * interval;
+	StepBlock * block;
+};
+
+struct StepBlock {
+	NoWaitSentences * sentences;
+};
+
+struct NoWaitSentences {
+	NoWaitSentence * sentence;
+	NoWaitSentences * next;
+};
+
+struct NoWaitSentence {
+	Pattern * pattern;
+};
+
+struct Chord {
+	union {
+		PatternChord * patternChord;
+		NoteChord * noteChord;
+	};
+	ChordType type;
+};
+
+struct PatternChord {
+	CommaSeparatedPatterns * patterns;
+};
+
+struct NoteChord {
+	CommaSeparatedNotes * notes;
+};
+
+struct CommaSeparatedPatterns {
+	Pattern * pattern;
+	CommaSeparatedPatterns * next;
+};
+
+struct CommaSeparatedNotes {
+	NoteAndOctave * note;
+	CommaSeparatedNotes * next;
+};
+
+struct Strum {
+	CommaSeparatedNotes * notes;
+	Duration * totalDuration;
+	Duration * interval;
+};
+
+struct Arpeggio {
+	CommaSeparatedNotes * notes;
+	Duration * totalDuration;
+};
+
+struct Degree {
+	int number;
+	int octave;
+	Duration * duration;
 };
 
 /**
