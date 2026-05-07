@@ -27,7 +27,9 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 	/** Terminals. */
 
 	signed int integer;
+	float floatValue;
 	TokenLabel token;
+	char * string;
 
 	/** Non-terminals. */
 
@@ -49,21 +51,51 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 %destructor { destroyExpression($$); } <expression>
 %destructor { destroyFactor($$); } <factor>
 
-/** Terminals. */
-%token <integer> INTEGER
-%token <token> ADD
-%token <token> CLOSE_BRACE
-%token <token> CLOSE_COMMENT
-%token <token> CLOSE_PARENTHESIS
-%token <token> DIV
-%token <token> MUL
-%token <token> OPEN_BRACE
-%token <token> OPEN_COMMENT
-%token <token> OPEN_PARENTHESIS
-%token <token> SUB
-
+/* Extra. */
 %token <token> IGNORED
 %token <token> UNKNOWN
+
+/** Terminals. */
+%token <integer> INTEGER
+%token <floatValue> FLOAT
+%token <string> STRING
+
+%token <token> ADD
+%token <token> DIV
+%token <token> MUL
+%token <token> SUB
+
+%token <token> SEMICOLON
+%token <token> COMMA
+%token <token> OPEN_BRACE
+%token <token> CLOSE_BRACE
+%token <token> OPEN_SQUARE
+%token <token> CLOSE_SQUARE
+%token <token> OPEN_PARENTHESIS
+%token <token> CLOSE_PARENTHESIS
+
+%token <token> PLAY
+%token <token> ALL
+%token <token> TEMPO
+%token <token> KEY
+%token <token> TRACK
+%token <token> INSTRUMENT
+%token <string> ID
+%token <token> PATTERN
+
+%token <token> REST
+%token <token> REPEAT
+%token <token> STEP
+%token <token> STRUM
+%token <token> ARPEGGIO
+%token <token> DEGREE
+
+%token <integer> NOTE_ID
+
+%token <token> DOTTED
+
+%token <integer> MODE
+%token <floatValue> DURATION_BUILTIN
 
 /** Non-terminals. */
 %type <constant> constant
@@ -98,7 +130,7 @@ factor: OPEN_PARENTHESIS expression CLOSE_PARENTHESIS		{ $$ = ExpressionFactorSe
 	| constant												{ $$ = ConstantFactorSemanticAction($1); }
 	;
 
-constant: INTEGER											{ $$ = IntegerConstantSemanticAction($1); }
+constant: INTEGER | FLOAT											{ $$ = IntegerConstantSemanticAction($1); }
 	;
 
 %%
