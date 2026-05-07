@@ -8,21 +8,13 @@ play -> PLAY OPEN_BRACE track_ids SEMICOLON CLOSE_BRACE | ALL SEMICOLON
 
 track_ids -> ID | ID COMMA track_ids
 
-config_sentence -> config_sentence_content SEMICOLON
+config_sentence -> key | tempo
 
-config_sentence_content -> key | tempo
+tempo -> TEMPO float SEMICOLON
 
-tempo -> TEMPO float
-
-key -> KEY pitch mode
+key -> KEY NOTE_ID mode SEMICOLON
 
 mode -> IONIAN | MAJOR | DORIAN | PHRYGIAN | LYDIAN | MIXOLYDIAN | AEOLIAN | MINOR | LOCRIAN
-
-pitch -> note_letter semitone_modifier
-
-note_letter -> C | D | E | F | G | A | B
-
-semitone_modifier -> SHARP | FLAT | NATURAL | %empty
 
 track -> TRACK ID OPEN_BRACE instrument sentences CLOSE_BRACE
 
@@ -32,7 +24,7 @@ instrument -> INSTRUMENT string SEMICOLON
 
 sentences -> sentence sentences | %empty
 
-sentence -> pattern_sentence | tempo | key
+sentence -> pattern | tempo | key
 
 pattern -> inline_pattern wait_after_inline | block wait_after_block | repeat | step
 
@@ -40,11 +32,11 @@ wait_after_inline -> duration SEMICOLON | SEMICOLON
 
 wait_after_block -> duration SEMICOLON | %empty
 
-inline_pattern -> note | rest | chord | strum | arpeggio | degree
+inline_pattern -> note | rest | chord | strum | arpeggio | degree | ID
 
-note -> note_id duration
+note -> note_octave duration
 
-note_id -> pitch integer
+note_octave -> NOTE_ID integer
 
 duration -> expression
 
@@ -64,13 +56,13 @@ note_chord -> OPEN_SQUARE comma_separated_notes CLOSE_SQUARE duration
 
 comma_separated_patterns -> pattern | pattern COMMA comma_separated_patterns
 
-comma_separated_notes -> note_id | note_id COMMA comma_separated_notes
+comma_separated_notes -> note_octave | note_octave COMMA comma_separated_notes
 
 strum -> STRUM OPEN_PARENTHESIS comma_separated_notes COMMA duration COMMA duration CLOSE_PARENTHESIS
 
 arpeggio -> ARPEGGIO OPEN_PARENTHESIS comma_separated_notes COMMA duration CLOSE_PARENTHESIS
 
-degree -> DEGREE OPEN_PARENTHESIS integer COMMA integer CLOSE_PARENTHESIS semitone_modifier duration
+degree -> DEGREE OPEN_PARENTHESIS integer COMMA integer CLOSE_PARENTHESIS duration
 
 
 
@@ -82,7 +74,7 @@ string -> ...
 
 expression -> sum | product | subtraction | division | grouped_expression | dotted | number
 
-number -> float | integer | standard_time
+number -> float | integer | DURATION_BUILTIN
 
 sum -> expression PLUS expression
 
@@ -95,5 +87,3 @@ division -> expression SLASH expression
 grouped_expression -> OPEN_PARENTHESIS expression CLOSE_PARENTHESIS
 
 dotted -> expression DOT
-
-standard_time -> WHOLE | W | HALF | H | QUARTER | Q | EIGHTH | E | SIXTEENTH | S | THIRTYSECOND | THS | SIXTYFOURTH | SXF

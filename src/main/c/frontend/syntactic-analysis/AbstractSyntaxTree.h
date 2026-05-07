@@ -17,7 +17,8 @@ ModuleDestructor initializeAbstractSyntaxTreeModule();
 typedef enum ExpressionType ExpressionType;
 typedef enum FactorType FactorType;
 
-typedef enum ConfigSentenceType ConfigSentenceType;
+typedef enum SentenceType SentenceType;
+typedef enum PatternType PatternType;
 
 typedef struct Constant Constant;
 typedef struct Expression Expression;
@@ -30,24 +31,20 @@ typedef struct Definition Definition;
 typedef struct Play Play;
 typedef struct TrackIDs TrackIDs;
 typedef struct ConfigSentence ConfigSentence;
-typedef struct ConfigSentenceContent ConfigSentenceContent;
 typedef struct Tempo Tempo;
 typedef struct Key Key;
 typedef struct Mode Mode;
-typedef struct Pitch Pitch;
-typedef struct NoteLetter NoteLetter;
-typedef struct SemitoneModifier;
+typedef struct NoteID NoteID;
 typedef struct Track Track;
 typedef struct Instrument Instrument;
 typedef struct Sentences Sentences;
 typedef struct Sentence Sentence;
 typedef struct PatternDefinition PatternDefinition;
 typedef struct Pattern Pattern;
-typedef struct WaitAfterInline WaitAfterInline;
-typedef struct WaitAfterBlock WaitAfterBlock;
+typedef struct Wait Wait;
 typedef struct InlinePattern InlinePattern;
 typedef struct Note Note;
-typedef struct NoteID NoteID;
+typedef struct NoteOctave NoteOctave;
 typedef struct Duration Duration;
 typedef struct Rest Rest;
 typedef struct Repeat Repeat;
@@ -79,9 +76,17 @@ enum FactorType {
 	EXPRESSION
 };
 
-enum ConfigSentenceType {
+enum SentenceType {
+	PATTERN,
 	KEY,
 	TEMPO
+};
+
+enum PatternType {
+	INLINE,
+	BLOCK,
+	REPEAT,
+	STEP
 };
 
 struct Constant {
@@ -113,11 +118,11 @@ struct Program {
 
 struct Definitions {
 	Definition * def;
-	Definitions * otherDefs;
+	Definitions * next;
 };
 
 struct Play {
-	TrackIDs * tracks;
+	TrackIDs * tracks; // TODO: ALL
 };
 
 struct ID {
@@ -126,19 +131,15 @@ struct ID {
 
 struct TrackIDs {
 	ID * id;
-	TrackIDs * ids;
+	TrackIDs * next;
 };
 
 struct ConfigSentence {
-	ConfigSentenceContent * content;
-};
-
-struct ConfigSentenceContent {
 	union {
 		Key * key;
 		Tempo * tempo;
 	};
-	ConfigSentenceType type;
+	SentenceType type;
 };
 
 struct Tempo {
@@ -146,7 +147,7 @@ struct Tempo {
 };
 
 struct Key {
-	Pitch * pitch;
+	NoteID * note;
 	Mode * mode;
 };
 
@@ -154,8 +155,49 @@ struct Mode {
 	char value; // 0 - 6
 };
 
-struct Pitch {
-	int noteNumber;
+struct NoteID {
+	char value; // 0 - 11
+};
+
+struct Track {
+	Instrument * instrument;
+	Sentences * sentences;
+};
+
+struct Instrument {
+	char *name;
+};
+
+struct Sentences {
+	Sentence * sentence;
+	Sentences * next;
+};
+
+struct Sentence {
+	union {
+		Pattern * pattern;
+		Tempo * tempo;
+		Key * key;
+	};
+	SentenceType type;
+};
+
+struct PatternDefinition {
+	Block * block;
+};
+
+struct Pattern {
+	union {
+		struct {
+			InlinePattern * inlinePattern;
+			Wait * inlineWait;
+		};
+		struct {
+			Block * block;
+			Wait * blockWait;
+		};
+	};
+	PatternType type;
 };
 
 /**

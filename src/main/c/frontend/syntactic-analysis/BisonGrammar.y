@@ -27,8 +27,9 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 	/** Terminals. */
 
 	signed int integer;
-	float float;
+	float floatValue;
 	TokenLabel token;
+	char * string;
 
 	/** Non-terminals. */
 
@@ -52,8 +53,8 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 
 /** Terminals. */
 %token <integer> INTEGER
-%token <float> FLOAT
-%token <token> STRING
+%token <floatValue> FLOAT
+%token <string> STRING
 
 %token <token> ADD
 %token <token> DIV
@@ -75,7 +76,7 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 %token <token> KEY
 %token <token> TRACK
 %token <token> INSTRUMENT
-%token <token> ID
+%token <string> ID
 %token <token> PATTERN
 
 %token <token> REST
@@ -85,35 +86,12 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 %token <token> ARPEGGIO
 %token <token> DEGREE
 
-%token <token> A
-%token <token> B
-%token <token> C
-%token <token> D
-%token <token> E
-%token <token> F
-%token <token> G
-%token <token> SHARP
-%token <token> FLAT
-%token <token> NATURAL
-
-%token <token> IONIAN
-%token <token> MAJOR
-%token <token> DORIAN
-%token <token> PHRYGIAN
-%token <token> LYDIAN
-%token <token> MIXOLYDIAN
-%token <token> AEOLIAN
-%token <token> MINOR
-%token <token> LOCRIAN
+%token <integer> NOTE_ID
 
 %token <token> DOTTED
-%token <token> WHOLE
-%token <token> HALF
-%token <token> QUARTER
-%token <token> EIGHTH
-%token <token> SIXTEENTH
-%token <token> THIRTYSECOND
-%token <token> SIXTYFOURTH
+
+%token <integer> MODE
+%token <floatValue> DURATION_BUILTIN
 
 /** Non-terminals. */
 %type <constant> constant
