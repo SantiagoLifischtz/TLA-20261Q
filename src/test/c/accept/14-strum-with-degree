@@ -1,0 +1,8 @@
+tempo 110;
+key G major;
+
+track guitar {
+    instrument “Acoustic Guitar”;
+    strum( degree 3, degree 5, degree 5, degree 3, 1, 1/8);
+    strum( degree 3, degree 2, degree 5, degree 3, 1, 1/8);
+}

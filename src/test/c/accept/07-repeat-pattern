@@ -1,0 +1,8 @@
+track piano {
+    instrument "Acoustic Grand";
+    repeat 4 {
+        C4 e;
+        E4 e;
+        G4 q;
+    }
+}

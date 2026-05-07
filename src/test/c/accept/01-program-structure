@@ -1,0 +1,12 @@
+tempo 120;
+key C major;
+
+track t1 {
+    instrument "Acoustic Grand";
+    [C4, E4, G4] 1/2;
+}
+track t2 {
+    instrument "Violin";
+    degree 1 q;
+}
+play { t1, t2 }

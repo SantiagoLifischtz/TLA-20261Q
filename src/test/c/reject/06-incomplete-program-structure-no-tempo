@@ -1,0 +1,10 @@
+key C major;
+track t1 {
+    instrument "Acoustic Grand";
+    [C4, E4, G4] 1/2;
+}
+track t2 {
+    instrument "Violin";
+    degree 5 h;
+}
+play { t1, t2 }

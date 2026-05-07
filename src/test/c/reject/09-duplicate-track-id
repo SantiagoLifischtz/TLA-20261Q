@@ -1,0 +1,12 @@
+tempo 120;
+key C major;
+
+track piano {
+    instrument "Acoustic Grand";
+    C4 q;
+}
+
+track piano {
+    instrument "Violin";
+    G4 q;
+}

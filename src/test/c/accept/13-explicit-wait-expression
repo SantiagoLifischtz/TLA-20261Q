@@ -1,0 +1,10 @@
+pattern intro {
+    F#3 e;
+    A3 e;
+    D4 q dot;
+}
+track piano {
+    instrument "Acoustic Grand";
+    intro 3*quarter;
+    intro;
+}

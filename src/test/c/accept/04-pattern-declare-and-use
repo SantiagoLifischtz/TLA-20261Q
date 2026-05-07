@@ -1,0 +1,10 @@
+pattern motif {
+    E4 e;
+    G4 e;
+    A4 q;
+}
+track piano {
+    instrument "Violin";
+    motif;
+    motif;
+}

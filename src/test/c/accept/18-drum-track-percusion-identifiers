@@ -1,0 +1,9 @@
+tempo 115;
+key C major;
+
+track bateria {
+    instrument "Drums";
+    electric_bass_drum q;
+    closed_hi_hat e;
+    acoustic_snare q;
+}
