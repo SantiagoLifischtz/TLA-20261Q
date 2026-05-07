@@ -27,6 +27,7 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 	/** Terminals. */
 
 	signed int integer;
+	float float;
 	TokenLabel token;
 
 	/** Non-terminals. */
@@ -51,19 +52,68 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 
 /** Terminals. */
 %token <integer> INTEGER
+%token <float> FLOAT
+%token <token> STRING
+
 %token <token> ADD
-%token <token> CLOSE_BRACE
-%token <token> CLOSE_COMMENT
-%token <token> CLOSE_PARENTHESIS
 %token <token> DIV
 %token <token> MUL
-%token <token> OPEN_BRACE
-%token <token> OPEN_COMMENT
-%token <token> OPEN_PARENTHESIS
 %token <token> SUB
 
-%token <token> IGNORED
-%token <token> UNKNOWN
+%token <token> SEMICOLON
+%token <token> COMMA
+%token <token> OPEN_BRACE
+%token <token> CLOSE_BRACE
+%token <token> OPEN_SQUARE
+%token <token> CLOSE_SQUARE
+%token <token> OPEN_PARENTHESIS
+%token <token> CLOSE_PARENTHESIS
+
+%token <token> PLAY
+%token <token> ALL
+%token <token> TEMPO
+%token <token> KEY
+%token <token> TRACK
+%token <token> INSTRUMENT
+%token <token> ID
+%token <token> PATTERN
+
+%token <token> REST
+%token <token> REPEAT
+%token <token> STEP
+%token <token> STRUM
+%token <token> ARPEGGIO
+%token <token> DEGREE
+
+%token <token> A
+%token <token> B
+%token <token> C
+%token <token> D
+%token <token> E
+%token <token> F
+%token <token> G
+%token <token> SHARP
+%token <token> FLAT
+%token <token> NATURAL
+
+%token <token> IONIAN
+%token <token> MAJOR
+%token <token> DORIAN
+%token <token> PHRYGIAN
+%token <token> LYDIAN
+%token <token> MIXOLYDIAN
+%token <token> AEOLIAN
+%token <token> MINOR
+%token <token> LOCRIAN
+
+%token <token> DOTTED
+%token <token> WHOLE
+%token <token> HALF
+%token <token> QUARTER
+%token <token> EIGHTH
+%token <token> SIXTEENTH
+%token <token> THIRTYSECOND
+%token <token> SIXTYFOURTH
 
 /** Non-terminals. */
 %type <constant> constant
@@ -98,7 +148,7 @@ factor: OPEN_PARENTHESIS expression CLOSE_PARENTHESIS		{ $$ = ExpressionFactorSe
 	| constant												{ $$ = ConstantFactorSemanticAction($1); }
 	;
 
-constant: INTEGER											{ $$ = IntegerConstantSemanticAction($1); }
+constant: INTEGER | FLOAT											{ $$ = IntegerConstantSemanticAction($1); }
 	;
 
 %%
