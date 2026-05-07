@@ -98,7 +98,7 @@ digit               [0-9]
 // Literals
 {digit}+"."{digit}+                 { return LiteralFloatLexemeAction(); }
 {digit}+                            { return LiteralIntegerLexemeAction(); }
-[A-G](#|b)?[0-9]+                   { return LiteralNoteIdLexemeAction(); }
+[A-G](#|b)?                         { return LiteralNoteIdLexemeAction(); }
 \"([^\\\"]|\\.)*\"                  { return LiteralStringLexemeAction(); }
 
 // Identifier (naming and percussion)
