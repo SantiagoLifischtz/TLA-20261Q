@@ -18,7 +18,7 @@ key -> KEY pitch mode
 
 mode -> IONIAN | MAJOR | DORIAN | PHRYGIAN | LYDIAN | MIXOLYDIAN | AEOLIAN | MINOR | LOCRIAN
 
-pitch -> note_letter semitone_modifier             <-------- en realidad con un regex sale en flex, esto es un terminal
+pitch -> note_letter semitone_modifier
 
 note_letter -> C | D | E | F | G | A | B
 
