@@ -78,7 +78,8 @@ enum ExpressionType {
 	DIVISION,
 	FACTOR,
 	MULTIPLICATION,
-	SUBTRACTION
+	SUBTRACTION,
+	DOT
 };
 
 enum FactorType {
@@ -158,6 +159,7 @@ struct Expression {
 			Expression * leftExpression;
 			Expression * rightExpression;
 		};
+		Expression * singleExpression;
 	};
 	ExpressionType type;
 };

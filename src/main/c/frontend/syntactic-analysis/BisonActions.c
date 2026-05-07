@@ -36,20 +36,36 @@ static void _logSyntacticAnalyzerAction(const char * functionName) {
 
 /* PUBLIC FUNCTIONS */
 
-Constant * IntegerConstantSemanticAction(const int value) {
+Number * IntegerSemanticAction(const int value) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Constant * constant = calloc(1, sizeof(Constant));
-	constant->value = value;
-	return constant;
+	Number * number = calloc(1, sizeof(Number));
+	number->intValue = value;
+	number->type = INTEGER;
+	return number;
 }
 
-Expression * ArithmeticExpressionSemanticAction(Expression * leftExpression, Expression * rightExpression, ExpressionType type) {
+Number * FloatSemanticAction(const float value) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Number * number = calloc(1, sizeof(Number));
+	number->floatValue = value;
+	number->type = FLOAT;
+	return number;
+}
+
+Expression * BinaryOperationSemanticAction(Expression * leftExpression, Expression * rightExpression, ExpressionType type) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Expression * expression = calloc(1, sizeof(Expression));
 	expression->leftExpression = leftExpression;
 	expression->rightExpression = rightExpression;
 	expression->type = type;
 	return expression;
+}
+
+Expression * UnaryOperationSemanticAction(Expression * operand, ExpressionType type) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Expression * expression = calloc(1, sizeof(Expression));
+	expression->singleExpression = operand;
+	expression->type = type;
 }
 
 Expression * FactorExpressionSemanticAction(Factor * factor) {
@@ -60,11 +76,11 @@ Expression * FactorExpressionSemanticAction(Factor * factor) {
 	return expression;
 }
 
-Factor * ConstantFactorSemanticAction(Constant * constant) {
+Factor * ConstantFactorSemanticAction(Number * number) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Factor * factor = calloc(1, sizeof(Factor));
-	factor->constant = constant;
-	factor->type = CONSTANT;
+	factor->number = number;
+	factor->type = NUMBER;
 	return factor;
 }
 
@@ -74,12 +90,4 @@ Factor * ExpressionFactorSemanticAction(Expression * expression) {
 	factor->expression = expression;
 	factor->type = EXPRESSION;
 	return factor;
-}
-
-Program * ExpressionProgramSemanticAction(Expression * expression) {
-	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Program * program = calloc(1, sizeof(Program));
-	program->expression = expression;
-	_compilerState->abstractSyntaxtTree = program;
-	return program;
 }
