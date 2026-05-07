@@ -55,25 +55,25 @@ digit               [0-9]
 
 %}
 
-// Keywords {}
+/* Keywords {} */
 "pattern"                           { return KeywordLexemeAction(PATTERN); }
 "repeat"                            { return KeywordLexemeAction(REPEAT); }
 "step"                              { return KeywordLexemeAction(STEP); }
 "track"                             { return KeywordLexemeAction(TRACK); }
 "play"                              { return KeywordLexemeAction(PLAY); }
 
-// Keywords line
+/* Keywords line */
 "instrument"                        { return KeywordLexemeAction(INSTRUMENT); }
 "tempo"                             { return KeywordLexemeAction(TEMPO); }
 "key"                               { return KeywordLexemeAction(KEY); }
 "rest"                              { return KeywordLexemeAction(REST); }
 
-// Keywords ()
+/* Keywords () */
 "strum"                             { return KeywordLexemeAction(STRUM); }
 "arpeggio"                          { return KeywordLexemeAction(ARPEGGIO); }
 "degree"                            { return KeywordLexemeAction(DEGREE); }
 
-// Keywords durations
+/* Keywords durations */
 "dot"                               { return KeywordLexemeAction(DOT); }
 "whole"|"w"                         { return KeywordLexemeAction(WHOLE); }
 "half"|"h"                          { return KeywordLexemeAction(HALF); }
@@ -83,7 +83,7 @@ digit               [0-9]
 "thirtysecond"|"ths"                { return KeywordLexemeAction(THIRTYSECOND); }
 "sixtyfourth"|"sxf"                 { return KeywordLexemeAction(SIXTYFOURTH); }
 
-// Keywords modes
+/* Keywords modes */
 "major"|"ionian"                    { return KeywordLexemeAction(MAJOR); }
 "dorian"                            { return KeywordLexemeAction(DORIAN); }
 "phrygian"                          { return KeywordLexemeAction(PHRYGIAN); }
@@ -92,25 +92,25 @@ digit               [0-9]
 "minor"|"aeolian"                   { return KeywordLexemeAction(MINOR); }
 "locrian"                           { return KeywordLexemeAction(LOCRIAN); }
 
-// Keywords special
+/* Keywords special */
 "all"                               { return KeywordLexemeAction(ALL); }
 
-// Literals
+/* Literals */
 {digit}+"."{digit}+                 { return LiteralFloatLexemeAction(); }
 {digit}+                            { return LiteralIntegerLexemeAction(); }
 [A-G](#|b)?                         { return LiteralNoteIdLexemeAction(); }
 \"([^\\\"]|\\.)*\"                  { return LiteralStringLexemeAction(); }
 
-// Identifier (naming and percussion)
-[a-zA-Z_][a-zA-Z0-9_]*              { return NamingLexemeAction(); } // TODO check, could be the same as LiteralNote
+/* Identifier (naming and percussion) */
+[a-zA-Z_][a-zA-Z0-9_]*              { return NamingLexemeAction(); } /* TODO check, could be the same as LiteralNote */
 
-// Arithmetic
+/* Arithmetic */
 "-"									{ return ArithmeticOperatorLexemeAction(SUB); }
 "*"									{ return ArithmeticOperatorLexemeAction(MUL); }
 "/"									{ return ArithmeticOperatorLexemeAction(DIV); }
 "+"									{ return ArithmeticOperatorLexemeAction(ADD); }
 
-// Structure
+/* Structure */
 "{"									{ return StructureOperatorLexemeAction(OPEN_BRACE); }
 "}"									{ return StructureOperatorLexemeAction(CLOSE_BRACE); }
 "("									{ return StructureOperatorLexemeAction(OPEN_PARENTHESIS); }
@@ -120,10 +120,10 @@ digit               [0-9]
 ","									{ return StructureOperatorLexemeAction(COMMA); }
 ";"									{ return StructureOperatorLexemeAction(SEMICOLON); }
 
-// Comment
+/* Comment */
 "//".*                              { return IgnoredLexemeAction(); }
 
-// Special
+/* Special */
 {whitespace}						{ return IgnoredLexemeAction(); }
 .									{ return UnknownLexemeAction(); }
 <<EOF>>								{ return EOFLexemeAction(); }
