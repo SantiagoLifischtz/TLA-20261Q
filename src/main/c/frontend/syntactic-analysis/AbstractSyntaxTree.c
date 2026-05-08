@@ -144,6 +144,7 @@ void destroyConfigSentence(ConfigSentence * configSentence) {
 void destroyTempo(Tempo * tempo) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (tempo != NULL) {
+		destroyExpression(tempo->expression);
 		free(tempo);
 	}
 }
@@ -202,7 +203,7 @@ void destroySentence(Sentence * sentence) {
 	if (sentence != NULL) {
 		switch (sentence->type) {
 			case PATTERN:
-				destroyPattern(sentence->pattern);
+				destroyPattern(sentence->patternSentence);
 				break;
 			case KEY:
 				destroyKey(sentence->key);
@@ -227,11 +228,11 @@ static void destroyPatternSentenceMembers(PatternSentence * patternSentence) {
 	switch (patternSentence->type) {
 		case INLINE_SENTENCE:
 			destroyInlinePattern(patternSentence->inlinePattern);
-			destroyWait(patternSentence->inlineWait);
+			destroyWait(patternSentence->wait);
 			break;
 		case BLOCK_SENTENCE:
 			destroyBlock(patternSentence->block);
-			destroyWait(patternSentence->blockWait);
+			destroyWait(patternSentence->wait);
 			break;
 		case REPEAT:
 			destroyRepeat(patternSentence->repeat);
@@ -276,6 +277,7 @@ void destroyBlock(Block * block) {
 void destroyWait(Wait * wait) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (wait != NULL) {
+		destroyDuration(wait->duration);
 		free(wait);
 	}
 }
@@ -346,7 +348,7 @@ void destroyRest(Rest * rest) {
 void destroyRepeat(Repeat * repeat) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (repeat != NULL) {
-		destroyPatternSentenceMembers(&(repeat->sentence));
+		destroyPatternSentenceMembers(repeat->sentence);
 		free(repeat);
 	}
 }

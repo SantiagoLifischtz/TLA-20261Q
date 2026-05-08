@@ -183,10 +183,10 @@ ConfigSentence * GlobalKeySemanticAction(Key * key) {
 	return sentence;
 }
 
-Tempo * TempoSemanticAction(const float value) {
+Tempo * TempoSemanticAction(Expression * exp) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Tempo * tempo = calloc(1, sizeof(Tempo));
-	tempo->value = value;
+	tempo->expression = exp;
 	return tempo; // Are you rushing or dragging
 }
 
@@ -295,4 +295,136 @@ PatternSentence * StepPSSemanticAction(Step * step, Wait * wait) {
 	ps->wait = wait;
 	ps->type = STEP;
 	return ps;
+}
+
+Pattern * PatternSemanticAction(InlinePattern * inlinePattern) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Pattern * p = calloc(1, sizeof(Pattern));
+	p->inlinePattern = inlinePattern;
+	p->type = INLINE;
+	return p;
+}
+
+Pattern * BlockPatternSemanticAction(Block * block) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Pattern * p = calloc(1, sizeof(Pattern));
+	p->block = block;
+	p->type = BLOCK;
+	return p;
+}
+
+Wait * WaitSemanticAction(Duration * duration) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Wait * wait = calloc(1, sizeof(Wait));
+	wait->duration = duration;
+	return wait;
+}
+
+InlinePattern * NotePatternSemanticAction(Note * note) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	InlinePattern * ip = calloc(1, sizeof(InlinePattern));
+	ip->note = note;
+	ip->type = NOTE;
+	return ip;
+}
+
+InlinePattern * RestPatternSemanticAction(Rest * rest) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	InlinePattern * ip = calloc(1, sizeof(InlinePattern));
+	ip->rest = rest;
+	ip->type = REST;
+	return ip;
+}
+
+InlinePattern * ChordPatternSemanticAction(Chord * chord) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	InlinePattern * ip = calloc(1, sizeof(InlinePattern));
+	ip->chord = chord;
+	ip->type = CHORD;
+	return ip;
+}
+
+InlinePattern * StrumPatternSemanticAction(Strum * strum) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	InlinePattern * ip = calloc(1, sizeof(InlinePattern));
+	ip->strum = strum;
+	ip->type = STRUM;
+	return ip;
+}
+
+InlinePattern * ArpeggioPatternSemanticAction(Arpeggio * arp) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	InlinePattern * ip = calloc(1, sizeof(InlinePattern));
+	ip->arpeggio = arp;
+	ip->type = ARPEGGIO;
+	return ip;
+}
+
+InlinePattern * DegreePatternSemanticAction(Degree * degree) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	InlinePattern * ip = calloc(1, sizeof(InlinePattern));
+	ip->degree = degree;
+	ip->type = DEGREE;
+	return ip;
+}
+
+InlinePattern * IDPatternSemanticAction(ID * id) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	InlinePattern * ip = calloc(1, sizeof(InlinePattern));
+	ip->id = id;
+	ip->type = PATTERN_ID;
+	return ip;
+}
+
+Note * NoteSemanticAction(NoteAndOctave * noteAndOctave, Duration * duration) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Note * note = calloc(1, sizeof(Note));
+	note->noteAndOctave = noteAndOctave;
+	note->duration = duration;
+	return note;
+}
+
+NoteAndOctave * NoteOctaveSemanticAction(NoteID * noteID, const int octave) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	NoteAndOctave * n = calloc(1, sizeof(NoteAndOctave));
+	n->note = noteID;
+	n->octave = octave;
+	return n;
+}
+
+Duration * DurationSemanticAction(Expression * exp) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Duration * d = calloc(1, sizeof(Duration));
+	d->expression = exp;
+	return d;
+}
+
+Rest * RestSemanticAction(Duration * duration) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Rest * rest = calloc(1, sizeof(Rest));
+	rest->duration = duration;
+	return rest;
+}
+
+Repeat * RepeatSemanticAction(const int count, PatternSentence * ps) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Repeat * repeat = calloc(1, sizeof(Repeat));
+	repeat->count = count;
+	repeat->sentence = ps;
+	return repeat;
+}
+
+Step * StepSemanticAction(Duration * interval, StepBlock * block) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Step * step = calloc(1, sizeof(Step));
+	step->interval = interval;
+	step->block = block;
+	return step;
+}
+
+Block * BlockSemanticAction(Sentences * sentences) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Block * block = calloc(1, sizeof(Block));
+	block->sentences = sentences;
+	return block;
 }

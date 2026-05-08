@@ -10,7 +10,7 @@ track_ids -> ID | ID COMMA track_ids
 
 config_sentence -> key | tempo
 
-tempo -> TEMPO float SEMICOLON
+tempo -> TEMPO expression SEMICOLON
 
 key -> KEY NOTE_ID mode SEMICOLON
 

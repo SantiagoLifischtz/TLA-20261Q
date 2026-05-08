@@ -206,7 +206,7 @@ struct ConfigSentence {
 };
 
 struct Tempo {
-	float value;
+	Expression * expression;
 };
 
 struct Key {
@@ -277,7 +277,7 @@ struct Block {
 };
 
 struct Wait {
-	float value;
+	Duration * duration;
 };
 
 struct InlinePattern {
@@ -313,7 +313,7 @@ struct Rest {
 
 struct Repeat {
 	int count;
-	PatternSentence sentence;
+	PatternSentence * sentence;
 };
 
 struct Step {
