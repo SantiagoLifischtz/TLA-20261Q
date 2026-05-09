@@ -23,6 +23,7 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 %define api.value.union.name SemanticValue
 %define parse.error detailed
 %locations
+%define api.token.prefix {TOK_}
 
 %union {
 	/** Terminals. */
@@ -127,6 +128,10 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 %destructor { destroyDegree($$); } <degree>
 %destructor { destroyID($$); } <id>
 
+/** Lexer-only keywords */
+%token <token> WHOLE HALF QUARTER EIGHT SIXTEENTH THIRTYSECOND SIXTYFOURTH
+%token <token> MAJOR DORIAN PHRYGIAN LYDIAN MIXOLYDIAN MINOR LOCRIAN
+
 /* Extra. */
 %token <token> IGNORED
 %token <token> UNKNOWN
@@ -151,7 +156,7 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 %token <token> CLOSE_PARENTHESIS
 
 %token <token> PLAY
-%token <token> ALL
+%token <token> PLAY_ALL
 %token <token> TEMPO
 %token <token> KEY
 %token <token> TRACK
@@ -241,7 +246,7 @@ definition: config_sentence									{ $$ = ConfigDefinitionSemanticAction($1); }
 	;
 
 play: PLAY OPEN_BRACE track_ids[ids] SEMICOLON CLOSE_BRACE	{ $$ = PlayTracksSemanticAction($ids); }
-	| PLAY OPEN_BRACE ALL SEMICOLON CLOSE_BRACE				{ $$ = PlayAllSemanticAction(); }
+	| PLAY OPEN_BRACE PLAY_ALL SEMICOLON CLOSE_BRACE				{ $$ = PlayAllSemanticAction(); }
 	;
 
 track_ids: id												{ $$ = TrackListSemanticAction($1, NULL); }
