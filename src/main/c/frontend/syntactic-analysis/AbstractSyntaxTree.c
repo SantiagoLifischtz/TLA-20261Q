@@ -175,6 +175,7 @@ void destroyNoteID(NoteID * noteID) {
 void destroyTrack(Track * track) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (track != NULL) {
+		destroyID(track->id);
 		destroyInstrument(track->instrument);
 		destroySentences(track->sentences);
 		free(track);
@@ -219,6 +220,7 @@ void destroySentence(Sentence * sentence) {
 void destroyPatternDefinition(PatternDefinition * patternDefinition) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (patternDefinition != NULL) {
+		destroyID(patternDefinition->id);
 		destroyBlock(patternDefinition->block);
 		free(patternDefinition);
 	}

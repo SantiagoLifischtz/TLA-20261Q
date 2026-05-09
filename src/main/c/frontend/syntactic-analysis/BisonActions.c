@@ -137,7 +137,7 @@ Definition * PatternDefinitionSemanticAction(PatternDefinition * patternDef) {
 	return definition;
 }
 
-PatternDefinition * PatternDeclarationSemanticAction(Block * block) {
+PatternDefinition * PatternDeclarationSemanticAction(ID * id, Block * block) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	PatternDefinition * def = calloc(1, sizeof(PatternDefinition));
 	def->block = block;
@@ -212,7 +212,7 @@ Mode * ModeSemanticAction(const char value) {
 	return mode;
 }
 
-Track * TrackSemanticAction(Instrument * instrument, Sentences * sentences) {
+Track * TrackSemanticAction(ID * id, Instrument * instrument, Sentences * sentences) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Track * track = calloc(1, sizeof(Track));
 	track->instrument = instrument;

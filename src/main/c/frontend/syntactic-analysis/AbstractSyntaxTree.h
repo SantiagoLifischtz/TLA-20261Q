@@ -223,6 +223,7 @@ struct NoteID {
 };
 
 struct Track {
+	ID * id;
 	Instrument * instrument;
 	Sentences * sentences;
 };
@@ -246,6 +247,7 @@ struct Sentence {
 };
 
 struct PatternDefinition {
+	ID * id;
 	Block * block;
 };
 
