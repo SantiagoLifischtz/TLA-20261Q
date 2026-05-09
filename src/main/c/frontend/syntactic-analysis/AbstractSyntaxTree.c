@@ -204,7 +204,7 @@ void destroySentence(Sentence * sentence) {
 	if (sentence != NULL) {
 		switch (sentence->type) {
 			case PATTERN:
-				destroyPattern(sentence->patternSentence);
+				destroyPatternSentence(sentence->patternSentence);
 				break;
 			case KEY:
 				destroyKey(sentence->key);
