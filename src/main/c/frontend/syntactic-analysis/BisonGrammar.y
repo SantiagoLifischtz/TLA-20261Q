@@ -22,6 +22,7 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 %define api.value.union.name SemanticValue
 %define parse.error detailed
 %locations
+%define api.token.prefix {TOK_}
 
 %union {
 	/** Terminals. */
@@ -96,6 +97,10 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 
 %token <integer> MODE
 %token <floatValue> DURATION_BUILTIN
+
+/** Lexer-only keywords */
+%token <token> WHOLE HALF QUARTER EIGHT SIXTEENTH THIRTYSECOND SIXTYFOURTH
+%token <token> MAJOR DORIAN PHRYGIAN LYDIAN MIXOLYDIAN MINOR LOCRIAN
 
 /** Non-terminals. */
 %type <constant> constant

@@ -1,4 +1,5 @@
 #include "FlexActions.h"
+#include "../syntactic-analysis/BisonParser.h"
 
 /* MODULE INTERNAL STATE */
 
@@ -75,7 +76,7 @@ CompilationStatus KeywordLexemeAction(TokenLabel label) {
 }
 
 CompilationStatus LiteralFloatLexemeAction() {
-	Token * token = createToken(_lexicalAnalyzer, FLOAT);
+	Token * token = createToken(_lexicalAnalyzer, TOK_FLOAT);
 	token->semanticValue->floatValue = atof(token->lexeme);
 	_logTokenAction(__FUNCTION__, token);
 	CompilationStatus status = pushToken(_lexicalAnalyzer, token);
@@ -84,7 +85,7 @@ CompilationStatus LiteralFloatLexemeAction() {
 }
 
 CompilationStatus LiteralIntegerLexemeAction() {
-	Token * token = createToken(_lexicalAnalyzer, INTEGER);
+	Token * token = createToken(_lexicalAnalyzer, TOK_INTEGER);
 	token->semanticValue->integer = atoi(token->lexeme);
 	_logTokenAction(__FUNCTION__, token);
 	CompilationStatus status = pushToken(_lexicalAnalyzer, token);
@@ -93,7 +94,7 @@ CompilationStatus LiteralIntegerLexemeAction() {
 }
 
 CompilationStatus LiteralNoteIdLexemeAction() {
-	Token * token = createToken(_lexicalAnalyzer, INTEGER);
+	Token * token = createToken(_lexicalAnalyzer, TOK_NOTE_ID);
 	token->semanticValue->integer = _noteSemitone(token->lexeme);
 	_logTokenAction(__FUNCTION__, token);
 	CompilationStatus status = pushToken(_lexicalAnalyzer, token);
@@ -102,7 +103,7 @@ CompilationStatus LiteralNoteIdLexemeAction() {
 }
 
 CompilationStatus LiteralStringLexemeAction() {
-	Token * token = createToken(_lexicalAnalyzer, STRING);
+	Token * token = createToken(_lexicalAnalyzer, TOK_STRING);
 	size_t length = strlen(token->lexeme);
 	char * value = malloc(length - 1);
 	strncpy(value, token->lexeme + 1, length - 2);
@@ -115,7 +116,7 @@ CompilationStatus LiteralStringLexemeAction() {
 }
 
 CompilationStatus NamingLexemeAction() {
-	Token * token = createToken(_lexicalAnalyzer, STRING);
+	Token * token = createToken(_lexicalAnalyzer, TOK_STRING);
 	token->semanticValue->string = strdup(token->lexeme);
 	_logTokenAction(__FUNCTION__, token);
 	CompilationStatus status = pushToken(_lexicalAnalyzer, token);
@@ -141,7 +142,7 @@ CompilationStatus StructureOperatorLexemeAction(TokenLabel label) {
 
 CompilationStatus IgnoredLexemeAction() {
 	if (_logIgnoredLexemes) {
-		Token * token = createToken(_lexicalAnalyzer, IGNORED);
+		Token * token = createToken(_lexicalAnalyzer, TOK_IGNORED);
 		_logTokenAction(__FUNCTION__, token);
 		destroyToken(token);
 	}
@@ -149,7 +150,7 @@ CompilationStatus IgnoredLexemeAction() {
 }
 
 CompilationStatus UnknownLexemeAction() {
-	Token * token = createToken(_lexicalAnalyzer, UNKNOWN);
+	Token * token = createToken(_lexicalAnalyzer, TOK_UNKNOWN);
 	_logTokenAction(__FUNCTION__, token);
 	destroyToken(token);
 	return FAILED;
