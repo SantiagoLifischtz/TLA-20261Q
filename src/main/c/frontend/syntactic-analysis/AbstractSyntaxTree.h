@@ -16,11 +16,17 @@ ModuleDestructor initializeAbstractSyntaxTreeModule();
 
 typedef enum ExpressionType ExpressionType;
 typedef enum FactorType FactorType;
+typedef enum NumberType NumberType;
 
+typedef enum DefinitionType DefinitionType;
 typedef enum SentenceType SentenceType;
+typedef enum PatternSentenceType PatternSentenceType;
 typedef enum PatternType PatternType;
+typedef enum InlinePatternType InlinePatternType;
+typedef enum ChordType ChordType;
+typedef enum PlayBlockType PlayBlockType;
 
-typedef struct Constant Constant;
+typedef struct Number Number;
 typedef struct Expression Expression;
 typedef struct Factor Factor;
 typedef struct ID ID;
@@ -40,15 +46,19 @@ typedef struct Instrument Instrument;
 typedef struct Sentences Sentences;
 typedef struct Sentence Sentence;
 typedef struct PatternDefinition PatternDefinition;
+typedef struct PatternSentence PatternSentence;
 typedef struct Pattern Pattern;
 typedef struct Wait Wait;
 typedef struct InlinePattern InlinePattern;
 typedef struct Note Note;
-typedef struct NoteOctave NoteOctave;
+typedef struct NoteAndOctave NoteAndOctave;
 typedef struct Duration Duration;
 typedef struct Rest Rest;
 typedef struct Repeat Repeat;
 typedef struct Step Step;
+typedef struct StepBlock StepBlock;
+typedef struct NoWaitSentences NoWaitSentences;
+typedef struct NoWaitSentence NoWaitSentence;
 typedef struct Block Block;
 typedef struct Chord Chord;
 typedef struct PatternChord PatternChord;
@@ -68,11 +78,12 @@ enum ExpressionType {
 	DIVISION,
 	FACTOR,
 	MULTIPLICATION,
-	SUBTRACTION
+	SUBTRACTION,
+	DOT
 };
 
 enum FactorType {
-	CONSTANT,
+	NUMBER,
 	EXPRESSION
 };
 
@@ -82,20 +93,60 @@ enum SentenceType {
 	TEMPO
 };
 
-enum PatternType {
-	INLINE,
-	BLOCK,
+enum DefinitionType {
+	CONFIG,
+	PATTERN_DEF,
+	TRACK_DEF
+};
+
+enum PatternSentenceType {
+	INLINE_SENTENCE,
+	BLOCK_SENTENCE,
 	REPEAT,
 	STEP
 };
 
-struct Constant {
-	int value;
+enum PatternType {
+	INLINE,
+	BLOCK
+};
+
+enum InlinePatternType {
+	NOTE,
+	REST,
+	CHORD,
+	STRUM,
+	ARPEGGIO,
+	DEGREE,
+	PATTERN_ID
+};
+
+enum NumberType {
+	INTEGER,
+	FLOAT
+};
+
+enum ChordType {
+	PATTERN_CHORD,
+	NOTE_CHORD
+};
+
+enum PlayBlockType {
+	TRACKS,
+	ALL
+};
+
+struct Number {
+	union {
+		int intValue;
+		float floatValue;
+	};
+	NumberType type;
 };
 
 struct Factor {
 	union {
-		Constant * constant;
+		Number * number;
 		Expression * expression;
 	};
 	FactorType type;
@@ -108,12 +159,14 @@ struct Expression {
 			Expression * leftExpression;
 			Expression * rightExpression;
 		};
+		Expression * singleExpression;
 	};
 	ExpressionType type;
 };
 
 struct Program {
-	Expression * expression;
+	Definitions * definitions;
+	Play * playBlock;
 };
 
 struct Definitions {
@@ -121,8 +174,18 @@ struct Definitions {
 	Definitions * next;
 };
 
+struct Definition {
+	union {
+		ConfigSentence * config;
+		PatternDefinition * pattern;
+		Track * track;
+	};
+	DefinitionType type;
+};
+
 struct Play {
-	TrackIDs * tracks; // TODO: ALL
+	TrackIDs * tracks;
+	PlayBlockType type; // Si esta en all, tracks es ignorado.
 };
 
 struct ID {
@@ -143,7 +206,7 @@ struct ConfigSentence {
 };
 
 struct Tempo {
-	float value;
+	Expression * expression;
 };
 
 struct Key {
@@ -160,6 +223,7 @@ struct NoteID {
 };
 
 struct Track {
+	ID * id;
 	Instrument * instrument;
 	Sentences * sentences;
 };
@@ -175,7 +239,7 @@ struct Sentences {
 
 struct Sentence {
 	union {
-		Pattern * pattern;
+		PatternSentence * patternSentence;
 		Tempo * tempo;
 		Key * key;
 	};
@@ -183,32 +247,186 @@ struct Sentence {
 };
 
 struct PatternDefinition {
+	ID * id;
 	Block * block;
+};
+
+struct PatternSentence {
+	union {
+		struct {
+			union {
+				InlinePattern * inlinePattern;
+				Block * block;
+			};
+			Wait * wait;
+		};
+		Repeat * repeat;
+		Step * step;
+	};
+	PatternSentenceType type;
 };
 
 struct Pattern {
 	union {
-		struct {
-			InlinePattern * inlinePattern;
-			Wait * inlineWait;
-		};
-		struct {
-			Block * block;
-			Wait * blockWait;
-		};
+		InlinePattern * inlinePattern;
+		Block * block;
 	};
 	PatternType type;
+};
+
+struct Block {
+	Sentences * sentences;
+};
+
+struct Wait {
+	Duration * duration;
+};
+
+struct InlinePattern {
+	union {
+		Note * note;
+		Rest * rest;
+		Chord * chord;
+		Strum * strum;
+		Arpeggio * arpeggio;
+		Degree * degree;
+		ID * id;
+	};
+	InlinePatternType type;
+};
+
+struct Note {
+	NoteAndOctave * noteAndOctave;
+	Duration * duration;
+};
+
+struct NoteAndOctave {
+	NoteID * note;
+	char octave; // midi value = note->value + 12 * octave
+};
+
+struct Duration {
+	Expression * expression;
+};
+
+struct Rest {
+	Duration * duration;
+};
+
+struct Repeat {
+	int count;
+	PatternSentence * sentence;
+};
+
+struct Step {
+	Duration * interval;
+	StepBlock * block;
+};
+
+struct StepBlock {
+	NoWaitSentences * sentences;
+};
+
+struct NoWaitSentences {
+	NoWaitSentence * sentence;
+	NoWaitSentences * next;
+};
+
+struct NoWaitSentence {
+	union {
+		InlinePattern * inlinePattern;
+		Block * block;
+	};
+	PatternType type;
+};
+
+struct Chord {
+	union {
+		PatternChord * patternChord;
+		NoteChord * noteChord;
+	};
+	ChordType type;
+};
+
+struct PatternChord {
+	CommaSeparatedPatterns * patterns;
+};
+
+struct NoteChord {
+	CommaSeparatedNotes * notes;
+};
+
+struct CommaSeparatedPatterns {
+	Pattern * pattern;
+	CommaSeparatedPatterns * next;
+};
+
+struct CommaSeparatedNotes {
+	NoteAndOctave * note;
+	CommaSeparatedNotes * next;
+};
+
+struct Strum {
+	CommaSeparatedNotes * notes;
+	Duration * totalDuration;
+	Duration * interval;
+};
+
+struct Arpeggio {
+	CommaSeparatedNotes * notes;
+	Duration * totalDuration;
+};
+
+struct Degree {
+	int number;
+	int octave;
+	Duration * duration;
 };
 
 /**
  * Node recursive super-duper-trambolik-destructors.
  */
 
-void destroyConstant(Constant * constant);
 void destroyExpression(Expression * expression);
 void destroyFactor(Factor * factor);
+void destroyNumber(Number * number);
 void destroyProgram(Program * program);
-
-// TODO add destroy functions
+void destroyDefinitions(Definitions * definitions);
+void destroyDefinition(Definition * definition);
+void destroyPlay(Play * play);
+void destroyID(ID * id);
+void destroyTrackIDs(TrackIDs * trackIDs);
+void destroyConfigSentence(ConfigSentence * configSentence);
+void destroyTempo(Tempo * tempo);
+void destroyKey(Key * key);
+void destroyMode(Mode * mode);
+void destroyNoteID(NoteID * noteID);
+void destroyTrack(Track * track);
+void destroyInstrument(Instrument * instrument);
+void destroySentences(Sentences * sentences);
+void destroySentence(Sentence * sentence);
+void destroyPatternDefinition(PatternDefinition * patternDefinition);
+void destroyPatternSentence(PatternSentence * patternSentence);
+void destroyPattern(Pattern * pattern);
+void destroyBlock(Block * block);
+void destroyWait(Wait * wait);
+void destroyInlinePattern(InlinePattern * inlinePattern);
+void destroyNote(Note * note);
+void destroyNoteAndOctave(NoteAndOctave * noteAndOctave);
+void destroyDuration(Duration * duration);
+void destroyRest(Rest * rest);
+void destroyRepeat(Repeat * repeat);
+void destroyStep(Step * step);
+void destroyStepBlock(StepBlock * stepBlock);
+void destroyNoWaitSentences(NoWaitSentences * noWaitSentences);
+void destroyNoWaitSentence(NoWaitSentence * noWaitSentence);
+void destroyChord(Chord * chord);
+void destroyPatternChord(PatternChord * patternChord);
+void destroyNoteChord(NoteChord * noteChord);
+void destroyCommaSeparatedPatterns(CommaSeparatedPatterns * commaSeparatedPatterns);
+void destroyCommaSeparatedNotes(CommaSeparatedNotes * commaSeparatedNotes);
+void destroyStrum(Strum * strum);
+void destroyArpeggio(Arpeggio * arpeggio);
+void destroyDegree(Degree * degree);
 
 #endif
