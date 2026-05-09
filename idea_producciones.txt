@@ -10,7 +10,7 @@ track_ids -> ID | ID COMMA track_ids
 
 config_sentence -> key | tempo
 
-tempo -> TEMPO float SEMICOLON
+tempo -> TEMPO expression SEMICOLON
 
 key -> KEY NOTE_ID mode SEMICOLON
 
@@ -24,29 +24,37 @@ instrument -> INSTRUMENT string SEMICOLON
 
 sentences -> sentence sentences | %empty
 
-sentence -> pattern | tempo | key
+sentence -> pattern_sentence | tempo | key
 
-pattern -> inline_pattern wait_after_inline | block wait_after_block | repeat | step
+pattern_sentence -> inline_pattern optional_wait SEMICOLON | block wait_after_block | repeat | step wait_after_block
 
-wait_after_inline -> duration SEMICOLON | SEMICOLON
+pattern -> inline_pattern | block
+
+optional_wait -> duration | %empty
 
 wait_after_block -> duration SEMICOLON | %empty
 
 inline_pattern -> note | rest | chord | strum | arpeggio | degree | ID
 
-note -> note_octave duration
+note -> note_and_octave duration
 
-note_octave -> NOTE_ID integer
+note_and_octave -> NOTE_ID integer
 
 duration -> expression
 
 rest -> REST duration
 
-repeat -> REPEAT integer pattern
+repeat -> REPEAT integer pattern_sentence
 
-step -> STEP duration pattern
+step -> STEP duration step_block
 
 block -> OPEN_BRACE sentences CLOSE_BRACE
+
+step_block -> OPEN_BRACE no_wait_sentences CLOSE_BRACE
+
+no_wait_sentences -> no_wait_sentence no_wait_sentences | %empty
+
+no_wait_sentence -> inline_pattern SEMICOLON | block
 
 chord -> pattern_chord | note_chord
 
@@ -56,7 +64,7 @@ note_chord -> OPEN_SQUARE comma_separated_notes CLOSE_SQUARE duration
 
 comma_separated_patterns -> pattern | pattern COMMA comma_separated_patterns
 
-comma_separated_notes -> note_octave | note_octave COMMA comma_separated_notes
+comma_separated_notes -> note_and_octave | note_and_octave COMMA comma_separated_notes
 
 strum -> STRUM OPEN_PARENTHESIS comma_separated_notes COMMA duration COMMA duration CLOSE_PARENTHESIS
 
