@@ -3,6 +3,7 @@
 #include "../../support/type/TokenLabel.h"
 #include "AbstractSyntaxTree.h"
 #include "BisonActions.h"
+#include <stdlib.h>
 
 /**
  * The error reporting function for Bison parser.
@@ -27,7 +28,7 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 	/** Terminals. */
 
 	signed int integer;
-	float floatValue;
+	float float_value;
 	TokenLabel token;
 	char * string;
 
@@ -40,36 +41,36 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 	Definitions * definitions;
 	Definition * definition;
 	Play * play;
-	TrackIDs * trackIDs;
-	ConfigSentence * configSentence;
+	TrackIDs * track_ids;
+	ConfigSentence * config_sentence;
 	Tempo * tempo;
 	Key * key;
 	Mode * mode;
-	NoteID * noteID;
+	NoteID * note_id;
 	Track * track;
 	Instrument * instrument;
 	Sentences * sentences;
 	Sentence * sentence;
-	PatternDefinition * patternDefinition;
-	PatternSentence * patternSentence;
+	PatternDefinition * pattern_definition;
+	PatternSentence * pattern_sentence;
 	Pattern * pattern;
 	Wait * wait;
-	InlinePattern * inlinePattern;
+	InlinePattern * inline_pattern;
 	Note * note;
-	NoteAndOctave * noteAndOctave;
+	NoteAndOctave * note_and_octave;
 	Duration * duration;
 	Rest * rest;
 	Repeat * repeat;
 	Step * step;
-	StepBlock * stepBlock;
-	NoWaitSentences * noWaitSentences;
-	NoWaitSentence * noWaitSentence;
+	StepBlock * step_block;
+	NoWaitSentences * no_wait_sentences;
+	NoWaitSentence * no_wait_sentence;
 	Block * block;
 	Chord * chord;
-	PatternChord * patternChord;
-	CommaSeparatedPatterns * commaSeparatedPatterns;
-	NoteChord * noteChord;
-	CommaSeparatedNotes * commaSeparatedNotes;
+	PatternChord * pattern_chord;
+	CommaSeparatedPatterns * comma_separated_patterns;
+	NoteChord * note_chord;
+	CommaSeparatedNotes * comma_separated_notes;
 	Strum * strum;
 	Arpeggio * arpeggio;
 	Degree * degree;
@@ -91,36 +92,36 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 %destructor { destroyDefinitions($$); } <definitions>
 %destructor { destroyDefinition($$); } <definition>
 %destructor { destroyPlay($$); } <play>
-%destructor { destroyTrackIDs($$); } <trackIDs>
-%destructor { destroyConfigSentence($$); } <configSentence>
+%destructor { destroyTrackIDs($$); } <track_ids>
+%destructor { destroyConfigSentence($$); } <config_sentence>
 %destructor { destroyTempo($$); } <tempo>
 %destructor { destroyKey($$); } <key>
 %destructor { destroyMode($$); } <mode>
-%destructor { destroyNoteID($$); } <noteID>
+%destructor { destroyNoteID($$); } <note_id>
 %destructor { destroyTrack($$); } <track>
 %destructor { destroyInstrument($$); } <instrument>
 %destructor { destroySentences($$); } <sentences>
 %destructor { destroySentence($$); } <sentence>
-%destructor { destroyPatternDefinition($$); } <patternDefinition>
-%destructor { destroyPatternSentence($$); } <patternSentence>
+%destructor { destroyPatternDefinition($$); } <pattern_definition>
+%destructor { destroyPatternSentence($$); } <pattern_sentence>
 %destructor { destroyPattern($$); } <pattern>
 %destructor { destroyWait($$); } <wait>
-%destructor { destroyInlinePattern($$); } <inlinePattern>
+%destructor { destroyInlinePattern($$); } <inline_pattern>
 %destructor { destroyNote($$); } <note>
-%destructor { destroyNoteAndOctave($$); } <noteAndOctave>
+%destructor { destroyNoteAndOctave($$); } <note_and_octave>
 %destructor { destroyDuration($$); } <duration>
 %destructor { destroyRest($$); } <rest>
 %destructor { destroyRepeat($$); } <repeat>
 %destructor { destroyStep($$); } <step>
-%destructor { destroyStepBlock($$); } <stepBlock>
-%destructor { destroyNoWaitSentences($$); } <noWaitSentences>
-%destructor { destroyNoWaitSentence($$); } <noWaitSentence>
+%destructor { destroyStepBlock($$); } <step_block>
+%destructor { destroyNoWaitSentences($$); } <no_wait_sentences>
+%destructor { destroyNoWaitSentence($$); } <no_wait_sentence>
 %destructor { destroyBlock($$); } <block>
 %destructor { destroyChord($$); } <chord>
-%destructor { destroyPatternChord($$); } <patternChord>
-%destructor { destroyCommaSeparatedPatterns($$); } <commaSeparatedPatterns>
-%destructor { destroyNoteChord($$); } <noteChord>
-%destructor { destroyCommaSeparatedNotes($$); } <commaSeparatedNotes>
+%destructor { destroyPatternChord($$); } <pattern_chord>
+%destructor { destroyCommaSeparatedPatterns($$); } <comma_separated_patterns>
+%destructor { destroyNoteChord($$); } <note_chord>
+%destructor { destroyCommaSeparatedNotes($$); } <comma_separated_notes>
 %destructor { destroyStrum($$); } <strum>
 %destructor { destroyArpeggio($$); } <arpeggio>
 %destructor { destroyDegree($$); } <degree>
@@ -128,7 +129,7 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 
 /** Terminals. */
 %token <integer> INTEGER
-%token <floatValue> FLOAT
+%token <float_value> FLOAT
 %token <string> STRING
 
 %token <token> ADD
@@ -166,7 +167,7 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 %token <token> DOTTED
 
 %token <integer> MODE
-%token <floatValue> DURATION_BUILTIN
+%token <float_value> DURATION_BUILTIN
 
 /** Non-terminals. */
 %type <number> number
@@ -176,36 +177,36 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 %type <definitions> definitions
 %type <definition> definition
 %type <play> play
-%type <trackIDs> trackIDs
-%type <configSentence> configSentence
+%type <track_ids> track_ids
+%type <config_sentence> config_sentence
 %type <tempo> tempo
 %type <key> key
 %type <mode> mode
-%type <noteID> noteID
+%type <note_id> note_id
 %type <track> track
 %type <instrument> instrument
 %type <sentences> sentences
 %type <sentence> sentence
-%type <patternDefinition> patternDefinition
-%type <patternSentence> patternSentence
+%type <pattern_definition> pattern_definition
+%type <pattern_sentence> pattern_sentence
 %type <pattern> pattern
 %type <wait> wait
-%type <inlinePattern> inlinePattern
+%type <inline_pattern> inline_pattern
 %type <note> note
-%type <noteAndOctave> noteAndOctave
+%type <note_and_octave> note_and_octave
 %type <duration> duration
 %type <rest> rest
 %type <repeat> repeat
 %type <step> step
-%type <stepBlock> stepBlock
-%type <noWaitSentences> noWaitSentences
-%type <noWaitSentence> noWaitSentence
+%type <step_block> step_block
+%type <no_wait_sentences> no_wait_sentences
+%type <no_wait_sentence> no_wait_sentence
 %type <block> block
 %type <chord> chord
-%type <patternChord> patternChord
-%type <commaSeparatedPatterns> commaSeparatedPatterns
-%type <noteChord> noteChord
-%type <commaSeparatedNotes> commaSeparatedNotes
+%type <pattern_chord> pattern_chord
+%type <comma_separated_patterns> comma_separated_patterns
+%type <note_chord> note_chord
+%type <comma_separated_notes> comma_separated_notes
 %type <strum> strum
 %type <arpeggio> arpeggio
 %type <degree> degree
@@ -222,8 +223,14 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 
 %%
 
-program: expression 										{ $$ = ExpressionProgramSemanticAction($1); }
+program: definitions play 									{ $$ = ProgramSemanticAction($1, $2); }
 	;
+
+definitions: definition definitions							{ $$ = DefinitionListSemanticAction($1, $2); }
+	| %empty												{ $$ = NULL }
+	;
+
+definition: config_sentence
 
 expression: expression[left] ADD expression[right]			{ $$ = ArithmeticExpressionSemanticAction($left, $right, ADDITION); }
 	| expression[left] DIV expression[right]				{ $$ = ArithmeticExpressionSemanticAction($left, $right, DIVISION); }
