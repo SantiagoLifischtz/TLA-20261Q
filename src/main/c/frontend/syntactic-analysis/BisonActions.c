@@ -66,6 +66,7 @@ Expression * UnaryOperationSemanticAction(Expression * operand, ExpressionType t
 	Expression * expression = calloc(1, sizeof(Expression));
 	expression->singleExpression = operand;
 	expression->type = type;
+	return expression;
 }
 
 Expression * FactorExpressionSemanticAction(Factor * factor) {
@@ -135,6 +136,7 @@ Definition * PatternDefinitionSemanticAction(PatternDefinition * patternDef) {
 PatternDefinition * PatternDeclarationSemanticAction(ID * id, Block * block) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	PatternDefinition * def = calloc(1, sizeof(PatternDefinition));
+	def->id = id;
 	def->block = block;
 	return def;
 }
@@ -210,6 +212,7 @@ Mode * ModeSemanticAction(const char value) {
 Track * TrackSemanticAction(ID * id, Instrument * instrument, Sentences * sentences) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Track * track = calloc(1, sizeof(Track));
+	track->id = id;
 	track->instrument = instrument;
 	track->sentences = sentences;
 	return track;
