@@ -190,7 +190,8 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 %type <pattern_definition> pattern_definition
 %type <pattern_sentence> pattern_sentence
 %type <pattern> pattern
-%type <wait> wait
+%type <wait> optional_wait
+%type <wait> wait_after_block
 %type <inline_pattern> inline_pattern
 %type <note> note
 %type <note_and_octave> note_and_octave
@@ -262,6 +263,109 @@ note_id: NOTE_ID											{ $$ = NoteIDSemanticAction($1); }
 mode: MODE													{ $$ = ModeSemanticAction($1); }
 	;
 
+track: TRACK id[id] OPEN_BRACE instrument[inst] sentences[sent] CLOSE_BRACE	{ $$ = TrackSemanticAction($id, $inst, $sent); }
+	;
+
+pattern_definition: PATTERN id block						{ $$ = PatternDeclarationSemanticAction($2, $3); }
+	;
+
+instrument: INSTRUMENT STRING SEMICOLON						{ $$ = InstrumentSemanticAction($2); }
+	;
+
+sentences: sentence sentences								{ $$ = SentenceListSemanticAction($1, $2); }
+	| %empty												{ $$ = NULL; }
+	;
+
+sentence: pattern_sentence									{ $$ = PatternSentenceSemanticAction($1); }
+	| tempo													{ $$ = TempoSentenceSemanticAction($1); }
+	| key													{ $$ = KeySentenceSemanticAction($1); }
+	;
+
+pattern_sentence: inline_pattern optional_wait SEMICOLON	{ $$ = InlinePSSemanticAction($1, $2); }
+	| block wait_after_block								{ $$ = BlockPSSemanticAction($1, $2); }
+	| repeat												{ $$ = RepeatPSSemanticAction($1); }
+	| step wait_after_block									{ $$ = StepPSSemanticAction($1, $2); }
+	;
+
+pattern: inline_pattern										{ $$ = PatternSemanticAction($1); }
+	| block													{ $$ = BlockPatternSemanticAction($1); }
+	;
+
+optional_wait: duration										{ $$ = WaitSemanticAction($1); }
+	| %empty												{ $$ = MissingWaitSemanticAction(); }
+	;
+
+wait_after_block: duration SEMICOLON						{ $$ = WaitSemanticAction($1); }
+	| %empty												{ $$ = MissingWaitSemanticAction(); }
+	;
+
+duration: expression										{ $$ = DurationSemanticAction($1); }
+	;
+
+inline_pattern: note										{ $$ = NotePatternSemanticAction($1); }
+	| rest													{ $$ = RestPatternSemanticAction($1); }
+	| chord													{ $$ = ChordPatternSemanticAction($1); }
+	| strum													{ $$ = StrumPatternSemanticAction($1); }
+	| arpeggio												{ $$ = ArpeggioPatternSemanticAction($1); }
+	| degree												{ $$ = DegreePatternSemanticAction($1); }
+	| id													{ $$ = IDPatternSemanticAction($1); }
+	;
+
+note: note_and_octave duration								{ $$ = NoteSemanticAction($1, $2); }
+	;
+
+note_and_octave: note_id INTEGER							{ $$ = NoteOctaveSemanticAction($1, $2); }
+	;
+
+rest: REST duration											{ $$ = RestSemanticAction($2); }
+	;
+
+repeat: REPEAT INTEGER pattern_sentence						{ $$ = RepeatSemanticAction($2, $3); }
+	;
+
+step: STEP duration step_block								{ $$ = StepSemanticAction($2, $3); }
+	;
+
+block: OPEN_BRACE sentences CLOSE_BRACE						{ $$ = BlockSemanticAction($2); }
+	;
+
+step_block: OPEN_BRACE no_wait_sentences CLOSE_BRACE		{ $$ = StepBlockSemanticAction($2); }
+	;
+
+no_wait_sentences: no_wait_sentence no_wait_sentences		{ $$ = NoWaitSentencesSemanticAction($1, $2); }
+	| %empty												{ $$ = NULL; }
+	;
+
+no_wait_sentence: inline_pattern SEMICOLON					{ $$ = InlineNoWaitSemanticAction($1); }
+	| block													{ $$ = BlockNoWaitSemanticAction($1); }
+	;
+
+chord: pattern_chord										{ $$ = ChordOfPatternsSemanticAction($1); }
+	| note_chord											{ $$ = ChordOfNotesSemanticAction($1); }
+	;
+
+pattern_chord: OPEN_SQUARE comma_separated_patterns CLOSE_SQUARE	{ $$ = PatternChordSemanticAction($2); }
+	;
+
+note_chord: OPEN_SQUARE comma_separated_notes CLOSE_SQUARE	{ $$ = NoteChordSemanticAction($2); }
+	;
+
+comma_separated_patterns: pattern							{ $$ = CSPSemanticAction($1, NULL); }
+	| pattern COMMA comma_separated_patterns				{ $$ = CSPSemanticAction($1, $3); }
+	;
+
+comma_separated_notes: note_and_octave						{ $$ = CSNSemanticAction($1, NULL); }
+	| note_and_octave COMMA comma_separated_notes			{ $$ = CSNSemanticAction($1, NULL); }
+	;
+
+strum: STRUM OPEN_PARENTHESIS comma_separated_notes[notes] COMMA duration[total] COMMA duration[interval] CLOSE_PARENTHESIS		{ $$ = StrumSemanticAction($notes, $total, $interval); }
+	;
+
+arpeggio: ARPEGGIO OPEN_PARENTHESIS comma_separated_notes[notes] COMMA duration[total] CLOSE_PARENTHESIS	{ $$ = ArpeggioSemanticAction($notes, $total); }
+	;
+
+degree: DEGREE OPEN_PARENTHESIS INTEGER COMMA INTEGER CLOSE_PARENTHESIS duration	{ $$ = DegreeSemanticAction($3, $5, $7); }
+	;
 
 expression: expression[left] ADD expression[right]			{ $$ = ArithmeticExpressionSemanticAction($left, $right, ADDITION); }
 	| expression[left] DIV expression[right]				{ $$ = ArithmeticExpressionSemanticAction($left, $right, DIVISION); }

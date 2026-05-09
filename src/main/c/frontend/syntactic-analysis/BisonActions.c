@@ -279,11 +279,10 @@ PatternSentence * BlockPSSemanticAction(Block * block, Wait * wait) {
 	return ps;
 }
 
-PatternSentence * RepeatPSSemanticAction(Repeat * repeat, Wait * wait) {
+PatternSentence * RepeatPSSemanticAction(Repeat * repeat) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	PatternSentence * ps = calloc(1, sizeof(PatternSentence));
 	ps->repeat = repeat;
-	ps->wait = wait;
 	ps->type = REPEAT;
 	return ps;
 }
@@ -318,6 +317,15 @@ Wait * WaitSemanticAction(Duration * duration) {
 	Wait * wait = calloc(1, sizeof(Wait));
 	wait->duration = duration;
 	return wait;
+}
+
+Wait * MissingWaitSemanticAction() {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Number * zero = IntegerSemanticAction(0);
+	Factor * factor = ConstantFactorSemanticAction(zero);
+	Expression * expression = FactorExpressionSemanticAction(factor);
+	Duration * duration = DurationSemanticAction(expression);
+	return WaitSemanticAction(duration);
 }
 
 InlinePattern * NotePatternSemanticAction(Note * note) {
