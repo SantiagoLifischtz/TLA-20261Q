@@ -174,10 +174,6 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 %token <integer> MODE
 %token <float_value> DURATION_BUILTIN
 
-/** Lexer-only keywords */
-%token <token> WHOLE HALF QUARTER EIGHT SIXTEENTH THIRTYSECOND SIXTYFOURTH
-%token <token> MAJOR DORIAN PHRYGIAN LYDIAN MIXOLYDIAN MINOR LOCRIAN
-
 /** Non-terminals. */
 %type <number> number
 %type <expression> expression
