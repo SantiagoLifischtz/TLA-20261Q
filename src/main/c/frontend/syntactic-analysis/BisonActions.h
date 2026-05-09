@@ -51,7 +51,6 @@ PatternSentence * StepPSSemanticAction(Step * step, Wait * wait);
 Pattern * PatternSemanticAction(InlinePattern * inlinePattern);
 Pattern * BlockPatternSemanticAction(Block * block);
 Wait * WaitSemanticAction(Duration * duration);
-Wait * MissingWaitSemanticAction();
 InlinePattern * NotePatternSemanticAction(Note * note);
 InlinePattern * RestPatternSemanticAction(Rest * rest);
 InlinePattern * ChordPatternSemanticAction(Chord * chord);
