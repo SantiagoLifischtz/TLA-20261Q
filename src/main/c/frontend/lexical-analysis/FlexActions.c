@@ -33,6 +33,7 @@ ModuleDestructor initializeFlexActionsModule(LexicalAnalyzer * lexicalAnalyzer) 
 /* PRIVATE FUNCTIONS */
 
 static void _logTokenAction(const char * actionName, Token * token);
+static int _noteSemitone(const char * note);
 
 /**
  * Logs a lexical-analyzer action over a token in DEBUGGING level.
