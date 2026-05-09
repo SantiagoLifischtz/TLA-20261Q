@@ -1,5 +1,5 @@
-#include "backend/code-generation/Generator.h"
-#include "backend/domain-specific/Calculator.h"
+// #include "backend/code-generation/Generator.h" // TODO commented for Stage: 2
+// #include "backend/domain-specific/Calculator.h" // TODO commented for Stage: 2
 #include "frontend/Frontend.h"
 #include "frontend/lexical-analysis/FlexActions.h"
 #include "frontend/syntactic-analysis/BisonActions.h"
@@ -36,16 +36,20 @@ const int main(const int length, const char ** arguments) {
 	if (compilationStatus == SUCCEEDED) {
 		// ----------------------------------------------------------------------------------------
 		// Beginning of the Backend... ------------------------------------------------------------
-		logDebugging(logger, "Computing expression value...");
-		ComputationResult computationResult = executeCalculator(&compilerState);
-		if (computationResult.succeeded) {
-			compilerState.value = computationResult.value;
-			executeGenerator(&compilerState);
-		}
-		else {
-			logError(logger, "The computation phase rejects the input program.");
-			compilationStatus = FAILED;
-		}
+
+		// TODO commented for Stage: 2
+
+		// logDebugging(logger, "Computing expression value...");
+		// ComputationResult computationResult = executeCalculator(&compilerState);
+		// if (computationResult.succeeded) {
+		// 	compilerState.value = computationResult.value;
+		// 	executeGenerator(&compilerState);
+		// }
+		// else {
+		// 	logError(logger, "The computation phase rejects the input program.");
+		// 	compilationStatus = FAILED;
+		// }
+
 		// ...end of the Backend. -----------------------------------------------------------------
 		// ----------------------------------------------------------------------------------------
 	}
