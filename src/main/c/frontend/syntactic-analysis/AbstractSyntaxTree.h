@@ -133,7 +133,7 @@ enum ChordType {
 
 enum PlayBlockType {
 	TRACKS,
-	ALL
+	PLAY_ALL
 };
 
 struct Number {
@@ -185,7 +185,7 @@ struct Definition {
 
 struct Play {
 	TrackIDs * tracks;
-	PlayBlockType type; // Si esta en all, tracks es ignorado.
+	PlayBlockType type; // Si esta en PLAY_ALL, tracks es ignorado.
 };
 
 struct ID {
