@@ -173,6 +173,43 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 %type <expression> expression
 %type <factor> factor
 %type <program> program
+%type <definitions> definitions
+%type <definition> definition
+%type <play> play
+%type <trackIDs> trackIDs
+%type <configSentence> configSentence
+%type <tempo> tempo
+%type <key> key
+%type <mode> mode
+%type <noteID> noteID
+%type <track> track
+%type <instrument> instrument
+%type <sentences> sentences
+%type <sentence> sentence
+%type <patternDefinition> patternDefinition
+%type <patternSentence> patternSentence
+%type <pattern> pattern
+%type <wait> wait
+%type <inlinePattern> inlinePattern
+%type <note> note
+%type <noteAndOctave> noteAndOctave
+%type <duration> duration
+%type <rest> rest
+%type <repeat> repeat
+%type <step> step
+%type <stepBlock> stepBlock
+%type <noWaitSentences> noWaitSentences
+%type <noWaitSentence> noWaitSentence
+%type <block> block
+%type <chord> chord
+%type <patternChord> patternChord
+%type <commaSeparatedPatterns> commaSeparatedPatterns
+%type <noteChord> noteChord
+%type <commaSeparatedNotes> commaSeparatedNotes
+%type <strum> strum
+%type <arpeggio> arpeggio
+%type <degree> degree
+%type <id> id
 
 /**
  * Precedence and associativity.
@@ -184,8 +221,6 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 %left MUL DIV
 
 %%
-
-// IMPORTANT: To use λ in the following grammar, use the %empty symbol.
 
 program: expression 										{ $$ = ExpressionProgramSemanticAction($1); }
 	;
