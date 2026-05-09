@@ -15,6 +15,8 @@
  */
 
 extern CompilationStatus KeywordLexemeAction(TokenLabel label);
+extern CompilationStatus DurationLexemeAction(TokenLabel label);
+extern CompilationStatus ModeLexemeAction(TokenLabel label);
 extern CompilationStatus LiteralFloatLexemeAction();
 extern CompilationStatus LiteralIntegerLexemeAction();
 extern CompilationStatus LiteralNoteIdLexemeAction();
@@ -62,22 +64,22 @@ digit               [0-9]
 "arpeggio"                          { return KeywordLexemeAction(TOK_ARPEGGIO); }
 "degree"                            { return KeywordLexemeAction(TOK_DEGREE); }
 
-"dot"                               { return KeywordLexemeAction(TOK_DOTTED); }
-"whole"|"w"                         { return KeywordLexemeAction(TOK_WHOLE); }
-"half"|"h"                          { return KeywordLexemeAction(TOK_HALF); }
-"quarter"|"q"                       { return KeywordLexemeAction(TOK_QUARTER); }
-"eighth"|"e"                        { return KeywordLexemeAction(TOK_EIGHT); }
-"sixteenth"|"s"                     { return KeywordLexemeAction(TOK_SIXTEENTH); }
-"thirtysecond"|"ths"                { return KeywordLexemeAction(TOK_THIRTYSECOND); }
-"sixtyfourth"|"sxf"                 { return KeywordLexemeAction(TOK_SIXTYFOURTH); }
+"dot"                               { return DurationLexemeAction(TOK_DOTTED); }
+"whole"|"w"                         { return DurationLexemeAction(TOK_WHOLE); }
+"half"|"h"                          { return DurationLexemeAction(TOK_HALF); }
+"quarter"|"q"                       { return DurationLexemeAction(TOK_QUARTER); }
+"eighth"|"e"                        { return DurationLexemeAction(TOK_EIGHT); }
+"sixteenth"|"s"                     { return DurationLexemeAction(TOK_SIXTEENTH); }
+"thirtysecond"|"ths"                { return DurationLexemeAction(TOK_THIRTYSECOND); }
+"sixtyfourth"|"sxf"                 { return DurationLexemeAction(TOK_SIXTYFOURTH); }
 
-"major"|"ionian"                    { return KeywordLexemeAction(TOK_MAJOR); }
-"dorian"                            { return KeywordLexemeAction(TOK_DORIAN); }
-"phrygian"                          { return KeywordLexemeAction(TOK_PHRYGIAN); }
-"lydian"                            { return KeywordLexemeAction(TOK_LYDIAN); }
-"mixolydian"                        { return KeywordLexemeAction(TOK_MIXOLYDIAN); }
-"minor"|"aeolian"                   { return KeywordLexemeAction(TOK_MINOR); }
-"locrian"                           { return KeywordLexemeAction(TOK_LOCRIAN); }
+"major"|"ionian"                    { return ModeLexemeAction(TOK_MAJOR); }
+"dorian"                            { return ModeLexemeAction(TOK_DORIAN); }
+"phrygian"                          { return ModeLexemeAction(TOK_PHRYGIAN); }
+"lydian"                            { return ModeLexemeAction(TOK_LYDIAN); }
+"mixolydian"                        { return ModeLexemeAction(TOK_MIXOLYDIAN); }
+"minor"|"aeolian"                   { return ModeLexemeAction(TOK_MINOR); }
+"locrian"                           { return ModeLexemeAction(TOK_LOCRIAN); }
 
 "all"                               { return KeywordLexemeAction(TOK_ALL); }
 

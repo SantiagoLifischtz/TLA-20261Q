@@ -34,6 +34,9 @@ ModuleDestructor initializeFlexActionsModule(LexicalAnalyzer * lexicalAnalyzer) 
 
 static void _logTokenAction(const char * actionName, Token * token);
 static int _noteSemitone(const char * note);
+static float _durationValue(TokenLabel label);
+static int _modeValue(TokenLabel label);
+
 
 /**
  * Logs a lexical-analyzer action over a token in DEBUGGING level.
@@ -66,10 +69,84 @@ static int _noteSemitone(const char * note) {
 	return -1;
 }
 
+static float _durationValue(TokenLabel label) {
+	switch (label) {
+		case TOK_WHOLE:
+			return 1.0;
+
+		case TOK_HALF:
+			return 0.5;
+
+		case TOK_QUARTER:
+			return 0.25;
+
+		case TOK_EIGHT:
+			return 0.125;
+
+		case TOK_SIXTEENTH:
+			return 0.0625;
+
+		case TOK_THIRTYSECOND:
+			return 0.03125;
+
+		case TOK_SIXTYFOURTH:
+			return 0.015625;
+
+		default:
+			return -1.0;
+	}
+}
+
+static int _modeValue(TokenLabel label) {
+	switch (label) {
+		case TOK_MAJOR:
+			return 0;
+		
+		case TOK_DORIAN:
+			return 1;
+
+		case TOK_PHRYGIAN:
+			return 2;
+
+		case TOK_LYDIAN:
+			return 3;
+
+		case TOK_MIXOLYDIAN:
+			return 4;
+
+		case TOK_MINOR:
+			return 5;
+
+		case TOK_LOCRIAN:
+			return 6;
+
+		default:
+			return -1;
+	}
+}
+
 /* PUBLIC FUNCTIONS */
 
 CompilationStatus KeywordLexemeAction(TokenLabel label) {
 	Token * token = createToken(_lexicalAnalyzer, label);
+	_logTokenAction(__FUNCTION__, token);
+	CompilationStatus status = pushToken(_lexicalAnalyzer, token);
+	destroyToken(token);
+	return status;
+}
+
+CompilationStatus DurationLexemeAction(TokenLabel label) {
+	Token * token = createToken(_lexicalAnalyzer, TOK_DURATION_BUILTIN);
+	token->semanticValue->float_value = _durationValue(label);
+	_logTokenAction(__FUNCTION__, token);
+	CompilationStatus status = pushToken(_lexicalAnalyzer, token);
+	destroyToken(token);
+	return status;
+}
+
+CompilationStatus ModeLexemeAction(TokenLabel label) {
+	Token * token = createToken(_lexicalAnalyzer, TOK_MODE);
+	token->semanticValue->integer = _modeValue(label);
 	_logTokenAction(__FUNCTION__, token);
 	CompilationStatus status = pushToken(_lexicalAnalyzer, token);
 	destroyToken(token);
