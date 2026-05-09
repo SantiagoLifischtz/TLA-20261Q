@@ -128,6 +128,10 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 %destructor { destroyDegree($$); } <degree>
 %destructor { destroyID($$); } <id>
 
+/** Lexer-only keywords */
+%token <token> WHOLE HALF QUARTER EIGHT SIXTEENTH THIRTYSECOND SIXTYFOURTH
+%token <token> MAJOR DORIAN PHRYGIAN LYDIAN MIXOLYDIAN MINOR LOCRIAN
+
 /* Extra. */
 %token <token> IGNORED
 %token <token> UNKNOWN
