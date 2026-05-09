@@ -382,7 +382,14 @@ void destroyNoWaitSentences(NoWaitSentences * noWaitSentences) {
 void destroyNoWaitSentence(NoWaitSentence * noWaitSentence) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (noWaitSentence != NULL) {
-		destroyPattern(noWaitSentence->pattern);
+		switch (noWaitSentence->type) {
+			case INLINE:
+				destroyInlinePattern(noWaitSentence->inlinePattern);
+				break;
+			case BLOCK:
+				destroyBlock(noWaitSentence->block);
+				break;
+		}
 		free(noWaitSentence);
 	}
 }

@@ -428,3 +428,106 @@ Block * BlockSemanticAction(Sentences * sentences) {
 	block->sentences = sentences;
 	return block;
 }
+
+StepBlock * StepBlockSemanticAction(NoWaitSentences * nws) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	StepBlock * stepBlock = calloc(1, sizeof(StepBlock));
+	stepBlock->sentences = nws;
+	return stepBlock;
+}
+
+NoWaitSentences * NoWaitSentencesSemanticAction(NoWaitSentence * sentence, NoWaitSentences * otherSentences) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	NoWaitSentences * nws = calloc(1, sizeof(NoWaitSentences));
+	nws->sentence = sentence;
+	nws->next = otherSentences;
+	return nws;
+}
+
+NoWaitSentence * InlineNoWaitSemanticAction(InlinePattern * pattern) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	NoWaitSentence * sentence = calloc(1, sizeof(NoWaitSentence));
+	sentence->inlinePattern = pattern;
+	sentence->type = INLINE;
+	return sentence;
+}
+
+NoWaitSentence * BlockNoWaitSemanticAction(Block * block) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	NoWaitSentence * sentence = calloc(1, sizeof(NoWaitSentence));
+	sentence->block = block;
+	sentence->type = BLOCK;
+	return sentence;
+}
+
+Chord * ChordOfPatternsSemanticAction(PatternChord * pc) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Chord * chord = calloc(1, sizeof(Chord));
+	chord->patternChord = pc;
+	chord->type = PATTERN_CHORD;
+	return chord;
+}
+
+Chord * ChordOfNotesSemanticAction(NoteChord * nc) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Chord * chord = calloc(1, sizeof(Chord));
+	chord->noteChord = nc;
+	chord->type = NOTE_CHORD;
+	return chord;
+}
+
+PatternChord * PatternChordSemanticAction(CommaSeparatedPatterns * csp) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	PatternChord * patternChord = calloc(1, sizeof(PatternChord));
+	patternChord->patterns = csp;
+	return patternChord;
+}
+
+NoteChord * NoteChordSemanticAction(CommaSeparatedNotes * csn) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	NoteChord * noteChord = calloc(1, sizeof(NoteChord));
+	noteChord->notes = csn;
+	return noteChord;
+}
+
+CommaSeparatedPatterns * CSPSemanticAction(Pattern * pattern, CommaSeparatedPatterns * otherPatterns) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	CommaSeparatedPatterns * csp = calloc(1, sizeof(CommaSeparatedPatterns));
+	csp->pattern = pattern;
+	csp->next = otherPatterns;
+	return csp;
+}
+
+CommaSeparatedNotes * CSNSemanticAction(NoteAndOctave * note, CommaSeparatedNotes * otherNotes) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	CommaSeparatedNotes * csn = calloc(1, sizeof(CommaSeparatedNotes));
+	csn->note = note;
+	csn->next = otherNotes;
+	return csn;
+}
+
+Strum * StrumSemanticAction(CommaSeparatedNotes * csn, Duration * total, Duration * interval) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Strum * strum = calloc(1, sizeof(Strum));
+	strum->notes = csn;
+	strum->totalDuration = total;
+	strum->interval = interval;
+	return strum;
+}
+
+Arpeggio * ArpeggioSemanticAction(CommaSeparatedNotes * csn, Duration * total) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Arpeggio * arpeggio = calloc(1, sizeof(Arpeggio));
+	arpeggio->notes = csn;
+	arpeggio->totalDuration = total;
+	return arpeggio;
+}
+
+Degree * DegreeSemanticAction(const int number, const int octave, Duration * duration) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Degree * degree = calloc(1, sizeof(Degree));
+	degree->number = number;
+	degree->octave = octave;
+	degree->duration = duration;
+	return degree;
+}

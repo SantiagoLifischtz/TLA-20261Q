@@ -331,7 +331,11 @@ struct NoWaitSentences {
 };
 
 struct NoWaitSentence {
-	Pattern * pattern;
+	union {
+		InlinePattern * inlinePattern;
+		Block * block;
+	};
+	PatternType type;
 };
 
 struct Chord {
