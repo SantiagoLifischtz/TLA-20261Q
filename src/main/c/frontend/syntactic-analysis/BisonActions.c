@@ -36,11 +36,6 @@ static void _logSyntacticAnalyzerAction(const char * functionName) {
 
 /* PUBLIC FUNCTIONS */
 
-/* TEMP
-_logSyntacticAnalyzerAction(__FUNCTION__);
-	= calloc(1, sizeof());
-*/
-
 Number * IntegerSemanticAction(const int value) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Number * number = calloc(1, sizeof(Number));

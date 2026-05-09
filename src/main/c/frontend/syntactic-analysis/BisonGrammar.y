@@ -355,7 +355,7 @@ comma_separated_patterns: pattern							{ $$ = CSPSemanticAction($1, NULL); }
 	;
 
 comma_separated_notes: note_and_octave						{ $$ = CSNSemanticAction($1, NULL); }
-	| note_and_octave COMMA comma_separated_notes			{ $$ = CSNSemanticAction($1, NULL); }
+	| note_and_octave COMMA comma_separated_notes			{ $$ = CSNSemanticAction($1, $3); }
 	;
 
 strum: STRUM OPEN_PARENTHESIS comma_separated_notes[notes] COMMA duration[total] COMMA duration[interval] CLOSE_PARENTHESIS		{ $$ = StrumSemanticAction($notes, $total, $interval); }
