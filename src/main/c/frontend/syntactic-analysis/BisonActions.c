@@ -133,7 +133,7 @@ Definition * PatternDefinitionSemanticAction(PatternDefinition * patternDef) {
 	return definition;
 }
 
-PatternDefinition * PatternDeclarationSemanticAction(ID * id, Block * block) {
+PatternDefinition * PatternDeclarationSemanticAction(Identifier * id, Block * block) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	PatternDefinition * def = calloc(1, sizeof(PatternDefinition));
 	def->id = id;
@@ -156,7 +156,7 @@ Play * PlayAllSemanticAction() {
 	return play;
 }
 
-TrackIDs * TrackListSemanticAction(ID * newID, TrackIDs * otherIDs) {
+TrackIDs * TrackListSemanticAction(Identifier * newID, TrackIDs * otherIDs) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	TrackIDs * tracks = calloc(1, sizeof(TrackIDs));
 	tracks->id = newID;
@@ -209,7 +209,7 @@ Mode * ModeSemanticAction(const char value) {
 	return mode;
 }
 
-Track * TrackSemanticAction(ID * id, Instrument * instrument, Sentences * sentences) {
+Track * TrackSemanticAction(Identifier * id, Instrument * instrument, Sentences * sentences) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Track * track = calloc(1, sizeof(Track));
 	track->id = id;
@@ -357,15 +357,7 @@ InlinePattern * ArpeggioPatternSemanticAction(Arpeggio * arp) {
 	return ip;
 }
 
-InlinePattern * DegreePatternSemanticAction(Degree * degree) {
-	_logSyntacticAnalyzerAction(__FUNCTION__);
-	InlinePattern * ip = calloc(1, sizeof(InlinePattern));
-	ip->degree = degree;
-	ip->type = DEGREE;
-	return ip;
-}
-
-InlinePattern * IDPatternSemanticAction(ID * id) {
+InlinePattern * IDPatternSemanticAction(Identifier * id) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	InlinePattern * ip = calloc(1, sizeof(InlinePattern));
 	ip->id = id;
@@ -386,6 +378,15 @@ NoteAndOctave * NoteOctaveSemanticAction(NoteID * noteID, const int octave) {
 	NoteAndOctave * n = calloc(1, sizeof(NoteAndOctave));
 	n->note = noteID;
 	n->octave = octave;
+	n->type = ABSOLUTE;
+	return n;
+}
+
+NoteAndOctave * DegreeNoteSemanticAction(Degree * degree) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	NoteAndOctave * n = calloc(1, sizeof(NoteAndOctave));
+	n->degree = degree;
+	n->type = FROM_DEGREE;
 	return n;
 }
 
@@ -529,9 +530,9 @@ Degree * DegreeSemanticAction(const int number, const int octave, Duration * dur
 	return degree;
 }
 
-ID * IdentifierSemanticAction(const char *name) {
+Identifier * IdentifierSemanticAction(const char *name) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	ID * id = calloc(1, sizeof(ID));
+	Identifier * id = calloc(1, sizeof(Identifier));
 	int length = strlen(name);
 	id->name = malloc((length+1)*sizeof(char));
 	strcpy(id->name, name);

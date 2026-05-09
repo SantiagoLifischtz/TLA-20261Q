@@ -25,11 +25,12 @@ typedef enum PatternType PatternType;
 typedef enum InlinePatternType InlinePatternType;
 typedef enum ChordType ChordType;
 typedef enum PlayBlockType PlayBlockType;
+typedef enum NoteType NoteType;
 
 typedef struct Number Number;
 typedef struct Expression Expression;
 typedef struct Factor Factor;
-typedef struct ID ID;
+typedef struct Identifier Identifier;
 
 typedef struct Program Program;
 typedef struct Definitions Definitions;
@@ -117,7 +118,6 @@ enum InlinePatternType {
 	CHORD,
 	STRUM,
 	ARPEGGIO,
-	DEGREE,
 	PATTERN_ID
 };
 
@@ -134,6 +134,11 @@ enum ChordType {
 enum PlayBlockType {
 	TRACKS,
 	PLAY_ALL
+};
+
+enum NoteType {
+	ABSOLUTE,
+	FROM_DEGREE
 };
 
 struct Number {
@@ -188,12 +193,12 @@ struct Play {
 	PlayBlockType type; // Si esta en PLAY_ALL, tracks es ignorado.
 };
 
-struct ID {
+struct Identifier {
 	char * name;
 };
 
 struct TrackIDs {
-	ID * id;
+	Identifier * id;
 	TrackIDs * next;
 };
 
@@ -223,7 +228,7 @@ struct NoteID {
 };
 
 struct Track {
-	ID * id;
+	Identifier * id;
 	Instrument * instrument;
 	Sentences * sentences;
 };
@@ -247,7 +252,7 @@ struct Sentence {
 };
 
 struct PatternDefinition {
-	ID * id;
+	Identifier * id;
 	Block * block;
 };
 
@@ -290,7 +295,7 @@ struct InlinePattern {
 		Strum * strum;
 		Arpeggio * arpeggio;
 		Degree * degree;
-		ID * id;
+		Identifier * id;
 	};
 	InlinePatternType type;
 };
@@ -301,8 +306,14 @@ struct Note {
 };
 
 struct NoteAndOctave {
-	NoteID * note;
-	char octave; // midi value = note->value + 12 * octave
+	union {
+		struct {
+			NoteID * note;
+			char octave; // midi value = note->value + 12 * octave
+		};
+		Degree * degree;
+	};
+	NoteType type;
 };
 
 struct Duration {
@@ -394,7 +405,7 @@ void destroyProgram(Program * program);
 void destroyDefinitions(Definitions * definitions);
 void destroyDefinition(Definition * definition);
 void destroyPlay(Play * play);
-void destroyID(ID * id);
+void destroyID(Identifier * id);
 void destroyTrackIDs(TrackIDs * trackIDs);
 void destroyConfigSentence(ConfigSentence * configSentence);
 void destroyTempo(Tempo * tempo);
