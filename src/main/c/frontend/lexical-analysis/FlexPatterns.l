@@ -64,7 +64,7 @@ digit               [0-9]
 "arpeggio"                          { return KeywordLexemeAction(TOK_ARPEGGIO); }
 "degree"                            { return KeywordLexemeAction(TOK_DEGREE); }
 
-"dot"                               { return DurationLexemeAction(TOK_DOTTED); }
+"dot"                               { return DurationLexemeAction(DOT); }
 "whole"|"w"                         { return DurationLexemeAction(TOK_WHOLE); }
 "half"|"h"                          { return DurationLexemeAction(TOK_HALF); }
 "quarter"|"q"                       { return DurationLexemeAction(TOK_QUARTER); }
@@ -81,7 +81,7 @@ digit               [0-9]
 "minor"|"aeolian"                   { return ModeLexemeAction(TOK_MINOR); }
 "locrian"                           { return ModeLexemeAction(TOK_LOCRIAN); }
 
-"all"                               { return KeywordLexemeAction(TOK_ALL); }
+"all"                               { return KeywordLexemeAction(PLAY_ALL); }
 
 {digit}+"."{digit}+                 { return LiteralFloatLexemeAction(); }
 {digit}+                            { return LiteralIntegerLexemeAction(); }
