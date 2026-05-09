@@ -164,7 +164,7 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 
 %token <integer> NOTE_ID
 
-%token <token> DOTTED
+%token <token> DOT
 
 %token <integer> MODE
 %token <float_value> DURATION_BUILTIN
@@ -367,10 +367,11 @@ arpeggio: ARPEGGIO OPEN_PARENTHESIS comma_separated_notes[notes] COMMA duration[
 degree: DEGREE OPEN_PARENTHESIS INTEGER COMMA INTEGER CLOSE_PARENTHESIS duration	{ $$ = DegreeSemanticAction($3, $5, $7); }
 	;
 
-expression: expression[left] ADD expression[right]			{ $$ = ArithmeticExpressionSemanticAction($left, $right, ADDITION); }
-	| expression[left] DIV expression[right]				{ $$ = ArithmeticExpressionSemanticAction($left, $right, DIVISION); }
-	| expression[left] MUL expression[right]				{ $$ = ArithmeticExpressionSemanticAction($left, $right, MULTIPLICATION); }
-	| expression[left] SUB expression[right]				{ $$ = ArithmeticExpressionSemanticAction($left, $right, SUBTRACTION); }
+expression: expression[left] ADD expression[right]			{ $$ = BinaryOperationSemanticAction($left, $right, ADDITION); }
+	| expression[left] DIV expression[right]				{ $$ = BinaryOperationSemanticAction($left, $right, DIVISION); }
+	| expression[left] MUL expression[right]				{ $$ = BinaryOperationSemanticAction($left, $right, MULTIPLICATION); }
+	| expression[left] SUB expression[right]				{ $$ = BinaryOperationSemanticAction($left, $right, SUBTRACTION); }
+	| expression DOT										{ $$ = UnaryOperationSemanticAction($1, DOT); }
 	| factor												{ $$ = FactorExpressionSemanticAction($1); }
 	;
 
@@ -378,7 +379,9 @@ factor: OPEN_PARENTHESIS expression CLOSE_PARENTHESIS 		{ $$ = ExpressionFactorS
 	| number 												{ $$ = ConstantFactorSemanticAction($1); }
 	;
 
-number: INTEGER												{ $$ = IntegerConstantSemanticAction($1); }
+number: INTEGER												{ $$ = IntegerSemanticAction($1); }
+	| FLOAT													{ $$ = FloatSemanticAction($1); }
+	| DURATION_BUILTIN										{ $$ = FloatSemanticAction($1); }
 	;
 
 %%
