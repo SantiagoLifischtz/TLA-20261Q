@@ -317,15 +317,6 @@ Wait * WaitSemanticAction(Duration * duration) {
 	return wait;
 }
 
-Wait * MissingWaitSemanticAction() {
-	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Number * zero = IntegerSemanticAction(0);
-	Factor * factor = ConstantFactorSemanticAction(zero);
-	Expression * expression = FactorExpressionSemanticAction(factor);
-	Duration * duration = DurationSemanticAction(expression);
-	return WaitSemanticAction(duration);
-}
-
 InlinePattern * NotePatternSemanticAction(Note * note) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	InlinePattern * ip = calloc(1, sizeof(InlinePattern));

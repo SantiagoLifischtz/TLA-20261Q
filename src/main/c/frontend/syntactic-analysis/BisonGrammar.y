@@ -296,11 +296,11 @@ pattern: inline_pattern										{ $$ = PatternSemanticAction($1); }
 	;
 
 optional_wait: duration										{ $$ = WaitSemanticAction($1); }
-	| %empty												{ $$ = MissingWaitSemanticAction(); }
+	| %empty												{ $$ = NULL; }
 	;
 
 wait_after_block: duration SEMICOLON						{ $$ = WaitSemanticAction($1); }
-	| %empty												{ $$ = MissingWaitSemanticAction(); }
+	| %empty												{ $$ = NULL; }
 	;
 
 duration: expression										{ $$ = DurationSemanticAction($1); }
