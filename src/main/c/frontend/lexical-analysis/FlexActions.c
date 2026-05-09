@@ -77,7 +77,7 @@ CompilationStatus KeywordLexemeAction(TokenLabel label) {
 
 CompilationStatus LiteralFloatLexemeAction() {
 	Token * token = createToken(_lexicalAnalyzer, TOK_FLOAT);
-	token->semanticValue->floatValue = atof(token->lexeme);
+	token->semanticValue->float_value = atof(token->lexeme);
 	_logTokenAction(__FUNCTION__, token);
 	CompilationStatus status = pushToken(_lexicalAnalyzer, token);
 	destroyToken(token);
