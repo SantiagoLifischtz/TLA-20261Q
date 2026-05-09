@@ -6,3 +6,4 @@ track piano {
         G4 q;
     }
 }
+play all;

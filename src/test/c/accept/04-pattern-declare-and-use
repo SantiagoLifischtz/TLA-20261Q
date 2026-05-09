@@ -8,3 +8,4 @@ track piano {
     motif;
     motif;
 }
+play all;

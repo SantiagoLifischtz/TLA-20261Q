@@ -2,3 +2,4 @@ track piano {
     instrument "Electric Piano 1";
     arpeggio(C4, E4, G4, B4, whole);
 }
+play all;

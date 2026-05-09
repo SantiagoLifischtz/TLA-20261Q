@@ -246,7 +246,7 @@ definition: config_sentence									{ $$ = ConfigDefinitionSemanticAction($1); }
 	;
 
 play: PLAY OPEN_BRACE track_ids[ids] SEMICOLON CLOSE_BRACE	{ $$ = PlayTracksSemanticAction($ids); }
-	| PLAY OPEN_BRACE PLAY_ALL SEMICOLON CLOSE_BRACE				{ $$ = PlayAllSemanticAction(); }
+	| PLAY PLAY_ALL SEMICOLON								{ $$ = PlayAllSemanticAction(); }
 	;
 
 track_ids: id												{ $$ = TrackListSemanticAction($1, NULL); }

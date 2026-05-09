@@ -1,5 +1,11 @@
-[
- C4,
- E4,
- G4
-] q;
+track piano {
+    instrument
+        "Acoustic Grand";
+    
+    [
+        C4,
+        E4,
+        G4
+    ] q;
+}
+play all;

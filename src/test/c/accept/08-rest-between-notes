@@ -5,3 +5,4 @@ track piano {
     G4 q;
     rest q;
 }
+play all;
