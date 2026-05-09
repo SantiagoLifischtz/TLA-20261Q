@@ -531,3 +531,12 @@ Degree * DegreeSemanticAction(const int number, const int octave, Duration * dur
 	degree->duration = duration;
 	return degree;
 }
+
+ID * IdentifierSemanticAction(const char *name) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	ID * id = calloc(1, sizeof(ID));
+	int length = strlen(name);
+	id->name = malloc((length+1)*sizeof(char));
+	strcpy(id->name, name);
+	return id;
+}

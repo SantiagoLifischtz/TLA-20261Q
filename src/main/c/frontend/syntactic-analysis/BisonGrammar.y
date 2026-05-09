@@ -227,10 +227,41 @@ program: definitions play 									{ $$ = ProgramSemanticAction($1, $2); }
 	;
 
 definitions: definition definitions							{ $$ = DefinitionListSemanticAction($1, $2); }
-	| %empty												{ $$ = NULL }
+	| %empty												{ $$ = NULL; }
 	;
 
-definition: config_sentence
+definition: config_sentence									{ $$ = ConfigDefinitionSemanticAction($1); }
+	| pattern_definition									{ $$ = PatternDefinitionSemanticAction($1); }
+	| track													{ $$ = TrackDefinitionSemanticAction($1); }
+	;
+
+play: PLAY OPEN_BRACE track_ids[ids] SEMICOLON CLOSE_BRACE	{ $$ = PlayTracksSemanticAction($ids); }
+	| PLAY OPEN_BRACE ALL SEMICOLON CLOSE_BRACE				{ $$ = PlayAllSemanticAction(); }
+	;
+
+track_ids: id												{ $$ = TrackListSemanticAction($1, NULL); }
+	| id COMMA track_ids									{ $$ = TrackListSemanticAction($1, $3); }
+	;
+
+id: ID														{ $$ = IdentifierSemanticAction($1); }
+	;
+
+config_sentence: tempo										{ $$ = GlobalTempoSemanticAction($1); }
+	| key													{ $$ = GlobalKeySemanticAction($1); }
+	;
+
+tempo: TEMPO expression SEMICOLON							{ $$ = TempoSemanticAction($2); }
+	;
+
+key: KEY note_id mode SEMICOLON								{ $$ = KeySemanticAction($2, $3); }
+	;
+
+note_id: NOTE_ID											{ $$ = NoteIDSemanticAction($1); }
+	;
+
+mode: MODE													{ $$ = ModeSemanticAction($1); }
+	;
+
 
 expression: expression[left] ADD expression[right]			{ $$ = ArithmeticExpressionSemanticAction($left, $right, ADDITION); }
 	| expression[left] DIV expression[right]				{ $$ = ArithmeticExpressionSemanticAction($left, $right, DIVISION); }
