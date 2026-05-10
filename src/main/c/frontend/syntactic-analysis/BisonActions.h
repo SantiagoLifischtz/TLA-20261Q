@@ -39,7 +39,7 @@ Key * KeySemanticAction(NoteID * noteID, Mode * mode);
 NoteID * NoteIDSemanticAction(const char value);
 Mode * ModeSemanticAction(const char value);
 Track * TrackSemanticAction(Identifier * id, Instrument * instrument, Sentences * sentences);
-Instrument * InstrumentSemanticAction(const char* name);
+Instrument * InstrumentSemanticAction(char* name);
 Sentences * SentenceListSemanticAction(Sentence * newSentence, Sentences * otherSentences);
 Sentence * PatternSentenceSemanticAction(PatternSentence * ps);
 Sentence * TempoSentenceSemanticAction(Tempo * tempo);
@@ -60,7 +60,7 @@ InlinePattern * IDPatternSemanticAction(Identifier * id);
 Note * NoteSemanticAction(NoteAndOctave * noteAndOctave, Duration * duration);
 NoteAndOctave * NoteOctaveSemanticAction(NoteID * noteID, const int octave);
 NoteAndOctave * DegreeNoteSemanticAction(Degree * degree);
-NoteAndOctave * NoteFromStringSemanticAction(const char* identifier);
+NoteAndOctave * NoteFromStringSemanticAction(char* identifier);
 Duration * DurationSemanticAction(Expression * exp);
 Rest * RestSemanticAction(Duration * duration);
 Repeat * RepeatSemanticAction(const int count, PatternSentence * ps);
@@ -79,6 +79,6 @@ CommaSeparatedNotes * CSNSemanticAction(NoteAndOctave * note, CommaSeparatedNote
 Strum * StrumSemanticAction(CommaSeparatedNotes * csn, Duration * total, Duration * interval);
 Arpeggio * ArpeggioSemanticAction(CommaSeparatedNotes * csn, Duration * total);
 Degree * DegreeSemanticAction(const int number, const int octave, Duration * duration);
-Identifier * IdentifierSemanticAction(const char *name);
+Identifier * IdentifierSemanticAction(char *name);
 
 #endif

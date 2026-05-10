@@ -218,12 +218,13 @@ Track * TrackSemanticAction(Identifier * id, Instrument * instrument, Sentences 
 	return track;
 }
 
-Instrument * InstrumentSemanticAction(const char* name) {
+Instrument * InstrumentSemanticAction(char* name) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Instrument * instrument = calloc(1, sizeof(Instrument));
 	int length = strlen(name);
 	instrument->name = malloc((length+1)*sizeof(char));
 	strcpy(instrument->name, name);
+	free(name);
 	return instrument;
 }
 
@@ -390,12 +391,13 @@ NoteAndOctave * DegreeNoteSemanticAction(Degree * degree) {
 	return n;
 }
 
-NoteAndOctave * NoteFromStringSemanticAction(const char* identifier) {
+NoteAndOctave * NoteFromStringSemanticAction(char* identifier) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	NoteAndOctave * n = calloc(1, sizeof(NoteAndOctave));
 	int length = strlen(identifier);
 	n->identifier = malloc((length+1)*sizeof(char));
 	n->type = FROM_STRING;
+	free(identifier);
 	return n;
 }
 
@@ -539,11 +541,12 @@ Degree * DegreeSemanticAction(const int number, const int octave, Duration * dur
 	return degree;
 }
 
-Identifier * IdentifierSemanticAction(const char *name) {
+Identifier * IdentifierSemanticAction(char *name) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Identifier * id = calloc(1, sizeof(Identifier));
 	int length = strlen(name);
 	id->name = malloc((length+1)*sizeof(char));
 	strcpy(id->name, name);
+	free(name);
 	return id;
 }

@@ -229,6 +229,7 @@ void yyerror(const YYLTYPE * location, const char * message) {}
  * @see https://www.gnu.org/software/bison/manual/html_node/Precedence.html
  */
 %left ADD SUB
+%left DOT
 %left MUL DIV
 
 %%
@@ -272,7 +273,7 @@ note_id: NOTE_ID											{ $$ = NoteIDSemanticAction($1); }
 mode: MODE													{ $$ = ModeSemanticAction($1); }
 	;
 
-track: TRACK id[id] OPEN_BRACE instrument[inst] sentences[sent] CLOSE_BRACE	{ $$ = TrackSemanticAction($id, $inst, $sent); }
+track: TRACK id[name] OPEN_BRACE instrument[inst] sentences[sent] CLOSE_BRACE	{ $$ = TrackSemanticAction($name, $inst, $sent); }
 	;
 
 pattern_definition: PATTERN id block						{ $$ = PatternDeclarationSemanticAction($2, $3); }
@@ -369,7 +370,7 @@ comma_separated_notes: note_and_octave						{ $$ = CSNSemanticAction($1, NULL); 
 	;
 
 strum: STRUM OPEN_PARENTHESIS comma_separated_notes[notes] COMMA duration[total] COMMA duration[interval] CLOSE_PARENTHESIS		{ $$ = StrumSemanticAction($notes, $total, $interval); }
-	;
+	;	
 
 arpeggio: ARPEGGIO OPEN_PARENTHESIS comma_separated_notes[notes] COMMA duration[total] CLOSE_PARENTHESIS	{ $$ = ArpeggioSemanticAction($notes, $total); }
 	;

@@ -356,7 +356,7 @@ void destroyRest(Rest * rest) {
 void destroyRepeat(Repeat * repeat) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (repeat != NULL) {
-		destroyPatternSentenceMembers(repeat->sentence);
+		destroyPatternSentence(repeat->sentence);
 		free(repeat);
 	}
 }

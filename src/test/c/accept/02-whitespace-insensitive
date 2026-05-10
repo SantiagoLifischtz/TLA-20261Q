@@ -1,5 +1,5 @@
 track        whitespace_test {
-    instrument      "Acoustic Grand"
+    instrument      "Acoustic Grand";
     tempo 120;C4 q;E4 e      ;
 }
 
