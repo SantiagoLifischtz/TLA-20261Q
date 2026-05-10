@@ -5,6 +5,5 @@ track t1 {
 }
 track t2 {
     instrument "Violin";
-    degree 5 h;
+    degree(5,4) h;
 }
-play { t1, t2 }

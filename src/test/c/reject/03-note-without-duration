@@ -1,3 +1,4 @@
 track piano {
     C4;
 }
+play all;

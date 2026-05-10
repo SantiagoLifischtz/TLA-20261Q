@@ -6,4 +6,4 @@ track piano {
     C4 q;
 }
 
-play { piano, violin }
+play { piano, violin; }

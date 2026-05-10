@@ -9,3 +9,5 @@ track voice1 {
  instrument “Violin”;
  motif;
 }
+
+play all;
