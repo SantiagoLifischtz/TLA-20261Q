@@ -34,8 +34,7 @@ ModuleDestructor initializeFlexActionsModule(LexicalAnalyzer * lexicalAnalyzer) 
 
 static void _logTokenAction(const char * actionName, Token * token);
 static int _noteSemitone(const char * note);
-static float _durationValue(TokenLabel label);
-static int _modeValue(TokenLabel label);
+static float _durationValue(BuiltinDuration id);
 
 
 /**
@@ -69,59 +68,31 @@ static int _noteSemitone(const char * note) {
 	return -1;
 }
 
-static float _durationValue(TokenLabel label) {
-	switch (label) {
-		case TOK_WHOLE:
+static float _durationValue(BuiltinDuration id) {
+	switch (id) {
+		case WHOLE:
 			return 1.0;
 
-		case TOK_HALF:
+		case HALF:
 			return 0.5;
 
-		case TOK_QUARTER:
+		case QUARTER:
 			return 0.25;
 
-		case TOK_EIGHT:
+		case EIGHTH:
 			return 0.125;
 
-		case TOK_SIXTEENTH:
+		case SIXTEENTH:
 			return 0.0625;
 
-		case TOK_THIRTYSECOND:
+		case THIRTYSECOND:
 			return 0.03125;
 
-		case TOK_SIXTYFOURTH:
+		case SIXTYFOURTH:
 			return 0.015625;
 
 		default:
 			return -1.0;
-	}
-}
-
-static int _modeValue(TokenLabel label) {
-	switch (label) {
-		case TOK_MAJOR:
-			return 0;
-		
-		case TOK_DORIAN:
-			return 1;
-
-		case TOK_PHRYGIAN:
-			return 2;
-
-		case TOK_LYDIAN:
-			return 3;
-
-		case TOK_MIXOLYDIAN:
-			return 4;
-
-		case TOK_MINOR:
-			return 5;
-
-		case TOK_LOCRIAN:
-			return 6;
-
-		default:
-			return -1;
 	}
 }
 
@@ -135,18 +106,18 @@ CompilationStatus KeywordLexemeAction(TokenLabel label) {
 	return status;
 }
 
-CompilationStatus DurationLexemeAction(TokenLabel label) {
+CompilationStatus DurationLexemeAction(BuiltinDuration durationId) {
 	Token * token = createToken(_lexicalAnalyzer, TOK_DURATION_BUILTIN);
-	token->semanticValue->float_value = _durationValue(label);
+	token->semanticValue->float_value = _durationValue(durationId);
 	_logTokenAction(__FUNCTION__, token);
 	CompilationStatus status = pushToken(_lexicalAnalyzer, token);
 	destroyToken(token);
 	return status;
 }
 
-CompilationStatus ModeLexemeAction(TokenLabel label) {
+CompilationStatus ModeLexemeAction(ModeName modeValue) {
 	Token * token = createToken(_lexicalAnalyzer, TOK_MODE);
-	token->semanticValue->integer = _modeValue(label);
+	token->semanticValue->integer = (int)modeValue;
 	_logTokenAction(__FUNCTION__, token);
 	CompilationStatus status = pushToken(_lexicalAnalyzer, token);
 	destroyToken(token);
