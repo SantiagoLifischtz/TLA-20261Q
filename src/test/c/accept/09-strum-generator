@@ -1,5 +1,5 @@
 track guitar {
     instrument "Acoustic Guitar (nylon)";
-    strum(C3, E3, G3, half, e);
+    strum(half, e, C3, E3, G3);
 }
 play all;

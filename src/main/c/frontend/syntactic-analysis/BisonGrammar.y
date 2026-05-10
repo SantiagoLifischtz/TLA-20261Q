@@ -369,10 +369,10 @@ comma_separated_notes: note_and_octave						{ $$ = CSNSemanticAction($1, NULL); 
 	| note_and_octave COMMA comma_separated_notes			{ $$ = CSNSemanticAction($1, $3); }
 	;
 
-strum: STRUM OPEN_PARENTHESIS comma_separated_notes[notes] COMMA duration[total] COMMA duration[interval] CLOSE_PARENTHESIS		{ $$ = StrumSemanticAction($notes, $total, $interval); }
+strum: STRUM OPEN_PARENTHESIS duration[total] COMMA duration[interval] COMMA comma_separated_notes[notes] CLOSE_PARENTHESIS		{ $$ = StrumSemanticAction($notes, $total, $interval); }
 	;	
 
-arpeggio: ARPEGGIO OPEN_PARENTHESIS comma_separated_notes[notes] COMMA duration[total] CLOSE_PARENTHESIS	{ $$ = ArpeggioSemanticAction($notes, $total); }
+arpeggio: ARPEGGIO OPEN_PARENTHESIS duration[total] COMMA comma_separated_notes[notes] CLOSE_PARENTHESIS	{ $$ = ArpeggioSemanticAction($notes, $total); }
 	;
 
 degree: DEGREE OPEN_PARENTHESIS INTEGER COMMA INTEGER CLOSE_PARENTHESIS duration	{ $$ = DegreeSemanticAction($3, $5, $7); }
