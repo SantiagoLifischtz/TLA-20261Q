@@ -42,6 +42,8 @@ digit               [0-9]
 
 %%
 
+"//".*                              { return IgnoredLexemeAction(); }
+
 "pattern"                           { return KeywordLexemeAction(TOK_PATTERN); }
 "repeat"                            { return KeywordLexemeAction(TOK_REPEAT); }
 "step"                              { return KeywordLexemeAction(TOK_STEP); }
@@ -96,8 +98,6 @@ digit               [0-9]
 ";"									{ return StructureOperatorLexemeAction(TOK_SEMICOLON); }
 
 [a-z_H-Z]|[a-z_H-Z][0-9]|[a-zA-Z_][a-zA-Z_][a-zA-Z0-9_]*      { return NamingLexemeAction(); }
-
-"//".*                              { return IgnoredLexemeAction(); }
 
 {whitespace}						{ return IgnoredLexemeAction(); }
 .									{ return UnknownLexemeAction(); }
