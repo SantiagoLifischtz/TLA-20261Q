@@ -64,7 +64,6 @@ digit               [0-9]
 "arpeggio"                          { return KeywordLexemeAction(TOK_ARPEGGIO); }
 "degree"                            { return KeywordLexemeAction(TOK_DEGREE); }
 
-"dot"                               { return DurationLexemeAction(TOK_DOT); }
 "whole"|"w"                         { return DurationLexemeAction(TOK_WHOLE); }
 "half"|"h"                          { return DurationLexemeAction(TOK_HALF); }
 "quarter"|"q"                       { return DurationLexemeAction(TOK_QUARTER); }
@@ -88,12 +87,13 @@ digit               [0-9]
 [A-G](#|b)?                         { return LiteralNoteIdLexemeAction(); }
 \"([^\\\"]|\\.)*\"                  { return LiteralStringLexemeAction(); }
 
-[a-z_][a-zA-Z0-9_]*                 { return NamingLexemeAction(); }
+[A-Z][a-zA-Z0-9_]+|[H-Za-z_][a-zA-Z0-9_]*      { return NamingLexemeAction(); }
 
 "-"									{ return ArithmeticOperatorLexemeAction(TOK_SUB); }
 "*"									{ return ArithmeticOperatorLexemeAction(TOK_MUL); }
 "/"									{ return ArithmeticOperatorLexemeAction(TOK_DIV); }
 "+"									{ return ArithmeticOperatorLexemeAction(TOK_ADD); }
+"dot"                               { return ArithmeticOperatorLexemeAction(TOK_DOT); }
 
 "{"									{ return StructureOperatorLexemeAction(TOK_OPEN_BRACE); }
 "}"									{ return StructureOperatorLexemeAction(TOK_CLOSE_BRACE); }
