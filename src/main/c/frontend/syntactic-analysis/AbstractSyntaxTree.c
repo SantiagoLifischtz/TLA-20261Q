@@ -4,6 +4,10 @@
 
 static Logger * _logger = NULL;
 
+/* PRIVATE FUNCTIONS */
+
+static void _logDestructor(const char * functionName);
+
 /** Shutdown module's internal state. */
 void _shutdownAbstractSyntaxTreeModule() {
 	if (_logger != NULL) {
@@ -18,17 +22,21 @@ ModuleDestructor initializeAbstractSyntaxTreeModule() {
 	return _shutdownAbstractSyntaxTreeModule;
 }
 
+static void _logDestructor(const char * functionName) {
+	logDebugging(_logger, "Executing destructor: %s", functionName);
+}
+
 /* PUBLIC FUNCTIONS */
 
 void destroyNumber(Number * number) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (number != NULL) {
 		free(number);
 	}
 }
 
 void destroyExpression(Expression * expression) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (expression != NULL) {
 		switch (expression->type) {
 			case ADDITION:
@@ -37,6 +45,9 @@ void destroyExpression(Expression * expression) {
 			case SUBTRACTION:
 				destroyExpression(expression->leftExpression);
 				destroyExpression(expression->rightExpression);
+				break;
+			case DOT:
+				destroyExpression(expression->singleExpression);
 				break;
 			case FACTOR:
 				destroyFactor(expression->factor);
@@ -47,7 +58,7 @@ void destroyExpression(Expression * expression) {
 }
 
 void destroyFactor(Factor * factor) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (factor != NULL) {
 		switch (factor->type) {
 			case NUMBER:
@@ -62,7 +73,7 @@ void destroyFactor(Factor * factor) {
 }
 
 void destroyProgram(Program * program) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (program != NULL) {
 		destroyDefinitions(program->definitions);
 		destroyPlay(program->playBlock);
@@ -71,7 +82,7 @@ void destroyProgram(Program * program) {
 }
 
 void destroyDefinitions(Definitions * definitions) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (definitions != NULL) {
 		destroyDefinition(definitions->def);
 		destroyDefinitions(definitions->next);
@@ -80,7 +91,7 @@ void destroyDefinitions(Definitions * definitions) {
 }
 
 void destroyDefinition(Definition * definition) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (definition != NULL) {
 		switch (definition->type) {
 			case CONFIG:
@@ -98,7 +109,7 @@ void destroyDefinition(Definition * definition) {
 }
 
 void destroyPlay(Play * play) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (play != NULL) {
 		if (play->type == TRACKS) {
 			destroyTrackIDs(play->tracks);
@@ -108,7 +119,7 @@ void destroyPlay(Play * play) {
 }
 
 void destroyID(Identifier * id) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (id != NULL) {
 		free(id->name);
 		free(id);
@@ -116,7 +127,7 @@ void destroyID(Identifier * id) {
 }
 
 void destroyTrackIDs(TrackIDs * trackIDs) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (trackIDs != NULL) {
 		destroyID(trackIDs->id);
 		destroyTrackIDs(trackIDs->next);
@@ -125,7 +136,7 @@ void destroyTrackIDs(TrackIDs * trackIDs) {
 }
 
 void destroyConfigSentence(ConfigSentence * configSentence) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (configSentence != NULL) {
 		switch (configSentence->type) {
 			case KEY:
@@ -142,7 +153,7 @@ void destroyConfigSentence(ConfigSentence * configSentence) {
 }
 
 void destroyTempo(Tempo * tempo) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (tempo != NULL) {
 		destroyExpression(tempo->expression);
 		free(tempo);
@@ -150,7 +161,7 @@ void destroyTempo(Tempo * tempo) {
 }
 
 void destroyKey(Key * key) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (key != NULL) {
 		destroyNoteID(key->note);
 		destroyMode(key->mode);
@@ -159,21 +170,21 @@ void destroyKey(Key * key) {
 }
 
 void destroyMode(Mode * mode) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (mode != NULL) {
 		free(mode);
 	}
 }
 
 void destroyNoteID(NoteID * noteID) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (noteID != NULL) {
 		free(noteID);
 	}
 }
 
 void destroyTrack(Track * track) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (track != NULL) {
 		destroyID(track->id);
 		destroyInstrument(track->instrument);
@@ -183,7 +194,7 @@ void destroyTrack(Track * track) {
 }
 
 void destroyInstrument(Instrument * instrument) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (instrument != NULL) {
 		free(instrument->name);
 		free(instrument);
@@ -191,7 +202,7 @@ void destroyInstrument(Instrument * instrument) {
 }
 
 void destroySentences(Sentences * sentences) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (sentences != NULL) {
 		destroySentence(sentences->sentence);
 		destroySentences(sentences->next);
@@ -200,7 +211,7 @@ void destroySentences(Sentences * sentences) {
 }
 
 void destroySentence(Sentence * sentence) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (sentence != NULL) {
 		switch (sentence->type) {
 			case PATTERN:
@@ -218,7 +229,7 @@ void destroySentence(Sentence * sentence) {
 }
 
 void destroyPatternDefinition(PatternDefinition * patternDefinition) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (patternDefinition != NULL) {
 		destroyID(patternDefinition->id);
 		destroyBlock(patternDefinition->block);
@@ -246,7 +257,7 @@ static void destroyPatternSentenceMembers(PatternSentence * patternSentence) {
 }
 
 void destroyPatternSentence(PatternSentence * patternSentence) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (patternSentence != NULL) {
 		destroyPatternSentenceMembers(patternSentence);
 		free(patternSentence);
@@ -254,7 +265,7 @@ void destroyPatternSentence(PatternSentence * patternSentence) {
 }
 
 void destroyPattern(Pattern * pattern) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (pattern != NULL) {
 		switch (pattern->type) {
 			case INLINE:
@@ -269,7 +280,7 @@ void destroyPattern(Pattern * pattern) {
 }
 
 void destroyBlock(Block * block) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (block != NULL) {
 		destroySentences(block->sentences);
 		free(block);
@@ -277,7 +288,7 @@ void destroyBlock(Block * block) {
 }
 
 void destroyWait(Wait * wait) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (wait != NULL) {
 		destroyDuration(wait->duration);
 		free(wait);
@@ -285,7 +296,7 @@ void destroyWait(Wait * wait) {
 }
 
 void destroyInlinePattern(InlinePattern * inlinePattern) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (inlinePattern != NULL) {
 		switch (inlinePattern->type) {
 			case NOTE:
@@ -312,7 +323,7 @@ void destroyInlinePattern(InlinePattern * inlinePattern) {
 }
 
 void destroyNote(Note * note) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (note != NULL) {
 		destroyNoteAndOctave(note->noteAndOctave);
 		destroyDuration(note->duration);
@@ -321,7 +332,7 @@ void destroyNote(Note * note) {
 }
 
 void destroyNoteAndOctave(NoteAndOctave * noteAndOctave) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (noteAndOctave != NULL) {
 		switch (noteAndOctave->type) {
 			case ABSOLUTE:
@@ -338,7 +349,7 @@ void destroyNoteAndOctave(NoteAndOctave * noteAndOctave) {
 }
 
 void destroyDuration(Duration * duration) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (duration != NULL) {
 		destroyExpression(duration->expression);
 		free(duration);
@@ -346,7 +357,7 @@ void destroyDuration(Duration * duration) {
 }
 
 void destroyRest(Rest * rest) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (rest != NULL) {
 		destroyDuration(rest->duration);
 		free(rest);
@@ -354,7 +365,7 @@ void destroyRest(Rest * rest) {
 }
 
 void destroyRepeat(Repeat * repeat) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (repeat != NULL) {
 		destroyPatternSentence(repeat->sentence);
 		free(repeat);
@@ -362,7 +373,7 @@ void destroyRepeat(Repeat * repeat) {
 }
 
 void destroyStep(Step * step) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (step != NULL) {
 		destroyDuration(step->interval);
 		destroyStepBlock(step->block);
@@ -371,7 +382,7 @@ void destroyStep(Step * step) {
 }
 
 void destroyStepBlock(StepBlock * stepBlock) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (stepBlock != NULL) {
 		destroyNoWaitSentences(stepBlock->sentences);
 		free(stepBlock);
@@ -379,7 +390,7 @@ void destroyStepBlock(StepBlock * stepBlock) {
 }
 
 void destroyNoWaitSentences(NoWaitSentences * noWaitSentences) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (noWaitSentences != NULL) {
 		destroyNoWaitSentence(noWaitSentences->sentence);
 		destroyNoWaitSentences(noWaitSentences->next);
@@ -388,7 +399,7 @@ void destroyNoWaitSentences(NoWaitSentences * noWaitSentences) {
 }
 
 void destroyNoWaitSentence(NoWaitSentence * noWaitSentence) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (noWaitSentence != NULL) {
 		switch (noWaitSentence->type) {
 			case INLINE:
@@ -403,7 +414,7 @@ void destroyNoWaitSentence(NoWaitSentence * noWaitSentence) {
 }
 
 void destroyChord(Chord * chord) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (chord != NULL) {
 		switch (chord->type) {
 			case PATTERN_CHORD:
@@ -418,7 +429,7 @@ void destroyChord(Chord * chord) {
 }
 
 void destroyPatternChord(PatternChord * patternChord) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (patternChord != NULL) {
 		destroyCommaSeparatedPatterns(patternChord->patterns);
 		free(patternChord);
@@ -426,7 +437,7 @@ void destroyPatternChord(PatternChord * patternChord) {
 }
 
 void destroyNoteChord(NoteChord * noteChord) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (noteChord != NULL) {
 		destroyCommaSeparatedNotes(noteChord->notes);
 		free(noteChord);
@@ -434,7 +445,7 @@ void destroyNoteChord(NoteChord * noteChord) {
 }
 
 void destroyCommaSeparatedPatterns(CommaSeparatedPatterns * commaSeparatedPatterns) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (commaSeparatedPatterns != NULL) {
 		destroyPattern(commaSeparatedPatterns->pattern);
 		destroyCommaSeparatedPatterns(commaSeparatedPatterns->next);
@@ -443,7 +454,7 @@ void destroyCommaSeparatedPatterns(CommaSeparatedPatterns * commaSeparatedPatter
 }
 
 void destroyCommaSeparatedNotes(CommaSeparatedNotes * commaSeparatedNotes) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (commaSeparatedNotes != NULL) {
 		destroyNoteAndOctave(commaSeparatedNotes->note);
 		destroyCommaSeparatedNotes(commaSeparatedNotes->next);
@@ -452,7 +463,7 @@ void destroyCommaSeparatedNotes(CommaSeparatedNotes * commaSeparatedNotes) {
 }
 
 void destroyStrum(Strum * strum) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (strum != NULL) {
 		destroyCommaSeparatedNotes(strum->notes);
 		destroyDuration(strum->totalDuration);
@@ -462,7 +473,7 @@ void destroyStrum(Strum * strum) {
 }
 
 void destroyArpeggio(Arpeggio * arpeggio) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (arpeggio != NULL) {
 		destroyCommaSeparatedNotes(arpeggio->notes);
 		destroyDuration(arpeggio->totalDuration);
@@ -471,7 +482,7 @@ void destroyArpeggio(Arpeggio * arpeggio) {
 }
 
 void destroyDegree(Degree * degree) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	_logDestructor(__FUNCTION__);
 	if (degree != NULL) {
 		free(degree);
 	}
