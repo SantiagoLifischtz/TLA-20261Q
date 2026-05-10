@@ -295,7 +295,6 @@ struct InlinePattern {
 		Chord * chord;
 		Strum * strum;
 		Arpeggio * arpeggio;
-		Degree * degree;
 		Identifier * id;
 	};
 	InlinePatternType type;
@@ -393,7 +392,6 @@ struct Arpeggio {
 struct Degree {
 	int number;
 	int octave;
-	Duration * duration;
 };
 
 /**

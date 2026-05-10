@@ -532,12 +532,11 @@ Arpeggio * ArpeggioSemanticAction(CommaSeparatedNotes * csn, Duration * total) {
 	return arpeggio;
 }
 
-Degree * DegreeSemanticAction(const int number, const int octave, Duration * duration) {
+Degree * DegreeSemanticAction(const int number, const int octave) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Degree * degree = calloc(1, sizeof(Degree));
 	degree->number = number;
 	degree->octave = octave;
-	degree->duration = duration;
 	return degree;
 }
 

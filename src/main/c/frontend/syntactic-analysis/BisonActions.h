@@ -78,7 +78,7 @@ CommaSeparatedPatterns * CSPSemanticAction(Pattern * pattern, CommaSeparatedPatt
 CommaSeparatedNotes * CSNSemanticAction(NoteAndOctave * note, CommaSeparatedNotes * otherNotes);
 Strum * StrumSemanticAction(CommaSeparatedNotes * csn, Duration * total, Duration * interval);
 Arpeggio * ArpeggioSemanticAction(CommaSeparatedNotes * csn, Duration * total);
-Degree * DegreeSemanticAction(const int number, const int octave, Duration * duration);
+Degree * DegreeSemanticAction(const int number, const int octave);
 Identifier * IdentifierSemanticAction(char *name);
 
 #endif

@@ -375,7 +375,7 @@ strum: STRUM OPEN_PARENTHESIS duration[total] COMMA duration[interval] COMMA com
 arpeggio: ARPEGGIO OPEN_PARENTHESIS duration[total] COMMA comma_separated_notes[notes] CLOSE_PARENTHESIS	{ $$ = ArpeggioSemanticAction($notes, $total); }
 	;
 
-degree: DEGREE OPEN_PARENTHESIS INTEGER COMMA INTEGER CLOSE_PARENTHESIS duration	{ $$ = DegreeSemanticAction($3, $5, $7); }
+degree: DEGREE OPEN_PARENTHESIS INTEGER COMMA INTEGER CLOSE_PARENTHESIS	{ $$ = DegreeSemanticAction($3, $5); }
 	;
 
 expression: expression[left] ADD expression[right]			{ $$ = BinaryOperationSemanticAction($left, $right, ADDITION); }

@@ -473,7 +473,6 @@ void destroyArpeggio(Arpeggio * arpeggio) {
 void destroyDegree(Degree * degree) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (degree != NULL) {
-		destroyDuration(degree->duration);
 		free(degree);
 	}
 }
