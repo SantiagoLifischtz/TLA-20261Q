@@ -5,11 +5,11 @@ pattern melody_inline {
     F#3 e;
     A3 e;
     F#4 q dot;
- {
-    C#4 e;
-    E4 q;
-    D4 q dot;
- }
+    {
+        C#4 e;
+        E4 q;
+        D4 q dot;
+    }
     Bb3 e;
     C#4 q;
     B3 q;
@@ -22,3 +22,5 @@ track piano {
     instrument "Acoustic Grand";
     melody_inline;
 }
+
+play all;

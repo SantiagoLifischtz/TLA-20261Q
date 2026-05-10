@@ -12,4 +12,4 @@ track bass {
     C2 h;
 }
 
-play { all }
+play all;
