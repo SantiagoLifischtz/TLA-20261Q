@@ -3,7 +3,8 @@ key A minor;
 
 track strings {
     instrument "Violin";
-    degree 1 q;
-    degree 3 q;
-    degree 5 h;
+    degree(1,4) q;
+    degree(3,4) q;
+    degree(5,4) h;
 }
+play all;

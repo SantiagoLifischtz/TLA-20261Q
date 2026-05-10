@@ -1,7 +1,8 @@
 key C major;
 track piano {
     instrument "Acoustic Grand";
-    degree 1 q;
-    degree 3 q;
-    degree 5 h;
+    degree(1, 3) q;
+    degree(3, 3) q;
+    degree(5, 3) h;
 }
+play all;

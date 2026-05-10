@@ -5,3 +5,5 @@ track piano {
     C4 q;
     E4 q;
 }
+
+play all;

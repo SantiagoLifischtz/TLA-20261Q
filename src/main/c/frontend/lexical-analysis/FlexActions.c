@@ -194,8 +194,12 @@ CompilationStatus LiteralStringLexemeAction() {
 }
 
 CompilationStatus NamingLexemeAction() {
-	Token * token = createToken(_lexicalAnalyzer, TOK_STRING);
-	token->semanticValue->string = strdup(token->lexeme);
+	Token * token = createToken(_lexicalAnalyzer, TOK_ID);
+	size_t length = strlen(token->lexeme);
+	char * value = malloc(length+1);
+	strncpy(value, token->lexeme, length);
+	value[length] = '\0';
+	token->semanticValue->string = value;
 	_logTokenAction(__FUNCTION__, token);
 	CompilationStatus status = pushToken(_lexicalAnalyzer, token);
 	destroyToken(token);

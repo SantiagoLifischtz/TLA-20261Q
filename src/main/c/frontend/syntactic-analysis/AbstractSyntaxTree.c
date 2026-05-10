@@ -107,7 +107,7 @@ void destroyPlay(Play * play) {
 	}
 }
 
-void destroyID(ID * id) {
+void destroyID(Identifier * id) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (id != NULL) {
 		free(id->name);
@@ -303,9 +303,6 @@ void destroyInlinePattern(InlinePattern * inlinePattern) {
 			case ARPEGGIO:
 				destroyArpeggio(inlinePattern->arpeggio);
 				break;
-			case DEGREE:
-				destroyDegree(inlinePattern->degree);
-				break;
 			case PATTERN_ID:
 				destroyID(inlinePattern->id);
 				break;
@@ -326,7 +323,16 @@ void destroyNote(Note * note) {
 void destroyNoteAndOctave(NoteAndOctave * noteAndOctave) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (noteAndOctave != NULL) {
-		destroyNoteID(noteAndOctave->note);
+		switch (noteAndOctave->type) {
+			case ABSOLUTE:
+				destroyNoteID(noteAndOctave->note);
+				break;
+			case FROM_DEGREE:
+				destroyDegree(noteAndOctave->degree);
+				break;
+			case FROM_STRING:
+				free(noteAndOctave->identifier);
+		}
 		free(noteAndOctave);
 	}
 }
@@ -350,7 +356,7 @@ void destroyRest(Rest * rest) {
 void destroyRepeat(Repeat * repeat) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (repeat != NULL) {
-		destroyPatternSentenceMembers(repeat->sentence);
+		destroyPatternSentence(repeat->sentence);
 		free(repeat);
 	}
 }
@@ -467,7 +473,6 @@ void destroyArpeggio(Arpeggio * arpeggio) {
 void destroyDegree(Degree * degree) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (degree != NULL) {
-		destroyDuration(degree->duration);
 		free(degree);
 	}
 }

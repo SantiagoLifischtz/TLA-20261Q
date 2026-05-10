@@ -1,5 +1,9 @@
-[
- C4 q,
- E4 q h,
- G4 q
-];
+track chord {
+    instrument "Bright Acoustic";
+    [
+        C4 q,
+        E4 q h,
+        G4 q
+    ];
+}
+play all;

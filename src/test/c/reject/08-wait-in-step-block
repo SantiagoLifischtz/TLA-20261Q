@@ -3,7 +3,10 @@ key C major;
 
 track piano {
     instrument "Acoustic Grand";
-    C4 q;
+    step e {
+        F#3 eighth half;
+        A3 e;
+    }
 }
 
-play { piano, violin }
+play all;

@@ -8,3 +8,5 @@ track piano {
         A3 e;
     }
 }
+
+play all;

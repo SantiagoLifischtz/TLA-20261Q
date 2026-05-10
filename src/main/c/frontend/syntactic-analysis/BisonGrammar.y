@@ -75,7 +75,7 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 	Strum * strum;
 	Arpeggio * arpeggio;
 	Degree * degree;
-	ID * id;
+	Identifier * id;
 }
 
 /**
@@ -229,6 +229,7 @@ void yyerror(const YYLTYPE * location, const char * message) {}
  * @see https://www.gnu.org/software/bison/manual/html_node/Precedence.html
  */
 %left ADD SUB
+%left DOT
 %left MUL DIV
 
 %%
@@ -246,7 +247,7 @@ definition: config_sentence									{ $$ = ConfigDefinitionSemanticAction($1); }
 	;
 
 play: PLAY OPEN_BRACE track_ids[ids] SEMICOLON CLOSE_BRACE	{ $$ = PlayTracksSemanticAction($ids); }
-	| PLAY OPEN_BRACE PLAY_ALL SEMICOLON CLOSE_BRACE				{ $$ = PlayAllSemanticAction(); }
+	| PLAY PLAY_ALL SEMICOLON								{ $$ = PlayAllSemanticAction(); }
 	;
 
 track_ids: id												{ $$ = TrackListSemanticAction($1, NULL); }
@@ -272,7 +273,7 @@ note_id: NOTE_ID											{ $$ = NoteIDSemanticAction($1); }
 mode: MODE													{ $$ = ModeSemanticAction($1); }
 	;
 
-track: TRACK id[id] OPEN_BRACE instrument[inst] sentences[sent] CLOSE_BRACE	{ $$ = TrackSemanticAction($id, $inst, $sent); }
+track: TRACK id[name] OPEN_BRACE instrument[inst] sentences[sent] CLOSE_BRACE	{ $$ = TrackSemanticAction($name, $inst, $sent); }
 	;
 
 pattern_definition: PATTERN id block						{ $$ = PatternDeclarationSemanticAction($2, $3); }
@@ -316,7 +317,6 @@ inline_pattern: note										{ $$ = NotePatternSemanticAction($1); }
 	| chord													{ $$ = ChordPatternSemanticAction($1); }
 	| strum													{ $$ = StrumPatternSemanticAction($1); }
 	| arpeggio												{ $$ = ArpeggioPatternSemanticAction($1); }
-	| degree												{ $$ = DegreePatternSemanticAction($1); }
 	| id													{ $$ = IDPatternSemanticAction($1); }
 	;
 
@@ -324,6 +324,8 @@ note: note_and_octave duration								{ $$ = NoteSemanticAction($1, $2); }
 	;
 
 note_and_octave: note_id INTEGER							{ $$ = NoteOctaveSemanticAction($1, $2); }
+	| degree												{ $$ = DegreeNoteSemanticAction($1); }
+	| STRING												{ $$ = NoteFromStringSemanticAction($1); }
 	;
 
 rest: REST duration											{ $$ = RestSemanticAction($2); }
@@ -367,13 +369,13 @@ comma_separated_notes: note_and_octave						{ $$ = CSNSemanticAction($1, NULL); 
 	| note_and_octave COMMA comma_separated_notes			{ $$ = CSNSemanticAction($1, $3); }
 	;
 
-strum: STRUM OPEN_PARENTHESIS comma_separated_notes[notes] COMMA duration[total] COMMA duration[interval] CLOSE_PARENTHESIS		{ $$ = StrumSemanticAction($notes, $total, $interval); }
+strum: STRUM OPEN_PARENTHESIS duration[total] COMMA duration[interval] COMMA comma_separated_notes[notes] CLOSE_PARENTHESIS		{ $$ = StrumSemanticAction($notes, $total, $interval); }
+	;	
+
+arpeggio: ARPEGGIO OPEN_PARENTHESIS duration[total] COMMA comma_separated_notes[notes] CLOSE_PARENTHESIS	{ $$ = ArpeggioSemanticAction($notes, $total); }
 	;
 
-arpeggio: ARPEGGIO OPEN_PARENTHESIS comma_separated_notes[notes] COMMA duration[total] CLOSE_PARENTHESIS	{ $$ = ArpeggioSemanticAction($notes, $total); }
-	;
-
-degree: DEGREE OPEN_PARENTHESIS INTEGER COMMA INTEGER CLOSE_PARENTHESIS duration	{ $$ = DegreeSemanticAction($3, $5, $7); }
+degree: DEGREE OPEN_PARENTHESIS INTEGER COMMA INTEGER CLOSE_PARENTHESIS	{ $$ = DegreeSemanticAction($3, $5); }
 	;
 
 expression: expression[left] ADD expression[right]			{ $$ = BinaryOperationSemanticAction($left, $right, ADDITION); }

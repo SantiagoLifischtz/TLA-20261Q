@@ -8,3 +8,4 @@ track piano {
     intro 3*quarter;
     intro;
 }
+play all;

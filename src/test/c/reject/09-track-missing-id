@@ -1,0 +1,8 @@
+tempo 120;
+
+track {
+    instrument "Violin";
+    G4 q;
+}
+
+play all;
