@@ -10,6 +10,7 @@
 #include "../../support/type/ModuleDestructor.h"
 #include "../../support/type/Token.h"
 #include "../../support/type/TokenLabel.h"
+#include "../../support/type/LexerKeywords.h"
 #include "../Frontend.h"
 
 /** Initialize module's internal state. */

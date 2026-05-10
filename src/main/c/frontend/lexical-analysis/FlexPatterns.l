@@ -5,6 +5,7 @@
 #include "../../support/type/TokenLabel.h"
 #include "../syntactic-analysis/AbstractSyntaxTree.h"
 #include "../syntactic-analysis/BisonParser.h"
+#include "../../support/type/LexerKeywords.h"
 
 }
 
@@ -31,14 +32,6 @@ extern CompilationStatus EOFLexemeAction();
 %}
 
 /**
- * Flex contexts (a.k.a. start conditions).
- *
- * @see https://westes.github.io/flex/manual/Start-Conditions.html
- */
-%x IMPORT_EXPRESSION
-%x MULTILINE_COMMENT
-
-/**
  * Reusable patterns.
  *
  * @see https://westes.github.io/flex/manual/Matching.html
@@ -48,6 +41,8 @@ whitespace			[[:space:]]+
 digit               [0-9]
 
 %%
+
+"//".*                              { return IgnoredLexemeAction(); }
 
 "pattern"                           { return KeywordLexemeAction(TOK_PATTERN); }
 "repeat"                            { return KeywordLexemeAction(TOK_REPEAT); }
@@ -64,22 +59,21 @@ digit               [0-9]
 "arpeggio"                          { return KeywordLexemeAction(TOK_ARPEGGIO); }
 "degree"                            { return KeywordLexemeAction(TOK_DEGREE); }
 
-"dot"                               { return DurationLexemeAction(TOK_DOT); }
-"whole"|"w"                         { return DurationLexemeAction(TOK_WHOLE); }
-"half"|"h"                          { return DurationLexemeAction(TOK_HALF); }
-"quarter"|"q"                       { return DurationLexemeAction(TOK_QUARTER); }
-"eighth"|"e"                        { return DurationLexemeAction(TOK_EIGHT); }
-"sixteenth"|"s"                     { return DurationLexemeAction(TOK_SIXTEENTH); }
-"thirtysecond"|"ths"                { return DurationLexemeAction(TOK_THIRTYSECOND); }
-"sixtyfourth"|"sxf"                 { return DurationLexemeAction(TOK_SIXTYFOURTH); }
+"whole"|"w"                         { return DurationLexemeAction(WHOLE); }
+"half"|"h"                          { return DurationLexemeAction(HALF); }
+"quarter"|"q"                       { return DurationLexemeAction(QUARTER); }
+"eighth"|"e"                        { return DurationLexemeAction(EIGHTH); }
+"sixteenth"|"s"                     { return DurationLexemeAction(SIXTEENTH); }
+"thirtysecond"|"ths"                { return DurationLexemeAction(THIRTYSECOND); }
+"sixtyfourth"|"sxf"                 { return DurationLexemeAction(SIXTYFOURTH); }
 
-"major"|"ionian"                    { return ModeLexemeAction(TOK_MAJOR); }
-"dorian"                            { return ModeLexemeAction(TOK_DORIAN); }
-"phrygian"                          { return ModeLexemeAction(TOK_PHRYGIAN); }
-"lydian"                            { return ModeLexemeAction(TOK_LYDIAN); }
-"mixolydian"                        { return ModeLexemeAction(TOK_MIXOLYDIAN); }
-"minor"|"aeolian"                   { return ModeLexemeAction(TOK_MINOR); }
-"locrian"                           { return ModeLexemeAction(TOK_LOCRIAN); }
+"major"|"ionian"                    { return ModeLexemeAction(MAJOR); }
+"dorian"                            { return ModeLexemeAction(DORIAN); }
+"phrygian"                          { return ModeLexemeAction(PHRYGIAN); }
+"lydian"                            { return ModeLexemeAction(LYDIAN); }
+"mixolydian"                        { return ModeLexemeAction(MIXOLYDIAN); }
+"minor"|"aeolian"                   { return ModeLexemeAction(MINOR); }
+"locrian"                           { return ModeLexemeAction(LOCRIAN); }
 
 "all"                               { return KeywordLexemeAction(TOK_PLAY_ALL); }
 
@@ -88,12 +82,11 @@ digit               [0-9]
 [A-G](#|b)?                         { return LiteralNoteIdLexemeAction(); }
 \"([^\\\"]|\\.)*\"                  { return LiteralStringLexemeAction(); }
 
-[a-z_][a-zA-Z0-9_]*                 { return NamingLexemeAction(); }
-
 "-"									{ return ArithmeticOperatorLexemeAction(TOK_SUB); }
 "*"									{ return ArithmeticOperatorLexemeAction(TOK_MUL); }
 "/"									{ return ArithmeticOperatorLexemeAction(TOK_DIV); }
 "+"									{ return ArithmeticOperatorLexemeAction(TOK_ADD); }
+"dot"                               { return ArithmeticOperatorLexemeAction(TOK_DOT); }
 
 "{"									{ return StructureOperatorLexemeAction(TOK_OPEN_BRACE); }
 "}"									{ return StructureOperatorLexemeAction(TOK_CLOSE_BRACE); }
@@ -104,7 +97,7 @@ digit               [0-9]
 ","									{ return StructureOperatorLexemeAction(TOK_COMMA); }
 ";"									{ return StructureOperatorLexemeAction(TOK_SEMICOLON); }
 
-"//".*                              { return IgnoredLexemeAction(); }
+[a-z_H-Z]|[a-z_H-Z][0-9]|[a-zA-Z_][a-zA-Z_][a-zA-Z0-9_]*      { return NamingLexemeAction(); }
 
 {whitespace}						{ return IgnoredLexemeAction(); }
 .									{ return UnknownLexemeAction(); }
