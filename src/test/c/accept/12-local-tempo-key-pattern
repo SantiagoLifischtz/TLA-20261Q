@@ -2,10 +2,10 @@ tempo 120;
 key C major;
 
 pattern puente {
-    degree 1 q;
+    degree(1, 2) q;
     tempo 90;
-    degree 5 q;
-    degree 3 h;
+    degree(5, 2) q;
+    degree(3, 2) h;
 }
 
 track piano {
