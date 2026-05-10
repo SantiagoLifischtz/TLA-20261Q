@@ -60,6 +60,7 @@ InlinePattern * IDPatternSemanticAction(Identifier * id);
 Note * NoteSemanticAction(NoteAndOctave * noteAndOctave, Duration * duration);
 NoteAndOctave * NoteOctaveSemanticAction(NoteID * noteID, const int octave);
 NoteAndOctave * DegreeNoteSemanticAction(Degree * degree);
+NoteAndOctave * NoteFromStringSemanticAction(const char* identifier);
 Duration * DurationSemanticAction(Expression * exp);
 Rest * RestSemanticAction(Duration * duration);
 Repeat * RepeatSemanticAction(const int count, PatternSentence * ps);

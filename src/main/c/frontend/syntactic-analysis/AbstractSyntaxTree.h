@@ -138,7 +138,8 @@ enum PlayBlockType {
 
 enum NoteType {
 	ABSOLUTE,
-	FROM_DEGREE
+	FROM_DEGREE,
+	FROM_STRING
 };
 
 struct Number {
@@ -312,6 +313,7 @@ struct NoteAndOctave {
 			char octave; // midi value = note->value + 12 * octave
 		};
 		Degree * degree;
+		char *identifier;
 	};
 	NoteType type;
 };

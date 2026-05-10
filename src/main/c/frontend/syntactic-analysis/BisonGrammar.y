@@ -324,6 +324,7 @@ note: note_and_octave duration								{ $$ = NoteSemanticAction($1, $2); }
 
 note_and_octave: note_id INTEGER							{ $$ = NoteOctaveSemanticAction($1, $2); }
 	| degree												{ $$ = DegreeNoteSemanticAction($1); }
+	| STRING												{ $$ = NoteFromStringSemanticAction($1); }
 	;
 
 rest: REST duration											{ $$ = RestSemanticAction($2); }

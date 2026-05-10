@@ -330,6 +330,8 @@ void destroyNoteAndOctave(NoteAndOctave * noteAndOctave) {
 			case FROM_DEGREE:
 				destroyDegree(noteAndOctave->degree);
 				break;
+			case FROM_STRING:
+				free(noteAndOctave->identifier);
 		}
 		free(noteAndOctave);
 	}

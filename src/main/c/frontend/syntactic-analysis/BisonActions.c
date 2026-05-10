@@ -390,6 +390,15 @@ NoteAndOctave * DegreeNoteSemanticAction(Degree * degree) {
 	return n;
 }
 
+NoteAndOctave * NoteFromStringSemanticAction(const char* identifier) {
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	NoteAndOctave * n = calloc(1, sizeof(NoteAndOctave));
+	int length = strlen(identifier);
+	n->identifier = malloc((length+1)*sizeof(char));
+	n->type = FROM_STRING;
+	return n;
+}
+
 Duration * DurationSemanticAction(Expression * exp) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Duration * d = calloc(1, sizeof(Duration));
