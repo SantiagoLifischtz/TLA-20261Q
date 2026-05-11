@@ -1,0 +1,24 @@
+track flute {
+    instrument "Flute";
+
+    repeat 2 {
+        {
+            D4 h;
+            {
+                D5 q;
+                F#5 q;
+                {
+                    {
+                        A5 q;
+                    }
+                    {
+                        F#5 q;
+                    }
+                }
+            }
+        }
+        D6 h;
+    }
+}
+
+play all;

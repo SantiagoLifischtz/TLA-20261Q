@@ -80,6 +80,7 @@ digit               [0-9]
 {digit}+"."{digit}+                 { return LiteralFloatLexemeAction(); }
 {digit}+                            { return LiteralIntegerLexemeAction(); }
 [A-G](#|b)?                         { return LiteralNoteIdLexemeAction(); }
+[A-G](#|b)?/({digit}+)              { return LiteralNoteIdLexemeAction(); }
 \"([^\\\"]|\\.)*\"                  { return LiteralStringLexemeAction(); }
 
 "-"									{ return ArithmeticOperatorLexemeAction(TOK_SUB); }
@@ -97,7 +98,7 @@ digit               [0-9]
 ","									{ return StructureOperatorLexemeAction(TOK_COMMA); }
 ";"									{ return StructureOperatorLexemeAction(TOK_SEMICOLON); }
 
-[a-z_H-Z]|[a-z_H-Z][0-9]|[a-zA-Z_][a-zA-Z_][a-zA-Z0-9_]*      { return NamingLexemeAction(); }
+[a-zA-Z_][a-zA-Z0-9_]*              { return NamingLexemeAction(); }
 
 {whitespace}						{ return IgnoredLexemeAction(); }
 .									{ return UnknownLexemeAction(); }

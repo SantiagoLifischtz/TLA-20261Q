@@ -1,0 +1,16 @@
+pattern two_repeats {
+    repeat 4 Bb5 q;
+    repeat 4 [
+        Bb4,
+        D5,
+        F5,
+        Bb5
+    ] q;
+}
+
+track piano {
+    instrument "Acoustic Grand";
+    two_repeats;
+}
+
+play { piano; }

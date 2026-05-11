@@ -73,7 +73,7 @@ NoWaitSentence * BlockNoWaitSemanticAction(Block * block);
 Chord * ChordOfPatternsSemanticAction(PatternChord * pc);
 Chord * ChordOfNotesSemanticAction(NoteChord * nc);
 PatternChord * PatternChordSemanticAction(CommaSeparatedPatterns * csp);
-NoteChord * NoteChordSemanticAction(CommaSeparatedNotes * csn);
+NoteChord * NoteChordSemanticAction(CommaSeparatedNotes * csn, Duration * duration);
 CommaSeparatedPatterns * CSPSemanticAction(Pattern * pattern, CommaSeparatedPatterns * otherPatterns);
 CommaSeparatedNotes * CSNSemanticAction(NoteAndOctave * note, CommaSeparatedNotes * otherNotes);
 Strum * StrumSemanticAction(CommaSeparatedNotes * csn, Duration * total, Duration * interval);

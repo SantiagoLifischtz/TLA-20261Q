@@ -492,10 +492,11 @@ PatternChord * PatternChordSemanticAction(CommaSeparatedPatterns * csp) {
 	return patternChord;
 }
 
-NoteChord * NoteChordSemanticAction(CommaSeparatedNotes * csn) {
+NoteChord * NoteChordSemanticAction(CommaSeparatedNotes * csn, Duration * duration) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	NoteChord * noteChord = calloc(1, sizeof(NoteChord));
 	noteChord->notes = csn;
+	noteChord->duration = duration;
 	return noteChord;
 }
 

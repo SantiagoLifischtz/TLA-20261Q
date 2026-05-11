@@ -1,0 +1,35 @@
+key C aeolian;
+
+track organ {
+    instrument "Church Organ";
+
+    step e {
+        [
+            degree(1, 3),
+            degree(3, 3),
+            degree(5, 3)
+        ] w;
+        Eb4 e;
+        F4 e;
+        G4 e;
+        Ab4 e;
+        G4 e;
+        F4 e;
+        Ab4 e;
+        {
+            G4 e;
+            C4 e;
+            C4 e;
+            Bb3 e;
+            C4 e;
+        }
+        {
+            degree(1, 5) e;
+            degree(3, 5) e;
+            degree(5, 5) e;
+            degree(1, 6) e;
+        }
+    }
+}
+
+play all;

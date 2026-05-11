@@ -354,7 +354,7 @@ chord: pattern_chord										{ $$ = ChordOfPatternsSemanticAction($1); }
 pattern_chord: OPEN_SQUARE comma_separated_patterns CLOSE_SQUARE	{ $$ = PatternChordSemanticAction($2); }
 	;
 
-note_chord: OPEN_SQUARE comma_separated_notes CLOSE_SQUARE	{ $$ = NoteChordSemanticAction($2); }
+note_chord: OPEN_SQUARE comma_separated_notes CLOSE_SQUARE duration		{ $$ = NoteChordSemanticAction($2, $4); }
 	;
 
 comma_separated_patterns: pattern							{ $$ = CSPSemanticAction($1, NULL); }

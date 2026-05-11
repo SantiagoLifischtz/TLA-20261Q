@@ -1,0 +1,14 @@
+pattern up_down {
+    arpeggio(e, A3, B3, C#4, D4, F#4, D4, C#4, B3);
+}
+
+track saw {
+    instrument "Saw Wave";
+    [
+        F#2 w,
+        { repeat 8 F#6 e; },
+        up_down
+    ];
+}
+
+play { saw; }
