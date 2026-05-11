@@ -1,4 +1,10 @@
 pattern intro {
+    [
+        F#3,
+        A3,
+        D4
+    ] q dot whole;
+    
     F#3 e;
     A3 e;
     D4 q dot;
