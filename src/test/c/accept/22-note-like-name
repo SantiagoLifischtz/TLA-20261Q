@@ -1,0 +1,20 @@
+tempo 140;
+
+pattern Ab3Spam {
+    repeat 64 Ab3 sxf;
+}
+
+pattern G4life {
+    G3 s;
+    G4 s;
+    G5 s;
+    G6 s;
+}
+
+track square {
+    instrument "Square Wave";
+    Ab3Spam;
+    G4life;
+}
+
+play all;
