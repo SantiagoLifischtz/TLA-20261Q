@@ -366,6 +366,7 @@ struct PatternChord {
 
 struct NoteChord {
 	CommaSeparatedNotes * notes;
+	Duration * duration;
 };
 
 struct CommaSeparatedPatterns {

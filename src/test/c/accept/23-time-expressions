@@ -1,0 +1,22 @@
+tempo 150;
+
+pattern tv_time {
+    G4 h/2;
+    Bb4 0.25;
+    C5 e dot;
+    D5 (1/8) dot;
+    F5 e;
+
+    G4 e; G4 e;
+    Bb4 e*2;
+    Db5 0.125 dot;
+    C5 eighth dot;
+    Bb4 2/16;
+}
+
+track orch_hits {
+    instrument "Orchestra Hit";
+    tv_time;
+}
+
+play all;

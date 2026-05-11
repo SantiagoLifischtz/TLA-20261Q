@@ -440,6 +440,7 @@ void destroyNoteChord(NoteChord * noteChord) {
 	_logDestructor(__FUNCTION__);
 	if (noteChord != NULL) {
 		destroyCommaSeparatedNotes(noteChord->notes);
+		destroyDuration(noteChord->duration);
 		free(noteChord);
 	}
 }
