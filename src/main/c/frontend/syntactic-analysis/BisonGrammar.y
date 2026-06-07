@@ -128,6 +128,9 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 %destructor { destroyDegree($$); } <degree>
 %destructor { destroyID($$); } <id>
 
+%destructor { free($$); } STRING
+%destructor { free($$); } ID
+
 /* Extra. */
 %token <token> IGNORED
 %token <token> UNKNOWN

@@ -1,5 +1,5 @@
 pattern up_down {
-    arpeggio(e, A3, B3, C#4, D4, F#4, D4, C#4, B3);
+    arpeggio(whole, A3, B3, C#4, D4, F#4, D4, C#4, B3);
 }
 
 track saw {
