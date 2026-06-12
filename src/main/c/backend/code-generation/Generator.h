@@ -10,7 +10,6 @@
 #include "midi/MidiEvents.h"
 #include "midi/MidiInstruments.h"
 #include "midi/MidiConstants.h"
-#include "util/BigEndian.h"
 #include "util/Buffer.h"
 #include "util/ExpressionEvaluator.h"
 #include <stdarg.h>

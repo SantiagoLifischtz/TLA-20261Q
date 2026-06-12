@@ -36,7 +36,6 @@ if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
 		src/main/c/backend/code-generation/Generator.c
 		# src/main/c/backend/domain-specific/Calculator.c # TODO commented for Stage: 2
 		src/main/c/backend/code-generation/DefinitionTables.c
-		src/main/c/backend/code-generation/util/BigEndian.c
 		src/main/c/backend/code-generation/util/Buffer.c
 		src/main/c/backend/code-generation/util/ExpressionEvaluator.c
 		src/main/c/EntryPoint.c
