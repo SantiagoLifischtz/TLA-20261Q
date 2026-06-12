@@ -89,7 +89,6 @@ void yyerror(const YYLTYPE * location, const char * message) {}
 %destructor { destroyNumber($$); } <number>
 %destructor { destroyExpression($$); } <expression>
 %destructor { destroyFactor($$); } <factor>
-%destructor { destroyProgram($$); } <program>
 %destructor { destroyDefinitions($$); } <definitions>
 %destructor { destroyDefinition($$); } <definition>
 %destructor { destroyPlay($$); } <play>

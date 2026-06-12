@@ -98,6 +98,7 @@ Program * ProgramSemanticAction(Definitions * definitions, Play * playBlock) {
 	Program * program = calloc(1, sizeof(Program));
 	program->definitions = definitions;
 	program->playBlock = playBlock;
+	_compilerState->abstractSyntaxtTree = program;
 	return program;
 }
 
