@@ -6,6 +6,13 @@
 #include "../../support/logging/Logger.h"
 #include "../../support/type/CompilerState.h"
 #include "../../support/type/ModuleDestructor.h"
+#include "DefinitionTables.h"
+#include "midi/MidiEvents.h"
+#include "midi/MidiInstruments.h"
+#include "midi/MidiConstants.h"
+#include "util/BigEndian.h"
+#include "util/Buffer.h"
+#include "util/ExpressionEvaluator.h"
 #include <stdarg.h>
 #include <stdio.h>
 

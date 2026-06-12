@@ -1,0 +1,8 @@
+#ifndef MIDI_CONSTANTS_HEADER
+#define MIDI_CONSTANTS_HEADER
+
+// TODO
+
+
+
+#endif

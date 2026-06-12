@@ -1,0 +1,7 @@
+#ifndef MIDI_INSTRUMENTS_HEADER
+#define MIDI_INSTRUMENTS_HEADER
+
+
+// TODO
+
+#endif
