@@ -35,6 +35,7 @@ if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
 	add_executable(Flex-Bison-Compiler
 		# src/main/c/backend/code-generation/Generator.c # TODO commented for Stage: 2
 		# src/main/c/backend/domain-specific/Calculator.c # TODO commented for Stage: 2
+		src/main/c/backend/code-generation/DefinitionTables.c
 		src/main/c/EntryPoint.c
 		src/main/c/frontend/Frontend.c
 		src/main/c/frontend/lexical-analysis/FlexActions.c

@@ -1,0 +1,52 @@
+#ifndef DEFINITION_TABLES_HEADER
+#define DEFINITION_TABLES_HEADER
+
+#include "../../frontend/syntactic-analysis/AbstractSyntaxTree.h"
+#include <stdbool.h>
+
+//Busqueda de pattern por ID 
+typedef struct PatternEntry {
+	Identifier * id;
+	PatternDefinition * definition;
+	struct PatternEntry * next;
+} PatternEntry;
+
+//Busqueda de track por ID
+typedef struct TrackEntry {
+	Identifier * id;
+	Track * track;
+	struct TrackEntry * next;
+} TrackEntry;
+
+// Mapeo del instrumento a canal MIDI
+typedef struct InstrumentChannelEntry {
+	char * instrumentName;
+	unsigned char channel;
+	struct InstrumentChannelEntry * next;
+} InstrumentChannelEntry;
+
+// degreeToSemitone[1-7] semitona por grado
+typedef struct Scale {
+	char root;
+	char mode;
+	char degreeToSemitone[8];
+} Scale;
+
+typedef struct DefinitionContext {
+	PatternEntry * patterns;
+	TrackEntry * tracks;
+	InstrumentChannelEntry * instrumentChannels;
+	float globalTempoBpm; 
+	bool globalTempoSet;
+	Scale globalScale; 
+	bool globalScaleSet;
+} DefinitionContext;
+
+typedef struct {
+	bool succeeded;
+} DefinitionTablesResult;
+
+DefinitionTablesResult buildDefinitionContext(const Program * program, DefinitionContext * context);
+void destroyDefinitionContext(DefinitionContext * context);
+
+#endif
