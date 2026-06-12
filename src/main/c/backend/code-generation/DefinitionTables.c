@@ -3,6 +3,7 @@
 #include "../../support/logging/Logger.h"
 #include <stdlib.h>
 #include <string.h>
+#include "util/ExpressionEvaluator.h"
 
 static Logger * _logger = NULL;
 
@@ -27,15 +28,6 @@ static const char MODE_INTERVALS[7][7] = {
 	{0, 1, 3, 5, 6, 8, 10},
 };
 
-typedef struct {
-	bool succeeded;
-	float value;
-} FloatEvaluation;
-
-
-static FloatEvaluation _evaluateExpression(Expression * expression);
-static FloatEvaluation _evaluateFactor(Factor * factor);
-static FloatEvaluation _evaluateNumber(Number * number);
 static void _setScale(Scale * scale, const char root, const char mode);
 static void _setDefaultScale(Scale * scale);
 static bool _findPattern(const DefinitionContext * context, const char * name);
@@ -46,96 +38,6 @@ static bool _assignInstrumentChannel(DefinitionContext * context, const char * i
 static bool _isChannelAvailable(const DefinitionContext * context, unsigned char channel);
 static DefinitionTablesResult _failedResult(void);
 static DefinitionTablesResult _succeededResult(void);
-
-static FloatEvaluation _failedEvaluation(void) {
-	FloatEvaluation evaluation = { .succeeded = false, .value = 0.0f };
-	return evaluation;
-}
-
-static FloatEvaluation _evaluateNumber(Number * number) {
-	if (number == NULL) {
-		return _failedEvaluation();
-	}
-	FloatEvaluation evaluation = { .succeeded = true, .value = 0.0f };
-	switch (number->type) {
-		case INTEGER:
-			evaluation.value = (float) number->intValue;
-			break;
-		case FLOAT:
-			evaluation.value = number->floatValue;
-			break;
-		default:
-			return _failedEvaluation();
-	}
-	return evaluation;
-}
-
-static FloatEvaluation _evaluateFactor(Factor * factor) {
-	if (factor == NULL) {
-		return _failedEvaluation();
-	}
-	switch (factor->type) {
-		case NUMBER:
-			return _evaluateNumber(factor->number);
-		case EXPRESSION:
-			return _evaluateExpression(factor->expression);
-		default:
-			return _failedEvaluation();
-	}
-}
-
-static FloatEvaluation _evaluateExpression(Expression * expression) {
-	if (expression == NULL) {
-		return _failedEvaluation();
-	}
-	switch (expression->type) {
-		case ADDITION:
-		case SUBTRACTION:
-		case MULTIPLICATION:
-		case DIVISION: {
-			FloatEvaluation left = _evaluateExpression(expression->leftExpression);
-			FloatEvaluation right = _evaluateExpression(expression->rightExpression);
-			if (!left.succeeded || !right.succeeded) {
-				return _failedEvaluation();
-			}
-			FloatEvaluation evaluation = { .succeeded = true, .value = 0.0f };
-			switch (expression->type) {
-				case ADDITION:
-					evaluation.value = left.value + right.value;
-					break;
-				case SUBTRACTION:
-					evaluation.value = left.value - right.value;
-					break;
-				case MULTIPLICATION:
-					evaluation.value = left.value * right.value;
-					break;
-				case DIVISION:
-					if (right.value == 0.0f) {
-						logError(_logger, "Division by zero while evaluating tempo expression.");
-						return _failedEvaluation();
-					}
-					evaluation.value = left.value / right.value;
-					break;
-				default:
-					break;
-			}
-			return evaluation;
-		}
-		case DOT: {
-			FloatEvaluation inner = _evaluateExpression(expression->singleExpression);
-			if (!inner.succeeded) {
-				return _failedEvaluation();
-			}
-			inner.value *= 1.5f;
-			return inner;
-		}
-		case FACTOR:
-			return _evaluateFactor(expression->factor);
-		default:
-			return _failedEvaluation();
-	}
-}
-
 
 static void _setScale(Scale * scale, const char root, const char mode) {
 	scale->root = root;
@@ -308,7 +210,7 @@ DefinitionTablesResult buildDefinitionContext(const Program * program, Definitio
 						logError(_logger, "Global tempo was already defined.");
 						return _failedResult();
 					}
-					FloatEvaluation tempo = _evaluateExpression(config->tempo->expression);
+					FloatEvaluation tempo = evaluateExpression(config->tempo->expression);
 					if (!tempo.succeeded || tempo.value <= 0.0f) {
 						logError(_logger, "Invalid global tempo expression.");
 						return _failedResult();
