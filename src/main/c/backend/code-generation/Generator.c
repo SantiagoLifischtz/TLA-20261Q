@@ -43,17 +43,24 @@ static void _writeMThd(FILE * output, uint16_t numTracks) {
 
 /** PUBLIC FUNCTIONS */
 
-void executeGenerator(CompilerState * compilerState) {
+bool executeGenerator(CompilerState * compilerState) {
 	logDebugging(_logger, "Generating final output...");
 	DefinitionContext context;
-	DefinitionTablesResult result = buildDefinitionContext(compilerState->abstractSyntaxtTree, &context);
-	if (!result.succeeded) {
+	DefinitionTablesResult definitionResult = buildDefinitionContext(compilerState->abstractSyntaxtTree, &context);
+	if (!definitionResult.succeeded) {
 		logError(_logger, "DefinitionTables build error.");
-		return;
+		return false;
+	}
+	PlayBlockResult playResult = resolvePlayBlock(compilerState->abstractSyntaxtTree, &context);
+	if (!playResult.succeeded) {
+		logError(_logger, "Play block resolution error.");
+		destroyDefinitionContext(&context);
+		return false;
 	}
 	// TODO decisión de diseño: fwrite a archivo en particular o a STDOUT y que el usuario haga pipe?
-	_writeMThd(stdout, 1); // TODO, cantidad de tracks obtenerlo de DefinitionTables
+	_writeMThd(stdout, (uint16_t) (playResult.exportTrackCount + 1));
 	// TODO generar contenido MIDI
 	destroyDefinitionContext(&context);
 	logDebugging(_logger, "Generation is done.");
+	return true;
 }

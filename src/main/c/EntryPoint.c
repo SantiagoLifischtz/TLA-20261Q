@@ -37,18 +37,10 @@ const int main(const int length, const char ** arguments) {
 		// ----------------------------------------------------------------------------------------
 		// Beginning of the Backend... ------------------------------------------------------------
 
-		// TODO commented for Stage: 2
-
-		// logDebugging(logger, "Computing expression value...");
-		// ComputationResult computationResult = executeCalculator(&compilerState);
-		// if (computationResult.succeeded) {
-		// 	compilerState.value = computationResult.value;
-		executeGenerator(&compilerState);
-		// }
-		// else {
-		// 	logError(logger, "The computation phase rejects the input program.");
-		// 	compilationStatus = FAILED;
-		// }
+		if (!executeGenerator(&compilerState)) {
+			logError(logger, "The code-generation phase rejects the input program.");
+			compilationStatus = FAILED;
+		}
 
 		// ...end of the Backend. -----------------------------------------------------------------
 		// ----------------------------------------------------------------------------------------
