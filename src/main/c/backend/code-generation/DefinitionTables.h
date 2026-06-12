@@ -15,7 +15,7 @@ typedef struct PatternEntry {
 typedef struct TrackEntry {
 	Identifier * id;
 	Track * track;
-	bool selectedForExport;
+	bool selectedForExport; //el track se exporta al midi
 	struct TrackEntry * next;
 } TrackEntry;
 
