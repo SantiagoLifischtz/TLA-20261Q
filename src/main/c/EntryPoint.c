@@ -1,4 +1,4 @@
-// #include "backend/code-generation/Generator.h" // TODO commented for Stage: 2
+#include "backend/code-generation/Generator.h"
 // #include "backend/domain-specific/Calculator.h" // TODO commented for Stage: 2
 #include "frontend/Frontend.h"
 #include "frontend/lexical-analysis/FlexActions.h"
@@ -29,7 +29,7 @@ const int main(const int length, const char ** arguments) {
 		initializeBisonActionsModule(&compilerState),
 		initializeFrontendModule(lexicalAnalyzer),
 		// initializeCalculatorModule(), // TODO commented for Stage: 2
-		// initializeGeneratorModule() // TODO commented for Stage: 2
+		initializeGeneratorModule()
 	};
 	CompilationStatus compilationStatus = executeSyntacticAnalysis();
 	Program * program = compilerState.abstractSyntaxtTree;
@@ -43,7 +43,7 @@ const int main(const int length, const char ** arguments) {
 		// ComputationResult computationResult = executeCalculator(&compilerState);
 		// if (computationResult.succeeded) {
 		// 	compilerState.value = computationResult.value;
-		// 	executeGenerator(&compilerState);
+		executeGenerator(&compilerState);
 		// }
 		// else {
 		// 	logError(logger, "The computation phase rejects the input program.");
