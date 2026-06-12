@@ -38,6 +38,7 @@ if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
 		src/main/c/backend/code-generation/DefinitionTables.c
 		src/main/c/backend/code-generation/util/Buffer.c
 		src/main/c/backend/code-generation/util/ExpressionEvaluator.c
+		src/main/c/backend/code-generation/midi/MidiInstruments.c
 		src/main/c/EntryPoint.c
 		src/main/c/frontend/Frontend.c
 		src/main/c/frontend/lexical-analysis/FlexActions.c
