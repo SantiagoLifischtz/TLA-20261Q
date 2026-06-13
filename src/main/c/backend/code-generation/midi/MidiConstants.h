@@ -7,6 +7,7 @@
 #define MIDI_FORMAT_MULTI_TRACK   1
 #define MIDI_TICKS_PER_QUARTER    480
 
-#define MIDI_PERCUSSION_CHANNEL 9 // TODO o.o careful with this (special channel)
+#define MIDI_PERCUSSION_CHANNEL 9
+#define MIDI_DEFAULT_VELOCITY   0x40
 
 #endif

@@ -2,19 +2,16 @@
 #define PATTERN_PROCESSOR_HEADER
 
 #include <stdint.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include "../../frontend/syntactic-analysis/AbstractSyntaxTree.h"
+#include "DefinitionTables.h"
+#include "midi/MidiEvents.h"
+#include "midi/MidiInstruments.h"
+#include "midi/MidiNotes.h"
+#include "util/MidiEventList.h"
+#include "util/ExpressionEvaluator.h"
 
-
-// TODO estructuras de datos de tracks, et al
-
-typedef struct MidiEvent {
-	uint32_t ticks;
-	uint8_t * data;
-	uint32_t length;
-	struct MidiEvent * next;
-} MidiEvent;
-
-
-// TODO
-// processNote(), processPattern(), et al 
+uint32_t processNote(Note * note, uint32_t playhead, Scale * scale, unsigned char channel, MidiEventListADT events);
 
 #endif
