@@ -8,6 +8,7 @@
 #include "../../support/type/ModuleDestructor.h"
 #include "DefinitionTables.h"
 #include "PlayBlock.h"
+#include "PatternProcessor.h"
 #include "midi/MidiEvents.h"
 #include "midi/MidiInstruments.h"
 #include "midi/MidiConstants.h"
