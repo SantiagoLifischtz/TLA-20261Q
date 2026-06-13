@@ -99,6 +99,18 @@ static bool _insertTrack(DefinitionContext * context, Track * track) {
 	return true;
 }
 
+PatternEntry * findPatternEntry(const DefinitionContext * context, const char * name) {
+	if (context == NULL || name == NULL) {
+		return NULL;
+	}
+	for (PatternEntry * entry = context->patterns; entry != NULL; entry = entry->next) {
+		if (strcmp(entry->id->name, name) == 0) {
+			return entry;
+		}
+	}
+	return NULL;
+}
+
 TrackEntry * findTrackEntry(const DefinitionContext * context, const char * name) {
 	if (context == NULL || name == NULL) {
 		return NULL;

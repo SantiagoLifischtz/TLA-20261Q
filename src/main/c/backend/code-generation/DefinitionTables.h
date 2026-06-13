@@ -50,6 +50,7 @@ typedef struct {
 DefinitionTablesResult buildDefinitionContext(const Program * program, DefinitionContext * context);
 void destroyDefinitionContext(DefinitionContext * context);
 TrackEntry * findTrackEntry(const DefinitionContext * context, const char * name);
+PatternEntry * findPatternEntry(const DefinitionContext * context, const char * name);
 bool assignInstrumentChannel(DefinitionContext * context, const char * instrumentName);
 
 #endif
