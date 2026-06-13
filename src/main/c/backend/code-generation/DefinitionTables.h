@@ -15,6 +15,7 @@ typedef struct PatternEntry {
 typedef struct TrackEntry {
 	Identifier * id;
 	Track * track;
+	bool selectedForExport; //el track se exporta al midi
 	struct TrackEntry * next;
 } TrackEntry;
 
@@ -48,5 +49,7 @@ typedef struct {
 
 DefinitionTablesResult buildDefinitionContext(const Program * program, DefinitionContext * context);
 void destroyDefinitionContext(DefinitionContext * context);
+TrackEntry * findTrackEntry(const DefinitionContext * context, const char * name);
+bool assignInstrumentChannel(DefinitionContext * context, const char * instrumentName);
 
 #endif

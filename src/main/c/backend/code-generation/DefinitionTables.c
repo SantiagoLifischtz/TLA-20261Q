@@ -34,7 +34,6 @@ static bool _findPattern(const DefinitionContext * context, const char * name);
 static bool _findTrack(const DefinitionContext * context, const char * name);
 static bool _insertPattern(DefinitionContext * context, PatternDefinition * pattern);
 static bool _insertTrack(DefinitionContext * context, Track * track);
-static bool _assignInstrumentChannel(DefinitionContext * context, const char * instrumentName);
 static bool _isChannelAvailable(const DefinitionContext * context, unsigned char channel);
 static DefinitionTablesResult _failedResult(void);
 static DefinitionTablesResult _succeededResult(void);
@@ -94,9 +93,22 @@ static bool _insertTrack(DefinitionContext * context, Track * track) {
 	}
 	entry->id = track->id;
 	entry->track = track;
+	entry->selectedForExport = false;
 	entry->next = context->tracks;
 	context->tracks = entry;
 	return true;
+}
+
+TrackEntry * findTrackEntry(const DefinitionContext * context, const char * name) {
+	if (context == NULL || name == NULL) {
+		return NULL;
+	}
+	for (TrackEntry * entry = context->tracks; entry != NULL; entry = entry->next) {
+		if (strcmp(entry->id->name, name) == 0) {
+			return entry;
+		}
+	}
+	return NULL;
 }
 
 static bool _isChannelAvailable(const DefinitionContext * context, unsigned char channel) {
@@ -108,7 +120,7 @@ static bool _isChannelAvailable(const DefinitionContext * context, unsigned char
 	return true;
 }
 
-static bool _assignInstrumentChannel(DefinitionContext * context, const char * instrumentName) {
+bool assignInstrumentChannel(DefinitionContext * context, const char * instrumentName) {
 	if (instrumentName == NULL) {
 		logError(_logger, "Track is missing an instrument declaration.");
 		return false;
@@ -261,10 +273,6 @@ DefinitionTablesResult buildDefinitionContext(const Program * program, Definitio
 					return _failedResult();
 				}
 				if (!_insertTrack(context, track)) {
-					return _failedResult();
-				}
-				//Cada vez que se inserta una track, registra un instrumento en la tabla de canales
-				if (!_assignInstrumentChannel(context, track->instrument != NULL ? track->instrument->name : NULL)) {
 					return _failedResult();
 				}
 				break;

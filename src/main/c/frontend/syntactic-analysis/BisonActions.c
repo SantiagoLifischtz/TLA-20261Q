@@ -153,7 +153,7 @@ Play * PlayTracksSemanticAction(TrackIDs * tracks) {
 Play * PlayAllSemanticAction() {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Play * play = calloc(1, sizeof(Play));
-	play->type = ALL;
+	play->type = PLAY_ALL;
 	return play;
 }
 
