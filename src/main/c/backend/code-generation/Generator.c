@@ -20,7 +20,7 @@ ModuleDestructor initializeGeneratorModule() {
 
 /** PRIVATE FUNCTIONS */
 
-static void _writeMThd(FILE * output, uint16_t numTracks);
+static bool _writeMThd(FILE * output, uint16_t numTracks);
 
 //
 //
@@ -28,8 +28,12 @@ static void _writeMThd(FILE * output, uint16_t numTracks);
 
 
 
-static void _writeMThd(FILE * output, uint16_t numTracks) {
+static bool _writeMThd(FILE * output, uint16_t numTracks) {
 	BufferADT buffer = bufferNew();
+	if (buffer == NULL) {
+		logError(_logger, "Mthd mem alloc fail.");
+		return false;
+	}
 
 	bufferAppendData(buffer, MIDI_CHUNK_TYPE_HEADER, 4);
 	bufferAppendU32BE(buffer, MIDI_HEADER_CHUNK_LENGTH);
@@ -39,6 +43,10 @@ static void _writeMThd(FILE * output, uint16_t numTracks) {
 	fwrite(bufferGetData(buffer), 1, bufferGetLength(buffer), output);
 
 	bufferFree(buffer);
+
+	return true;
+}
+
 }
 
 /** PUBLIC FUNCTIONS */
@@ -58,8 +66,12 @@ bool executeGenerator(CompilerState * compilerState) {
 		return false;
 	}
 	// TODO decisión de diseño: fwrite a archivo en particular o a STDOUT y que el usuario haga pipe?
-	_writeMThd(stdout, (uint16_t) (playResult.exportTrackCount + 1));
 	// TODO generar contenido MIDI
+	if (!_writeMThd(stdout, (uint16_t) (playResult.exportTrackCount + 1))) {
+		logError(_logger, "Failed to write MIDI header.");
+		destroyDefinitionContext(&context);
+		return false;
+	}
 	destroyDefinitionContext(&context);
 	logDebugging(_logger, "Generation is done.");
 	return true;
