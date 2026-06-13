@@ -87,3 +87,13 @@ FloatEvaluation evaluateExpression(Expression * expression) {
 			return _failedEvaluation();
 	}
 }
+
+uint32_t evaluateDurationToTicks(Expression * expression) {
+	FloatEvaluation eval = evaluateExpression(expression);
+
+	if (!eval.succeeded || eval.value <= 0) {
+		return 0; // 0 duration is error in MIDI
+	}
+
+	return (uint32_t) (eval.value * MIDI_TICKS_PER_QUARTER);
+}
