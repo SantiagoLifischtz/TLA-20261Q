@@ -193,11 +193,13 @@ uint8_t getMidiInstrumentNumber(const char * instrumentName) {
 	return 0;
 }
 
-uint8_t getMidiPercussionNumber(const char * name) {
+MidiNoteResult getMidiPercussionNumber(const char * name) {
 	for (uint8_t i = 0; i < 128; ++i) {
 		if (percussionNames[i] != NULL && strcmp(name, percussionNames[i]) == 0) {
-			return i;
+			MidiNoteResult result = { .succeeded = true, .value = i };
+			return result;
 		}
 	}
-	return 128;
+	MidiNoteResult result = { .succeeded = false, .value = 0 };
+	return result;
 }
