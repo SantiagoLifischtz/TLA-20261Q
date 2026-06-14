@@ -20,7 +20,10 @@ MidiNoteResult getMidiDegreeNote(int degree, int octave, Scale * scale) {
 	result.value = 0;
 
 	if (scale != NULL && degree >= 1 && degree <= 7) {
-		uint8_t note = (uint8_t) (scale->degreeToSemitone[degree] + 12 * octave); // TODO check
+		int accumulated = scale->degreeToSemitone[degree];
+		int resultOctave = octave + accumulated / 12;
+		int resultSemitone = accumulated % 12;
+		uint8_t note = (uint8_t) (resultSemitone + 12 * resultOctave);
 		if (note <= 127) {
 			result.succeeded = true;
 			result.value = note;

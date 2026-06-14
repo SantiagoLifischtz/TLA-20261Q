@@ -43,7 +43,7 @@ static void _setScale(Scale * scale, const char root, const char mode) {
 	scale->mode = mode;
 	for (int degree = 1; degree <= 7; ++degree) {
 		const char interval = MODE_INTERVALS[(unsigned char) mode][degree - 1];
-		scale->degreeToSemitone[degree] = (char) ((root + interval) % 12);
+		scale->degreeToSemitone[degree] = (char) (root + interval);
 	}
 }
 
