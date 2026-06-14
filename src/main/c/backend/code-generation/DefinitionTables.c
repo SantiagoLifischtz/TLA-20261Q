@@ -137,6 +137,28 @@ bool assignInstrumentChannel(DefinitionContext * context, const char * instrumen
 		logError(_logger, "Track is missing an instrument declaration.");
 		return false;
 	}
+	if (strcmp(instrumentName, DSL_DRUMS_INSTRUMENT_NAME) == 0) {
+		for (InstrumentChannelEntry * entry = context->instrumentChannels; entry != NULL; entry = entry->next) {
+			if (entry->channel == PERCUSSION_CHANNEL) {
+				return true;
+			}
+		}
+		InstrumentChannelEntry * entry = calloc(1, sizeof(InstrumentChannelEntry));
+		if (entry == NULL) {
+			logError(_logger, "Out of memory while building instrument channel table.");
+			return false;
+		}
+		entry->instrumentName = strdup(instrumentName);
+		if (entry->instrumentName == NULL) {
+			free(entry);
+			logError(_logger, "Out of memory while building instrument channel table.");
+			return false;
+		}
+		entry->channel = PERCUSSION_CHANNEL;
+		entry->next = context->instrumentChannels;
+		context->instrumentChannels = entry;
+		return true;
+	}
 	// Si se repite el instrumento, se asigna el mismo canal
 	for (InstrumentChannelEntry * entry = context->instrumentChannels; entry != NULL; entry = entry->next) {
 		if (strcmp(entry->instrumentName, instrumentName) == 0) {

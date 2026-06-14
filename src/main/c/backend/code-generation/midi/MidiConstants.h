@@ -10,4 +10,6 @@
 #define MIDI_PERCUSSION_CHANNEL 9
 #define MIDI_DEFAULT_VELOCITY   0x40
 
+#define DSL_DRUMS_INSTRUMENT_NAME "Drums"
+
 #endif
