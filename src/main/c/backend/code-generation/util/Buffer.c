@@ -45,7 +45,7 @@ static void _writeU32toBE(uint8_t buffer[4], uint32_t value) {
  * @return Number of bytes written.
  */
 static uint32_t _writeVariableLength(uint8_t * buffer, uint32_t value) {
-	uint8_t temp[4];
+	uint8_t temp[5];
 	uint32_t i = 0;
 	uint32_t j;
 	temp[0] = value & 0x7F;
@@ -132,7 +132,7 @@ void bufferAppendU32BE(BufferADT buffer, uint32_t value) {
 }
 
 uint32_t bufferAppendVariableLength(BufferADT buffer, uint32_t value) {
-	uint8_t tmp[4];
+	uint8_t tmp[5];
 	uint32_t n = _writeVariableLength(tmp, value);
 	bufferAppendData(buffer, tmp, n);
 	return n;
