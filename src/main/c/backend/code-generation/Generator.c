@@ -23,12 +23,7 @@ ModuleDestructor initializeGeneratorModule() {
 
 static bool _writeMThd(FILE * output, uint16_t numTracks);
 static bool _generateAllTracks(FILE * output, DefinitionContext * context);
-
-//
-//
-
-
-
+static bool _writeMTrk(MidiEventListADT events, FILE * output);
 
 static bool _writeMThd(FILE * output, uint16_t numTracks) {
 	BufferADT buffer = bufferNew();
@@ -48,6 +43,42 @@ static bool _writeMThd(FILE * output, uint16_t numTracks) {
 	return true;
 }
 
+static bool _writeMTrk(MidiEventListADT events, FILE * output) {
+	BufferADT trackData = bufferNew();
+	if (trackData == NULL) {
+		logError(_logger, "MTrk mem alloc fail.");
+		return false;
+	}
+
+	uint32_t previousTicks = 0;
+	midiEventListResetIterator(events);
+
+	while (midiEventListHasNext(events)) {
+		MidiEventResult result = midiEventListNext(events);
+
+		bufferAppendVariableLength(trackData, result.event.ticks - previousTicks);
+
+		if (result.event.data != NULL && result.event.length > 0) {
+			bufferAppendData(trackData, result.event.data, result.event.length);
+		}
+
+		previousTicks = result.event.ticks;
+	}
+
+	BufferADT chunk = bufferNew();
+	if (chunk == NULL) {
+		logError(_logger, "MTrk chunk buffer alloc fail.");
+		bufferFree(trackData);
+		return false;
+	}
+
+	bufferAppendData(chunk, MIDI_CHUNK_TYPE_TRACK, 4);
+	bufferAppendU32BE(chunk, bufferGetLength(trackData));
+	bufferAppendData(chunk, bufferGetData(trackData), bufferGetLength(trackData));
+	bufferFree(trackData);
+
+	fwrite(bufferGetData(chunk), 1, bufferGetLength(chunk), output);
+	bufferFree(chunk);
 
 	return true;
 }

@@ -73,31 +73,24 @@ uint32_t midiEventListGetCount(MidiEventListADT midiEventList) {
 }
 
 bool midiEventListHasNext(MidiEventListADT midiEventList) {
-	if (midiEventList->current == NULL) {
-		midiEventList->current = midiEventList->head;
-	}
-
 	return midiEventList->current != NULL;
 }
 
-bool midiEventListNext(MidiEventListADT midiEventList, uint32_t * outTicks, uint8_t ** outData, uint32_t * outLength) {
+void midiEventListResetIterator(MidiEventListADT midiEventList) {
+	midiEventList->current = midiEventList->head;
+}
+
+MidiEventResult midiEventListNext(MidiEventListADT midiEventList) {
 	MidiEvent * midiEvent = midiEventList->current;
 
-	if (midiEvent == NULL) {
-		return false;
+	MidiEventResult result;
+	result.succeeded = midiEvent != NULL;
+	if (midiEvent != NULL) {
+		result.event.ticks = midiEvent->ticks;
+		result.event.data = midiEvent->data;
+		result.event.length = midiEvent->length;
+		midiEventList->current = midiEvent->next;
 	}
 
-	if (outTicks) {
-		*outTicks = midiEvent->ticks;
-	}
-	if (outData) {
-		*outData = midiEvent->data;
-	}
-	if (outLength) {
-		*outLength = midiEvent->length;
-	}
-
-	midiEventList->current = midiEvent->next;
-
-	return true;
+	return result;
 }
