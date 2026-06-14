@@ -12,6 +12,7 @@ typedef struct MidiEvent {
 
 typedef struct MidiEventListCDT {
 	uint32_t count;
+	uint32_t lastTick;
 	MidiEvent * head;
 	MidiEvent * tail;
 	MidiEvent * current;
@@ -65,11 +66,19 @@ bool midiEventListAppend(MidiEventListADT midiEventList, uint32_t ticks, uint8_t
 
 	midiEventList->count++;
 	
+	if (ticks > midiEventList->lastTick) {
+		midiEventList->lastTick = ticks;
+	}
+	
 	return true;
 }
 
 uint32_t midiEventListGetCount(MidiEventListADT midiEventList) {
 	return midiEventList->count;
+}
+
+uint32_t midiEventListGetLastTick(MidiEventListADT midiEventList) {
+	return midiEventList->lastTick;
 }
 
 bool midiEventListHasNext(MidiEventListADT midiEventList) {
