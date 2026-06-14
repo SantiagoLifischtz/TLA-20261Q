@@ -16,20 +16,7 @@ static const unsigned char PERCUSSION_CHANNEL = 9;
 static const unsigned char CHANNEL_COUNT = 16;
 
 
-// Filas = modos 0=major…6=locrian
-// Columnas = semitonos grados 1–7
-static const char MODE_INTERVALS[7][7] = {
-	{0, 2, 4, 5, 7, 9, 11},
-	{0, 2, 3, 5, 7, 9, 10},
-	{0, 1, 3, 5, 7, 8, 10},
-	{0, 2, 4, 6, 7, 9, 11},
-	{0, 2, 4, 5, 7, 9, 10},
-	{0, 2, 3, 5, 7, 8, 10},
-	{0, 1, 3, 5, 6, 8, 10},
-};
 
-static void _setScale(Scale * scale, const char root, const char mode);
-static void _setDefaultScale(Scale * scale);
 static bool _findPattern(const DefinitionContext * context, const char * name);
 static bool _findTrack(const DefinitionContext * context, const char * name);
 static bool _insertPattern(DefinitionContext * context, PatternDefinition * pattern);
@@ -37,20 +24,6 @@ static bool _insertTrack(DefinitionContext * context, Track * track);
 static bool _isChannelAvailable(const DefinitionContext * context, unsigned char channel);
 static DefinitionTablesResult _failedResult(void);
 static DefinitionTablesResult _succeededResult(void);
-
-static void _setScale(Scale * scale, const char root, const char mode) {
-	scale->root = root;
-	scale->mode = mode;
-	for (int degree = 1; degree <= 7; ++degree) {
-		const char interval = MODE_INTERVALS[(unsigned char) mode][degree - 1];
-		scale->degreeToSemitone[degree] = (char) (root + interval);
-	}
-}
-
-//Si no hay escala, que tenga un default de C major
-static void _setDefaultScale(Scale * scale) {
-	_setScale(scale, 0, 0);
-}
 
 static bool _findPattern(const DefinitionContext * context, const char * name) {
 	for (PatternEntry * entry = context->patterns; entry != NULL; entry = entry->next) {
@@ -193,6 +166,18 @@ bool assignInstrumentChannel(DefinitionContext * context, const char * instrumen
 	return false;
 }
 
+unsigned char getInstrumentChannel(const DefinitionContext * context, const char * instrumentName) {
+	if (context == NULL || instrumentName == NULL) {
+		return 0;
+	}
+	for (InstrumentChannelEntry * entry = context->instrumentChannels; entry != NULL; entry = entry->next) {
+		if (strcmp(entry->instrumentName, instrumentName) == 0) {
+			return entry->channel;
+		}
+	}
+	return 0;
+}
+
 //Falla la compilación ante un error semántico
 static DefinitionTablesResult _failedResult(void) {
 	DefinitionTablesResult result = { .succeeded = false };
@@ -275,7 +260,7 @@ DefinitionTablesResult buildDefinitionContext(const Program * program, Definitio
 						logError(_logger, "Invalid global key definition.");
 						return _failedResult();
 					}
-					_setScale(&context->globalScale, key->note->value, key->mode->value);
+					applyKeyToScale(key, &context->globalScale);
 					context->globalScaleSet = true;
 				}
 				break;
@@ -323,7 +308,7 @@ DefinitionTablesResult buildDefinitionContext(const Program * program, Definitio
 	}
 	//Si no hay escala, que tenga un default de C major
 	if (!context->globalScaleSet) {
-		_setDefaultScale(&context->globalScale);
+		setDefaultScale(&context->globalScale);
 	}
 
 	logDebugging(
