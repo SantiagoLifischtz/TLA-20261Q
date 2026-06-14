@@ -95,5 +95,5 @@ uint32_t evaluateDurationToTicks(Expression * expression) {
 		return 0; // 0 duration is error in MIDI
 	}
 
-	return (uint32_t) (eval.value * MIDI_TICKS_PER_QUARTER);
+	return (uint32_t) (eval.value*4 * MIDI_TICKS_PER_QUARTER);
 }
