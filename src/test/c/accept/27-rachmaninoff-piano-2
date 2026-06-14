@@ -5,31 +5,31 @@
 tempo 45;
 
 pattern left_hand {
-    E4 w;
-    G#4 w;
+    E4 q;
+    G#4 q;
 
-    D#4 w;
-    G#4 w;
+    D#4 q;
+    G#4 q;
 
-    C#4 w;
-    G#4 w;
+    C#4 q;
+    G#4 q;
 
-    C4 w;
-    F#4 w;
+    C4 q;
+    F#4 q;
 }
 
 pattern right_hand {
-    [G#4, B4, E5] w;
-    [B4, E5, G#5] w;
+    [G#4, B4, E5] q;
+    [B4, E5, G#5] q;
 
-    [G#4, B4, D#5] w;
-    [B4, D#5, G#5] w;
+    [G#4, B4, D#5] q;
+    [B4, D#5, G#5] q;
 
-    [G#4, B4, C#5] w;
-    [B4, C#5, G#5] w;
+    [G#4, B4, C#5] q;
+    [B4, C#5, G#5] q;
 
-    [E4, A4, C5] w;
-    [A4, C5, F#5] w;
+    [E4, A4, C5] q;
+    [A4, C5, F#5] q;
 }
 
 track main {
