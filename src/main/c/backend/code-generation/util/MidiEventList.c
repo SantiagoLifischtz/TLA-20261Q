@@ -39,7 +39,7 @@ void midiEventListFree(MidiEventListADT midiEventList) {
 }
 
 bool midiEventListAppend(MidiEventListADT midiEventList, uint32_t ticks, uint8_t * data, uint32_t length) {
-	MidiEvent * midiEvent = malloc(sizeof(midiEvent));
+	MidiEvent * midiEvent = malloc(sizeof(MidiEvent));
 
 	if (midiEvent == NULL) {
 		return false;
