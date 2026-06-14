@@ -113,8 +113,8 @@ static bool _generateAllTracks(FILE * output, DefinitionContext * context) {
 	}
 	setPatternProcessorConductorTrack(conductorTrack);
 
-	// set global tempo at tick 0 (explicit or default from DefinitionTables)
-	{
+	// set global tempo at tick 0
+	if (context->globalTempoSet) {
 		uint8_t tempoData[6];
 		buildTempoEvent(tempoData, MIDI_TEMPO_FROM_BPM(context->globalTempoBpm));
 
