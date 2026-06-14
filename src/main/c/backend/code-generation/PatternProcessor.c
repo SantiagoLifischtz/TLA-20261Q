@@ -1,4 +1,12 @@
 #include "PatternProcessor.h"
+#include "../../support/logging/Logger.h"
+
+static Logger * _logger = NULL;
+
+void setPatternProcessorLogger(Logger * logger) {
+	_logger = logger;
+}
+
 
 uint32_t processNote(Note * note, uint32_t playhead, Scale * scale, unsigned char channel, MidiEventListADT events) {
 	if (note == NULL || note->noteAndOctave == NULL || note->duration == NULL) {
@@ -13,13 +21,24 @@ uint32_t processNote(Note * note, uint32_t playhead, Scale * scale, unsigned cha
 		case FROM_DEGREE:
 			noteRes = getMidiDegreeNote(note->noteAndOctave->degree->number, note->noteAndOctave->degree->octave, scale);
 			break;
-		case FROM_STRING:
-			noteRes = getMidiPercussionNumber(note->noteAndOctave->identifier);
+		case FROM_STRING: {
+			MidiPercussionResult midiPercussionResult = getMidiPercussionNumber(note->noteAndOctave->identifier);
+			noteRes.succeeded = midiPercussionResult.succeeded;
+			noteRes.value = midiPercussionResult.value;
 			break;
+		}
 		default:
 			return 0;
 	}
 	if (!noteRes.succeeded) {
+		if (note->noteAndOctave->type == FROM_STRING) {
+			logError(_logger, "Unknown percussion: %s", note->noteAndOctave->identifier);
+		} else if (note->noteAndOctave->type == ABSOLUTE) {
+			logError(_logger, "Invalid note: %c%c", note->noteAndOctave->note->value, note->noteAndOctave->octave);
+		} else if (note->noteAndOctave->type == FROM_DEGREE) {
+			logError(_logger, "Invalid degree: %d in octave %d",
+			         note->noteAndOctave->degree->number, note->noteAndOctave->degree->octave);
+		}
 		return 0;
 	}
 

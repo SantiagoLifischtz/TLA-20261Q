@@ -182,24 +182,28 @@ static const char * percussionNames[128] = {
 	[81] = "Open Triangle",
 };
 
-uint8_t getMidiInstrumentNumber(const char * instrumentName) {
-
+MidiInstrumentResult getMidiInstrumentNumber(const char * instrumentName) {
 	// TODO, O(n) se puede mejorar
 	for (uint8_t i = 0; i < 128; ++i) {
 		if (instrumentNames[i] != NULL && strcmp(instrumentName, instrumentNames[i]) == 0) {
-			return i;
-		}
-	}
-	return 0;
-}
-
-MidiNoteResult getMidiPercussionNumber(const char * name) {
-	for (uint8_t i = 0; i < 128; ++i) {
-		if (percussionNames[i] != NULL && strcmp(name, percussionNames[i]) == 0) {
-			MidiNoteResult result = { .succeeded = true, .value = i };
+			MidiInstrumentResult result = { .succeeded = true, .value = i };
 			return result;
 		}
 	}
-	MidiNoteResult result = { .succeeded = false, .value = 0 };
+
+	MidiInstrumentResult result = { .succeeded = false, .value = 0 };
+	return result;
+}
+
+MidiPercussionResult getMidiPercussionNumber(const char * name) {
+	// TODO, idem
+	for (uint8_t i = 0; i < 128; ++i) {
+		if (percussionNames[i] != NULL && strcmp(name, percussionNames[i]) == 0) {
+			MidiPercussionResult result = { .succeeded = true, .value = i };
+			return result;
+		}
+	}
+	
+	MidiPercussionResult result = { .succeeded = false, .value = 0 };
 	return result;
 }
