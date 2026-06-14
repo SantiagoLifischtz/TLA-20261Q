@@ -1,0 +1,6 @@
+track piano {
+    instrument "Acoustic Grand Piano";
+    C4 1/0;
+}
+
+play all;

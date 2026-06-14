@@ -1,0 +1,17 @@
+track piano {
+    instrument "Acoustic Grand Piano";
+    C4 q;
+}
+
+track melody {
+    instrument "Violin";
+    E4 q;
+    G4 q;
+}
+
+track bass {
+    instrument "Electric Bass (picked)";
+    C2 h;
+}
+
+play { melody; }

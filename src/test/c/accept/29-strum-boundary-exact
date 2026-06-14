@@ -1,0 +1,6 @@
+track guitar {
+    instrument "Acoustic Guitar (nylon)";
+    strum(3/8, 1/8, C3, E3, G3);
+}
+
+play all;

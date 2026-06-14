@@ -1,0 +1,6 @@
+track piano {
+    instrument "Not A Real Instrument";
+    C4 q;
+}
+
+play all;

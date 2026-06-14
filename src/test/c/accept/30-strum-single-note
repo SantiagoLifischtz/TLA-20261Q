@@ -1,0 +1,6 @@
+track guitar {
+    instrument "Acoustic Guitar (nylon)";
+    strum(h, q, C4);
+}
+
+play all;

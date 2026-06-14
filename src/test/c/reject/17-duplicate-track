@@ -1,0 +1,11 @@
+track piano {
+    instrument "Acoustic Grand Piano";
+    C4 q;
+}
+
+track piano {
+    instrument "Violin";
+    D4 q;
+}
+
+play all;

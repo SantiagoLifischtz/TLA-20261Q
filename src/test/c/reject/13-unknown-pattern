@@ -1,0 +1,6 @@
+track piano {
+    instrument "Acoustic Grand Piano";
+    ghost_pattern;
+}
+
+play all;
