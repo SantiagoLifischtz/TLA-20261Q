@@ -1,0 +1,123 @@
+tempo 20;
+key C dorian;
+
+pattern all_durations {
+    C4 w;
+    C4 h;
+    C4 q;
+    C4 e;
+    C4 s;
+    C4 ths;
+    C4 sxf;
+    C4 q dot;
+    C4 3/8;
+    C4 q + e;
+    C4 e * 3;
+}
+
+pattern degree_arpeggio {
+    degree(1, 4) q;
+    degree(3, 4) q;
+    degree(5, 4) q;
+    degree(3, 4) q;
+}
+
+pattern chord_block {
+    [C4, E4, G4] h;
+    [F4, A4, C5] h;
+}
+
+pattern shennanigan {
+    [degree_arpeggio, chord_block];
+}
+
+pattern strum_example {
+    strum(w, q, E4, E4, G4, G4);
+}
+
+pattern arpeggio_example {
+    arpeggio(w, C2, E2, G2, C2);
+}
+
+pattern repeat_example {
+    repeat 3 {
+        C4 e;  D4 e;  E4 e;  F4 e;
+    }
+}
+
+pattern step_example {
+    step q {
+        degree(5, 4) e;
+        degree(4, 4) e;
+        degree(3, 4) e;
+        degree(2, 4) e;
+    }
+}
+
+pattern float_durations {
+    C4 0.5;  D4 1.0;  E4 2.0;
+}
+
+pattern nested_block {
+    {
+        C4 q;
+        { E4 q;  G4 q; }
+    }
+}
+
+
+track piano {
+    instrument "Acoustic Grand Piano";
+
+    tempo 60;
+    key G lydian;
+
+    rest 4 * 1;
+
+    all_durations;
+    rest 4;
+
+    degree(1, 4) q;
+    degree(2, 4) q;
+    degree(3, 4) q;
+    degree(4, 4) q;
+    rest w;
+
+    [C4, E4, G4] h;
+    rest w;
+
+    degree_arpeggio 4;
+
+    chord_block 4;
+
+    shennanigan 4;
+
+    strum_example 4;
+
+    arpeggio_example 4;
+    
+    repeat_example 4;
+
+    step_example 4;
+
+    float_durations 4;
+
+    nested_block 4;
+}
+
+track drums {
+    instrument "Drums";
+
+    "electric_bass_drum" q;
+    "closed_hi_hat" e;
+    "cowbell" q;
+
+    ["electric_bass_drum", "cowbell", "closed_hi_hat"] h;
+
+    "electric_bass_drum" q;
+    "cowbell" q;
+    "closed_hi_hat" e;
+}
+
+
+play { drums, piano; }
