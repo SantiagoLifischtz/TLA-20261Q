@@ -33,7 +33,7 @@ static bool _generateAllTracks(FILE * output, DefinitionContext * context);
 static bool _writeMThd(FILE * output, uint16_t numTracks) {
 	BufferADT buffer = bufferNew();
 	if (buffer == NULL) {
-		logError(_logger, "Mthd mem alloc fail.");
+		logError(_logger, "MThd mem alloc fail.");
 		return false;
 	}
 
@@ -45,6 +45,9 @@ static bool _writeMThd(FILE * output, uint16_t numTracks) {
 	fwrite(bufferGetData(buffer), 1, bufferGetLength(buffer), output);
 
 	bufferFree(buffer);
+	return true;
+}
+
 
 	return true;
 }
