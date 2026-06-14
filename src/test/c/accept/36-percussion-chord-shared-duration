@@ -1,0 +1,6 @@
+track drums {
+    instrument "Drums";
+    ["electric_bass_drum", "closed_hi_hat", "acoustic_snare"] q;
+}
+
+play all;

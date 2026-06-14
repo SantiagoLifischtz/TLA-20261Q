@@ -1,0 +1,9 @@
+key C major;
+key F major;
+
+track piano {
+    instrument "Acoustic Grand Piano";
+    C4 q;
+}
+
+play all;

@@ -1,0 +1,6 @@
+track drums {
+    instrument "Drums";
+    "fake_cowbell" q;
+}
+
+play all;

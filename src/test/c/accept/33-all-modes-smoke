@@ -1,0 +1,11 @@
+pattern once { degree(1, 4) e; }
+
+track t1 { instrument "Acoustic Grand Piano"; key C major;      once; }
+track t2 { instrument "Violin";               key C dorian;     once; }
+track t3 { instrument "Viola";                key C phrygian;   once; }
+track t4 { instrument "Cello";              key C lydian;     once; }
+track t5 { instrument "Flute";              key C mixolydian; once; }
+track t6 { instrument "Oboe";               key A minor;      once; }
+track t7 { instrument "Clarinet";           key C locrian;    once; }
+
+play all;

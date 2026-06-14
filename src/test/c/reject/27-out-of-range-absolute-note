@@ -1,0 +1,6 @@
+track piano {
+    instrument "Acoustic Grand Piano";
+    C 11 q;
+}
+
+play all;

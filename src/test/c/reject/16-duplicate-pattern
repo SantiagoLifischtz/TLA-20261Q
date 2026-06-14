@@ -1,0 +1,9 @@
+pattern motif { C4 q; }
+pattern motif { D4 q; }
+
+track piano {
+    instrument "Acoustic Grand Piano";
+    motif;
+}
+
+play all;

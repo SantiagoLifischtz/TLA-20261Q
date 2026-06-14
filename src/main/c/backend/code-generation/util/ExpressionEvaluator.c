@@ -56,9 +56,11 @@ FloatEvaluation evaluateExpression(Expression * expression) {
 				case ADDITION:
 					evaluation.value = left.value + right.value;
 					break;
-				case SUBTRACTION:
-					evaluation.value = left.value - right.value;
+				case SUBTRACTION: {
+					float difference = left.value - right.value;
+					evaluation.value = difference < 0.0f ? 0.0f : difference;
 					break;
+				}
 				case MULTIPLICATION:
 					evaluation.value = left.value * right.value;
 					break;

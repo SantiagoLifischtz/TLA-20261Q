@@ -1,0 +1,6 @@
+track piano {
+    instrument "Acoustic Grand Piano";
+    arpeggio(w, C4);
+}
+
+play all;
