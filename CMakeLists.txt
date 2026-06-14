@@ -42,6 +42,7 @@ if (CMAKE_C_COMPILER_ID STREQUAL "GNU")
 		src/main/c/backend/code-generation/util/ExpressionEvaluator.c
 		src/main/c/backend/code-generation/util/MidiEventList.c
 		src/main/c/backend/code-generation/util/ScaleUtils.c
+		src/main/c/backend/code-generation/midi/MidiEvents.c
 		src/main/c/backend/code-generation/midi/MidiInstruments.c
 		src/main/c/backend/code-generation/midi/MidiNotes.c
 		src/main/c/EntryPoint.c
