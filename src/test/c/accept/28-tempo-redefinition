@@ -1,0 +1,29 @@
+tempo 100;
+key F major;
+
+pattern melody_inline {
+
+    tempo 120;
+    F#3 e;
+    A3 e;
+
+    tempo 121;
+    F#4 q dot;
+    Bb3 e;
+    C#4 q;
+
+    tempo 122;
+    B3 q;
+    D4 q;
+
+    tempo 123;
+    E3 h;
+
+}
+
+track piano {
+    instrument "Acoustic Grand Piano";
+    melody_inline;
+}
+
+play all;
