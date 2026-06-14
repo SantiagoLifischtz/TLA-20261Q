@@ -113,18 +113,6 @@ static bool _generateAllTracks(FILE * output, DefinitionContext * context) {
 	}
 	setPatternProcessorConductorTrack(conductorTrack);
 
-	// set global tempo at tick 0 (explicit or default from DefinitionTables)
-	{
-		uint8_t tempoData[6];
-		buildTempoEvent(tempoData, MIDI_TEMPO_FROM_BPM(context->globalTempoBpm));
-
-		if (!midiEventListAppend(conductorTrack, 0, tempoData, 6)) {
-			_freeTrackResources(trackEvents, exportCount, conductorTrack);
-
-			return false;
-		}
-	}
-
 	uint32_t maxEndTick = 0;
 	uint16_t trackIndex = 0;
 
@@ -157,6 +145,19 @@ static bool _generateAllTracks(FILE * output, DefinitionContext * context) {
 			maxEndTick = endTick;
 		}
 		trackIndex++;
+	}
+
+	// Global tempo must be the first event on the conductor track (tick 0), before
+	// any local tempo changes that may also fall at playhead 0 during track processing.
+	{
+		uint8_t tempoData[6];
+		buildTempoEvent(tempoData, MIDI_TEMPO_FROM_BPM(context->globalTempoBpm));
+
+		if (!midiEventListPrepend(conductorTrack, 0, tempoData, 6)) {
+			_freeTrackResources(trackEvents, exportCount, conductorTrack);
+
+			return false;
+		}
 	}
 
 	// End of Track to conductor track
