@@ -7,6 +7,11 @@
 #define MIDI_FORMAT_MULTI_TRACK   1
 #define MIDI_TICKS_PER_QUARTER    480
 
-#define MIDI_PERCUSSION_CHANNEL 9 // TODO o.o careful with this (special channel)
+#define MIDI_PERCUSSION_CHANNEL 9
+#define MIDI_DEFAULT_VELOCITY   0x40
+
+#define MIDI_TEMPO_FROM_BPM(bpm) ((uint32_t)(60000000.0f / (bpm)))
+
+#define DSL_DRUMS_INSTRUMENT_NAME "Drums"
 
 #endif

@@ -2,6 +2,6 @@ tempo 120;
 key C major;
 
 track piano {
-    instrument "Acoustic Grand";
+    instrument "Acoustic Grand Piano";
     degree(7, 2 q;
 }

@@ -3,7 +3,7 @@ pattern up_down {
 }
 
 track saw {
-    instrument "Saw Wave";
+    instrument "Lead 2 (sawtooth wave)";
     [
         F#2 w,
         { repeat 8 F#6 e; },

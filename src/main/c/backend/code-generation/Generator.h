@@ -12,11 +12,14 @@
 #include "midi/MidiEvents.h"
 #include "midi/MidiInstruments.h"
 #include "midi/MidiConstants.h"
+#include "util/MidiEventList.h"
 #include "util/Buffer.h"
 #include "util/ExpressionEvaluator.h"
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 /** Initialize module's internal state. */
 ModuleDestructor initializeGeneratorModule();

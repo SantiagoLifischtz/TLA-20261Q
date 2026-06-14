@@ -23,17 +23,14 @@ ModuleDestructor initializeGeneratorModule() {
 
 static bool _writeMThd(FILE * output, uint16_t numTracks);
 static bool _generateAllTracks(FILE * output, DefinitionContext * context);
-
-//
-//
-
-
-
+static bool _writeMTrk(MidiEventListADT events, FILE * output);
+static bool _processExportTrack(MidiEventListADT conductorTrack, MidiEventListADT events, TrackEntry * t, DefinitionContext * context);
+static void _freeTrackResources(MidiEventListADT * trackEvents, uint16_t exportCount, MidiEventListADT conductorTrack);
 
 static bool _writeMThd(FILE * output, uint16_t numTracks) {
 	BufferADT buffer = bufferNew();
 	if (buffer == NULL) {
-		logError(_logger, "Mthd mem alloc fail.");
+		logError(_logger, "MThd mem alloc fail.");
 		return false;
 	}
 
@@ -45,112 +42,283 @@ static bool _writeMThd(FILE * output, uint16_t numTracks) {
 	fwrite(bufferGetData(buffer), 1, bufferGetLength(buffer), output);
 
 	bufferFree(buffer);
+	return true;
+}
+
+static bool _writeMTrk(MidiEventListADT events, FILE * output) {
+	BufferADT trackData = bufferNew();
+	if (trackData == NULL) {
+		logError(_logger, "MTrk mem alloc fail.");
+		return false;
+	}
+
+	uint32_t previousTicks = 0;
+	midiEventListResetIterator(events);
+
+	while (midiEventListHasNext(events)) {
+		MidiEventResult result = midiEventListNext(events);
+
+		bufferAppendVariableLength(trackData, result.event.ticks - previousTicks);
+
+		if (result.event.data != NULL && result.event.length > 0) {
+			bufferAppendData(trackData, result.event.data, result.event.length);
+		}
+
+		previousTicks = result.event.ticks;
+	}
+
+	BufferADT chunk = bufferNew();
+	if (chunk == NULL) {
+		logError(_logger, "MTrk chunk buffer alloc fail.");
+		bufferFree(trackData);
+		return false;
+	}
+
+	bufferAppendData(chunk, MIDI_CHUNK_TYPE_TRACK, 4);
+	bufferAppendU32BE(chunk, bufferGetLength(trackData));
+	bufferAppendData(chunk, bufferGetData(trackData), bufferGetLength(trackData));
+	bufferFree(trackData);
+
+	fwrite(bufferGetData(chunk), 1, bufferGetLength(chunk), output);
+	bufferFree(chunk);
 
 	return true;
 }
 
 static bool _generateAllTracks(FILE * output, DefinitionContext * context) {
+	uint16_t exportCount = 0;
 
-	// 
-	// TODO flujo general a partir del Docs (lo que entendí)
-	//
-	
-	// General:
-	// implementación 1:1:1 track(DLS):channel:track(MIDI) 
-	// linked list para ir guardando eventos
+	for (TrackEntry * track = context->tracks; track != NULL; track = track->next) {
+		if (track->selectedForExport) exportCount++;
+	}
 
-	// Init:
-	// TODO crear estructura de datos para tracks con: playhead, instrumento/trackNumber/canal, escala local, et al
-	// TODO crear lista global de eventos de tempo ("track extra") y set tempo global default (MidiConstants.h) en tick 0
-	// TODO crear mapa instrument -> canal (usar MidiInstruments.c)
-	// TODO crear estructura de percusión (track 9, esto definido en MidiConstants.h)
+	MidiEventListADT * trackEvents = NULL;
+	if (exportCount > 0) {
+		trackEvents = calloc(exportCount, sizeof(MidiEventListADT));
 
-	// Loop principal: para cada track (export=true)
-	// inicializar estructura de datos para tracks (instrumento, lista vacía eventos, playhead en 0, escala local, et al)
+		if (trackEvents == NULL) {
+			logError(_logger, "Track events array mem alloc fail.");
 
-		// por cada sentence del track (switch-case):
-			// KEY: pisar escala local, no avanza playhead
-			// TEMPO: agregar set tempo a la track global en playhead actual
-			// PATTERN:
-				// Note:
-					// note ID: validar rango 0-127, falla si se va
-					// degree: traducir usando escala local, falla si ?
-					// string: traducir con tabla de percusion, canal 9 (MidiConstants.h), falla si no existe
-					// note on en playhead, note off en playhead + duracion
-					// playhead += wait (o duration si wait es null)
-				// Rest:
-					// playhead += duration, falla si no es positivo
-				// Strum: 
-					// validar intervalo > 0, #notas*intervalo < total, falla si no
-					// notas escalonadas por intervalo, off en cada end time
-					// playhead += wait (o end time si wait es null)
-				// Arpeggio:
-					// validar duracion > 0
-					// notas escalonadas, cada una con duracion total / cantidad
-					// playhead += wait (o end time si wait es null)
-				// Block:
-					// procesar recursivamente sentences
-					// playhead += wait (o duracion retornada si wait es null)
-				// ID (Pattern):
-					// fallar si el patron no existe
-					// procesar como block
-				// Repeat:
-					// repetir la sentence N veces
-				// Pattern Chord:
-					// procesar cada patron, tomar la duracion mas larga
-					// playhead += wait (o duracion mas larga si wait es null)
-				// Step:
-					// sentences ("no wait"?) con intervalo fijo
-					// playhead += wait (o end time si wait es null)
-				// Note Chord:
-					// note on en playhead, note off en playhead + duracion, para cada nota y todo simultaneo
-					// playhead += wait (o duration si wait es null)
+			return false;
+		}
+	}
 
-	// escribir tracks:
-		// MTrk, uso de Buffer.c, recorrer eventos, ir leyendo deltas y escribiendo, et al...
-		// TODO
+	// conductor track, stores all tempo events
+	MidiEventListADT conductorTrack = midiEventListNew();
+	if (conductorTrack == NULL) {
+		logError(_logger, "Conductor track mem alloc fail.");
+		free(trackEvents);
 
-	// escribir track de tempo global
-		// TODO (misma logica que MTrk)
+		return false;
+	}
+	setPatternProcessorConductorTrack(conductorTrack);
 
-	// free de todo
-		// TODO
+	// set global tempo at tick 0
+	if (context->globalTempoSet) {
+		uint8_t tempoData[6];
+		buildTempoEvent(tempoData, MIDI_TEMPO_FROM_BPM(context->globalTempoBpm));
+
+		if (!midiEventListAppend(conductorTrack, 0, tempoData, 6)) {
+			_freeTrackResources(trackEvents, exportCount, conductorTrack);
+
+			return false;
+		}
+	}
+
+	uint32_t maxEndTick = 0;
+	uint16_t trackIndex = 0;
+
+	for (TrackEntry * t = context->tracks; t != NULL; t = t->next) {
+		if (!t->selectedForExport) {
+			continue;
+		}
+
+		if (t->track == NULL) {
+			trackIndex++;
+			continue;
+		}
+
+		trackEvents[trackIndex] = midiEventListNew();
+		if (trackEvents[trackIndex] == NULL) {
+			logError(_logger, "Midi event list mem alloc fail.");
+			_freeTrackResources(trackEvents, exportCount, conductorTrack);
+
+			return false;
+		}
+
+		if (!_processExportTrack(conductorTrack, trackEvents[trackIndex], t, context)) {
+			_freeTrackResources(trackEvents, exportCount, conductorTrack);
+			
+			return false;
+		}
+
+		uint32_t endTick = midiEventListGetLastTick(trackEvents[trackIndex]);
+		if (endTick > maxEndTick) {
+			maxEndTick = endTick;
+		}
+		trackIndex++;
+	}
+
+	// End of Track to conductor track
+	uint8_t eot[3] = { MIDI_META_EVENT, MIDI_META_END_OF_TRACK, 0x00 };
+	if (!midiEventListAppend(conductorTrack, maxEndTick, eot, 3)) {
+		logError(_logger, "End of Track fail.");
+		_freeTrackResources(trackEvents, exportCount, conductorTrack);
+
+		return false;
+	}
+
+	// write tracks
+	if (!_writeMTrk(conductorTrack, output)) {
+		logError(_logger, "Conductor track write fail.");
+		_freeTrackResources(trackEvents, exportCount, conductorTrack);
+
+		return false;
+	}
+
+	for (uint16_t i = 0; i < exportCount; i++) {
+		if (trackEvents[i] != NULL) {
+			if (!_writeMTrk(trackEvents[i], output)) {
+				logError(_logger, "Instrument track %u write fail.", i);
+				_freeTrackResources(trackEvents, exportCount, conductorTrack);
+
+				return false;
+			}
+		}
+	}
+
+	_freeTrackResources(trackEvents, exportCount, conductorTrack);
 
 	return true;
 }
 
-/** PUBLIC FUNCTIONS */
+static bool _processExportTrack(MidiEventListADT conductorTrack, MidiEventListADT events, TrackEntry * t, DefinitionContext * context) {
+	// MIDI channel resolver, write Program Change at tick 0 (except Drums)
+	const char * instrumentName = (t->track->instrument != NULL) ? t->track->instrument->name : NULL;
+	unsigned char channel = instrumentName != NULL ? getInstrumentChannel(context, instrumentName) : 0;
+
+	if (instrumentName != NULL && strcmp(instrumentName, DSL_DRUMS_INSTRUMENT_NAME) != 0) {
+		MidiInstrumentResult instrumentResult = getMidiInstrumentNumber(instrumentName);
+
+		if (!instrumentResult.succeeded) {
+			logError(_logger, "Instrument unknown: %s", instrumentName);
+
+			return false;
+		}
+
+		uint8_t patch = instrumentResult.value;
+		uint8_t programChange[2] = { MIDI_PROGRAM_CHANGE | channel, patch };
+
+		if (!midiEventListAppend(events, 0, programChange, 2)) {
+			logError(_logger, "Program Change event append fail.");
+
+			return false;
+		}
+	}
+
+	// Sentences loop, with playhead management
+	Scale localScale = context->globalScale;
+	uint32_t playhead = 0;
+
+	for (Sentences * s = t->track->sentences; s != NULL; s = s->next) {
+		if (s->sentence == NULL) continue;
+
+		switch (s->sentence->type) {
+			case KEY:
+				applyKeyToScale(s->sentence->key, &localScale);
+				break;
+
+			case TEMPO: {
+				FloatEvaluation eval = evaluateExpression(s->sentence->tempo->expression);
+
+				if (eval.succeeded && eval.value > 0.) {
+					uint8_t td[6];
+					buildTempoEvent(td, MIDI_TEMPO_FROM_BPM(eval.value));
+
+					if (!midiEventListAppend(conductorTrack, playhead, td, 6)) {
+						logError(_logger, "Set Tempo event append fail.");
+
+						return false;
+					}
+				}
+				else {
+					logError(_logger, "Invalid tempo expression.");
+
+					return false;
+				}
+
+				break;
+			}
+
+			case PATTERN: {
+				uint32_t advance = dispatchPatternSentence(events, s->sentence->patternSentence, playhead, &localScale, channel, context);
+
+				if (advance == 0) {
+					logError(_logger, "Pattern sentence processing failed.");
+
+					return false;
+				}
+				playhead += advance;
+
+				break;
+			}
+		}
+	}
+
+	// End of Track append
+	uint8_t eot[3] = { MIDI_META_EVENT, MIDI_META_END_OF_TRACK, 0x00 };
+	if (!midiEventListAppend(events, playhead, eot, 3)) {
+		logError(_logger, "End of Track event append fail.");
+
+		return false;
+	}
+
+	return true;
+}
+
+static void _freeTrackResources(MidiEventListADT * trackEvents, uint16_t exportCount, MidiEventListADT conductorTrack) {
+	midiEventListFree(conductorTrack);
+	for (uint16_t i = 0; i < exportCount; i++) {
+		if (trackEvents[i] != NULL) {
+			midiEventListFree(trackEvents[i]);
+		}
+	}
+	free(trackEvents);
+}
 
 bool executeGenerator(CompilerState * compilerState) {
 	logDebugging(_logger, "Generating final output...");
+
+	setPatternProcessorLogger(_logger);
+
 	DefinitionContext context;
 	DefinitionTablesResult definitionResult = buildDefinitionContext(compilerState->abstractSyntaxtTree, &context);
 	if (!definitionResult.succeeded) {
 		logError(_logger, "DefinitionTables build error.");
 		return false;
 	}
+
 	PlayBlockResult playResult = resolvePlayBlock(compilerState->abstractSyntaxtTree, &context);
 	if (!playResult.succeeded) {
 		logError(_logger, "Play block resolution error.");
 		destroyDefinitionContext(&context);
 		return false;
 	}
-	// TODO decisión de diseño: fwrite a archivo en particular o a STDOUT y que el usuario haga pipe?
+
 	if (!_writeMThd(stdout, (uint16_t) (playResult.exportTrackCount + 1))) {
 		logError(_logger, "Failed to write MIDI header.");
 		destroyDefinitionContext(&context);
 		return false;
 	}
-
+	
 	if (!_generateAllTracks(stdout, &context)) {
 		logError(_logger, "MTrk generation failed.");
 		destroyDefinitionContext(&context);
 		return false;
 	}
 
-	// TODO frees...
-
 	destroyDefinitionContext(&context);
 	logDebugging(_logger, "Generation is done.");
+
 	return true;
 }

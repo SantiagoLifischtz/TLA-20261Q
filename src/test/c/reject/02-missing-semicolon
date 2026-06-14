@@ -1,5 +1,5 @@
 track piano {
-    instrument "Acoustic Grand"
+    instrument "Acoustic Grand Piano"
     C4 q;
 }
 play all;

@@ -12,7 +12,7 @@ pattern G4life {
 }
 
 track square {
-    instrument "Square Wave";
+    instrument "Lead 1 (square wave)";
     Ab3Spam;
     G4life;
 }

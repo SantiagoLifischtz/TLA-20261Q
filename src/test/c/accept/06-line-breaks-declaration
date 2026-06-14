@@ -1,6 +1,6 @@
 track piano {
     instrument
-        "Acoustic Grand";
+        "Acoustic Grand Piano";
     
     [
         C4,

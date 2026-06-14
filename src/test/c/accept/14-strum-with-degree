@@ -2,7 +2,7 @@ tempo 110;
 key G major;
 
 track guitar {
-    instrument "Acoustic Guitar";
+    instrument "Acoustic Guitar (nylon)";
     strum(1, 1/8, degree(3, 3), degree(5, 3), degree(5, 3), degree(3, 3));
     strum(1, 1/8, degree(3, 4), degree(2, 4), degree(5, 4), degree(3, 4));
 }

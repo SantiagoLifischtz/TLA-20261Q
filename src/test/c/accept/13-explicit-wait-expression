@@ -10,7 +10,7 @@ pattern intro {
     D4 q dot;
 }
 track piano {
-    instrument "Acoustic Grand";
+    instrument "Acoustic Grand Piano";
     intro 3*quarter;
     intro;
 }

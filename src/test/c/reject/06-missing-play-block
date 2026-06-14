@@ -1,6 +1,6 @@
 key C major;
 track t1 {
-    instrument "Acoustic Grand";
+    instrument "Acoustic Grand Piano";
     [C4, E4, G4] 1/2;
 }
 track t2 {

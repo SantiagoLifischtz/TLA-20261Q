@@ -2,13 +2,13 @@ tempo 128;
 key C major;
 
 track piano {
-    instrument "Acoustic Grand";
+    instrument "Acoustic Grand Piano";
     C4 q;
     E4 q;
 }
 
 track bass {
-    instrument "Electric Bass";
+    instrument "Electric Bass (picked)";
     C2 h;
 }
 

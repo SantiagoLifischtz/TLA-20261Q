@@ -2,6 +2,7 @@
 #define DEFINITION_TABLES_HEADER
 
 #include "../../frontend/syntactic-analysis/AbstractSyntaxTree.h"
+#include "util/ScaleUtils.h"
 #include <stdbool.h>
 
 //Busqueda de pattern por ID 
@@ -26,13 +27,6 @@ typedef struct InstrumentChannelEntry {
 	struct InstrumentChannelEntry * next;
 } InstrumentChannelEntry;
 
-// degreeToSemitone[1-7] semitona por grado
-typedef struct Scale {
-	char root;
-	char mode;
-	char degreeToSemitone[8];
-} Scale;
-
 typedef struct DefinitionContext {
 	PatternEntry * patterns;
 	TrackEntry * tracks;
@@ -50,6 +44,8 @@ typedef struct {
 DefinitionTablesResult buildDefinitionContext(const Program * program, DefinitionContext * context);
 void destroyDefinitionContext(DefinitionContext * context);
 TrackEntry * findTrackEntry(const DefinitionContext * context, const char * name);
+PatternEntry * findPatternEntry(const DefinitionContext * context, const char * name);
 bool assignInstrumentChannel(DefinitionContext * context, const char * instrumentName);
+unsigned char getInstrumentChannel(const DefinitionContext * context, const char * instrumentName);
 
 #endif

@@ -1,0 +1,45 @@
+// Sacado de: https://www.youtube.com/shorts/4x43clsbmbY
+// Curseds la manera en la que toca piano (sigh... YouTube Shorts)
+// pero me sirve
+
+tempo 45;
+
+pattern left_hand {
+    E4 w;
+    G#4 w;
+
+    D#4 w;
+    G#4 w;
+
+    C#4 w;
+    G#4 w;
+
+    C4 w;
+    F#4 w;
+}
+
+pattern right_hand {
+    [G#4, B4, E5] w;
+    [B4, E5, G#5] w;
+
+    [G#4, B4, D#5] w;
+    [B4, D#5, G#5] w;
+
+    [G#4, B4, C#5] w;
+    [B4, C#5, G#5] w;
+
+    [E4, A4, C5] w;
+    [A4, C5, F#5] w;
+}
+
+track main {
+    instrument "Acoustic Grand Piano";
+
+    [left_hand, right_hand];
+}
+
+play { main; }
+
+
+
+
