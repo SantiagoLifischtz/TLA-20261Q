@@ -1,5 +1,3 @@
-[✗](https://github.com/SantiagoLifischtz/TLA-20261Q/actions/workflows/pipeline.yaml)
-
 # Orchestra Compiler
 
 A Flex/Bison compiler that accepts programs written in **Orchestra** — a domain-specific language for describing music — and emits **Standard MIDI files** (binary `MThd` + `MTrk` chunks) to stdout.
