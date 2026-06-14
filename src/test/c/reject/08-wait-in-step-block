@@ -2,7 +2,7 @@ tempo 120;
 key C major;
 
 track piano {
-    instrument "Acoustic Grand";
+    instrument "Acoustic Grand Piano";
     step e {
         F#3 eighth half;
         A3 e;

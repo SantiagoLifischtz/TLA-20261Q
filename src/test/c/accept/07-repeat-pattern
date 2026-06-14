@@ -1,5 +1,5 @@
 track piano {
-    instrument "Acoustic Grand";
+    instrument "Acoustic Grand Piano";
     repeat 4 {
         C4 e;
         E4 e;

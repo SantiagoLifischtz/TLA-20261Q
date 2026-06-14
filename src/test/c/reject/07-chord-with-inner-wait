@@ -1,5 +1,5 @@
 track chord {
-    instrument "Bright Acoustic";
+    instrument "Bright Acoustic Piano";
     [
         C4 q,
         E4 q h,

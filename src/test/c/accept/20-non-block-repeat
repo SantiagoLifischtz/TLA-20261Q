@@ -9,7 +9,7 @@ pattern two_repeats {
 }
 
 track piano {
-    instrument "Acoustic Grand";
+    instrument "Acoustic Grand Piano";
     two_repeats;
 }
 

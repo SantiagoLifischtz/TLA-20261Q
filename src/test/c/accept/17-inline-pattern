@@ -19,7 +19,7 @@ pattern melody_inline {
 }
 
 track piano {
-    instrument "Acoustic Grand";
+    instrument "Acoustic Grand Piano";
     melody_inline;
 }
 

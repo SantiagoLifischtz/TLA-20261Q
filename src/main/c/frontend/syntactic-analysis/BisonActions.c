@@ -397,6 +397,7 @@ NoteAndOctave * NoteFromStringSemanticAction(char* identifier) {
 	NoteAndOctave * n = calloc(1, sizeof(NoteAndOctave));
 	int length = strlen(identifier);
 	n->identifier = malloc((length+1)*sizeof(char));
+	strcpy(n->identifier, identifier);
 	n->type = FROM_STRING;
 	free(identifier);
 	return n;

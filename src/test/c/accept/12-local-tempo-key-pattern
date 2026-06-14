@@ -9,7 +9,7 @@ pattern puente {
 }
 
 track piano {
-    instrument "Acoustic Grand";
+    instrument "Acoustic Grand Piano";
     puente;
 }
 
