@@ -48,7 +48,7 @@ This project solves that gap by defining **Orchestra**, a text-based language fo
   - Duration expressions (`h/2`, `q dot`, `3*quarter`)
   - Global and local tempo/key overrides (all seven modes)
   - Selective export via `play { track1, track2 };` or `play all;`
-- **40 automated tests** — 28 accept, 12 reject (syntax + semantics)
+- **65 automated tests** — 38 accept, 27 reject (syntax + semantics)
 - **Docker-based dev environment** — reproducible build with GCC, CMake, Flex, and Bison
 - **CI pipeline** — GitHub Actions runs build + full test suite on push/PR
 
@@ -79,7 +79,6 @@ TLA-20261Q/
 ├── README.md, LICENSE.md                  # docs
 ├── CMakeLists.txt, compose.yaml           # build & Docker
 ├── .github/workflows/pipeline.yaml        # CI
-├── doc/                                   # Orchestra design documentation
 │
 ├── src/main/
 │   ├── bash/                              # build.sh, run.sh, test.sh, flex.sh, bison.sh
@@ -99,8 +98,8 @@ TLA-20261Q/
 │   │   └── support/                       # Environment, Logger, String, compiler types
 │   ├── docker/compiler/Dockerfile
 │   └── test/c/
-│       ├── accept/                        # 28 valid programs
-│       └── reject/                        # 12 invalid programs
+│       ├── accept/                        # 38 valid programs
+│       └── reject/                        # 27 invalid programs
 │
 └── .build/Flex-Bison-Compiler             # compiled binary (created by build.sh)
 ```
@@ -206,7 +205,7 @@ The backend follows a **four-step pipeline**:
 1. **Definition tables** — build pattern/track tables; resolve global tempo (default 120 BPM) and key (default C major)
 2. **Play block** — mark export tracks; assign MIDI channels (max 16, channel 9 reserved for percussion)
 3. **Pattern processing** — translate AST musical constructs to timed MIDI events (absolute ticks; delta-times computed at write)
-4. **MIDI serialization** — write `MThd` header + conductor track + one `MTrk` per exported instrument track
+4. **MIDI serialization** — write `MThd` header + conductor track + one `MTrk` per exported track
 
 **Key design decisions:**
 
@@ -236,6 +235,8 @@ All accept programs live under `src/test/c/accept/`. Highlights:
 | `18-drum-track-percusion-identifiers` | GM percussion via string IDs                |
 | `23-time-expressions`                 | Rich duration math (`h/2`, `q dot`, `2/16`) |
 | `27-rachmaninoff-piano-2`             | Multi-pattern real-world piece              |
+| `34-play-subset`                      | Selective export via `play { ... }`         |
+| `38-unvalidated-non-exported-track`   | Non-exported track errors do not fail build   |
 | `01-heavy-test`                       | Integration test covering all constructs    |
 
 
@@ -253,6 +254,20 @@ track piano {
     motif;
 }
 play all;
+```
+
+**Non-exported track example** (`38-unvalidated-non-exported-track`):
+
+```
+track broken {
+    instrument "Acoustic Grand Piano";
+    ghost_pattern;
+}
+track good {
+    instrument "Violin";
+    C4 q;
+}
+play { good; }   // broken is not validated because it is not exported
 ```
 
 ---
@@ -302,7 +317,7 @@ play all;
 
 ## Testing
 
-Run the full test suite (40 programs):
+Run the full test suite (65 programs):
 
 ```bash
 src/main/bash/test.sh
@@ -313,11 +328,11 @@ Each test pipes a file from `src/test/c/accept/` or `src/test/c/reject/` to the 
 
 | Suite     | Count | Expected exit code |
 | --------- | ----- | ------------------ |
-| `accept/` | 28    | `0`                |
-| `reject/` | 12    | `1`                |
+| `accept/` | 38    | `0`                |
+| `reject/` | 27    | `1`                |
 
 
-Reject tests cover syntax errors (missing semicolons, malformed generators) and semantic errors (unknown play track, missing instrument on export track, channel exhaustion, invalid notes/patterns).
+Reject tests cover syntax errors (missing semicolons, malformed generators) and semantic errors on **export-selected** tracks (unknown play track, missing instrument, invalid notes/patterns).
 
 ---
 

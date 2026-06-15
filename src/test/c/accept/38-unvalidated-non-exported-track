@@ -1,0 +1,11 @@
+track broken {
+    instrument "Acoustic Grand Piano";
+    ghost_pattern;
+}
+
+track good {
+    instrument "Violin";
+    C4 q;
+}
+
+play { good; }
