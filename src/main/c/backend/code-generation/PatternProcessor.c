@@ -16,6 +16,17 @@ void setPatternProcessorConductorTrack(MidiEventListADT track) {
 
 static uint32_t _dispatchInlinePattern(MidiEventListADT events, InlinePattern * iPtrn, uint32_t playhead, Scale * scale, unsigned char channel, DefinitionContext * context);
 static bool _appendNoteEvent(MidiEventListADT events, NoteAndOctave * noteAndOctave, uint32_t playhead, Scale * scale, unsigned char channel, uint32_t durationTicks);
+static bool _appendTempoAtPlayhead(Tempo * tempo, uint32_t playhead, bool strictValidation);
+static uint32_t _processPatternSentenceAtPlayhead(
+	MidiEventListADT events,
+	PatternSentence * patternSentence,
+	uint32_t playhead,
+	Scale * scale,
+	unsigned char channel,
+	DefinitionContext * context,
+	bool strictValidation,
+	bool * succeeded
+);
 
 static uint32_t _dispatchInlinePattern(MidiEventListADT events, InlinePattern * iPtrn, uint32_t playhead, Scale * scale, unsigned char channel, DefinitionContext * context) {
 	if (iPtrn == NULL) {
@@ -97,6 +108,114 @@ static bool _appendNoteEvent(MidiEventListADT events, NoteAndOctave * noteAndOct
     }
 
 	return true;
+}
+
+static bool _appendTempoAtPlayhead(Tempo * tempo, uint32_t playhead, bool strictValidation) {
+	if (tempo == NULL) {
+		return !strictValidation;
+	}
+
+	FloatEvaluation eval = evaluateExpression(tempo->expression);
+	if (eval.succeeded && eval.value > 0.0f) {
+		if (_conductorTrack == NULL) {
+			return !strictValidation;
+		}
+
+		uint8_t td[6];
+		buildTempoEvent(td, MIDI_TEMPO_FROM_BPM(eval.value));
+
+		if (!midiEventListAppend(_conductorTrack, playhead, td, 6)) {
+			logError(_logger, "Set Tempo event append fail.");
+			return false;
+		}
+
+		return true;
+	}
+
+	if (strictValidation) {
+		logError(_logger, "Invalid tempo expression.");
+		return false;
+	}
+
+	return true;
+}
+
+static uint32_t _processPatternSentenceAtPlayhead(
+	MidiEventListADT events,
+	PatternSentence * patternSentence,
+	uint32_t playhead,
+	Scale * scale,
+	unsigned char channel,
+	DefinitionContext * context,
+	bool strictValidation,
+	bool * succeeded
+) {
+	uint32_t advance = dispatchPatternSentence(events, patternSentence, playhead, scale, channel, context);
+
+	if (strictValidation && advance == 0) {
+		logError(_logger, "Pattern sentence processing failed.");
+		*succeeded = false;
+		return 0;
+	}
+
+	return advance;
+}
+
+SentencesResult processSentences(
+	MidiEventListADT events,
+	Sentences * sentences,
+	uint32_t playhead,
+	Scale * scale,
+	unsigned char channel,
+	DefinitionContext * context,
+	bool strictValidation
+) {
+	SentencesResult result = { .succeeded = true, .ticksAdvanced = 0 };
+
+	if (sentences == NULL) {
+		return result;
+	}
+
+	uint32_t localPlayhead = playhead;
+	for (Sentences * s = sentences; s != NULL; s = s->next) {
+		if (s->sentence == NULL) {
+			continue;
+		}
+
+		switch (s->sentence->type) {
+			case KEY:
+				applyKeyToScale(s->sentence->key, scale);
+				break;
+			case TEMPO:
+				if (!_appendTempoAtPlayhead(s->sentence->tempo, localPlayhead, strictValidation)) {
+					result.succeeded = false;
+					return result;
+				}
+				break;
+			case PATTERN: {
+				uint32_t advance = _processPatternSentenceAtPlayhead(
+					events,
+					s->sentence->patternSentence,
+					localPlayhead,
+					scale,
+					channel,
+					context,
+					strictValidation,
+					&result.succeeded
+				);
+
+				if (!result.succeeded) {
+					return result;
+				}
+
+				localPlayhead += advance;
+				break;
+			}
+		}
+	}
+
+	result.ticksAdvanced = localPlayhead - playhead;
+	return result;
 }
 
 /* PUBLIC FUNCTIONS */
@@ -222,35 +341,8 @@ uint32_t processBlock(MidiEventListADT events, Block * block, uint32_t playhead,
 		return 0;
 	}
 
-	uint32_t localPlayhead = playhead;
-	for (Sentences * s = block->sentences; s != NULL; s = s->next) {
-		if (s->sentence == NULL) continue;
-
-		switch (s->sentence->type) {
-			case KEY:
-				applyKeyToScale(s->sentence->key, scale);
-				break;
-			case TEMPO: {
-				FloatEvaluation eval = evaluateExpression(s->sentence->tempo->expression);
-				if (eval.succeeded && eval.value > 0.0f && _conductorTrack != NULL) {
-					uint8_t td[6];
-					buildTempoEvent(td, MIDI_TEMPO_FROM_BPM(eval.value));
-
-					if (!midiEventListAppend(_conductorTrack, localPlayhead, td, 6)) {
-						logError(_logger, "Set Tempo event append in block fail.");
-                        
-						return 0;
-					}
-				}
-				break;
-			}
-			case PATTERN:
-				localPlayhead += dispatchPatternSentence(events, s->sentence->patternSentence, localPlayhead, scale, channel, context);
-				break;
-		}
-	}
-
-	return localPlayhead - playhead;
+	SentencesResult result = processSentences(events, block->sentences, playhead, scale, channel, context, false);
+	return result.succeeded ? result.ticksAdvanced : 0;
 }
 
 uint32_t processPatternId(MidiEventListADT events, Identifier * id, uint32_t playhead, Scale * scale, unsigned char channel, DefinitionContext * context) {
