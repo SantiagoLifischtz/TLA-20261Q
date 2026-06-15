@@ -215,7 +215,6 @@ The backend follows a **four-step pipeline**:
 - Same GM instrument on multiple export tracks can share one MIDI channel
 - Only play-selected tracks are exported to MIDI; semantic validation runs on export-selected tracks only
 
-See [AGENTS.md](AGENTS.md) for the full architecture reference.
 
 ---
 
