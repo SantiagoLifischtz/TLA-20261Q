@@ -4,7 +4,7 @@ A Flex/Bison compiler that accepts programs written in **Orchestra** — a domai
 
 ---
 
-## Authors / Team
+## Authors
 
 - Gerónimo Asin (L.65486) — [gasin@itba.edu.ar](mailto:gasin@itba.edu.ar)
 - Andrés Garbarz  (L.65488) — [angarbarz@itba.edu.ar](mailto:angarbarz@itba.edu.ar)
@@ -27,7 +27,7 @@ A Flex/Bison compiler that accepts programs written in **Orchestra** — a domai
 
 ---
 
-## Problem Statement / Motivation
+## Problem Statement
 
 Writing music in a general-purpose programming language is verbose and error-prone. Traditional music notation tools are visual and not easily version-controlled or composed programmatically.
 
@@ -185,7 +185,7 @@ docker compose down
 
 ---
 
-## Architecture / Design
+## Architecture 
 
 ```mermaid
 flowchart LR
@@ -333,7 +333,7 @@ A tool to transpose a pattern by a given number of semitones was initially set a
 
 ---
 
-## References / Credits
+## References
 
 - Back, D. (s. f.). *Standard MIDI-File Format Spec. 1.1, updated*. MIDI Music.  
 [https://midimusic.github.io/tech/midispec.html](https://midimusic.github.io/tech/midispec.html)
