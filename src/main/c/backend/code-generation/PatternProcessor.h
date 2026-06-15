@@ -17,6 +17,21 @@
 void setPatternProcessorLogger(Logger * logger);
 void setPatternProcessorConductorTrack(MidiEventListADT track);
 
+typedef struct {
+	bool succeeded;
+	uint32_t ticksAdvanced;
+} SentencesResult;
+
+SentencesResult processSentences(
+	MidiEventListADT events,
+	Sentences * sentences,
+	uint32_t playhead,
+	Scale * scale,
+	unsigned char channel,
+	DefinitionContext * context,
+	bool strictValidation
+);
+
 uint32_t processNote(MidiEventListADT events, Note * note, uint32_t playhead, Scale * scale, unsigned char channel);
 uint32_t processRest(Rest * rest);
 uint32_t processNoteChord(MidiEventListADT events, NoteChord * chord, uint32_t playhead, Scale * scale, unsigned char channel);
