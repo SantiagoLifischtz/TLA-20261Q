@@ -39,11 +39,11 @@ void midiEventListFree(MidiEventListADT midiEventList) {
 	free(midiEventList);
 }
 
-bool midiEventListAppend(MidiEventListADT midiEventList, uint32_t ticks, uint8_t * data, uint32_t length) {
+static MidiEvent * _newMidiEvent(uint32_t ticks, uint8_t * data, uint32_t length) {
 	MidiEvent * midiEvent = malloc(sizeof(MidiEvent));
 
 	if (midiEvent == NULL) {
-		return false;
+		return NULL;
 	}
 
 	midiEvent->data = NULL;
@@ -53,7 +53,27 @@ bool midiEventListAppend(MidiEventListADT midiEventList, uint32_t ticks, uint8_t
 
 	if (length > 0) {
 		midiEvent->data = malloc(length);
+		if (midiEvent->data == NULL) {
+			free(midiEvent);
+			return NULL;
+		}
 		memcpy(midiEvent->data, data, length);
+	}
+
+	return midiEvent;
+}
+
+static void _updateLastTick(MidiEventListADT midiEventList, uint32_t ticks) {
+	if (ticks > midiEventList->lastTick) {
+		midiEventList->lastTick = ticks;
+	}
+}
+
+bool midiEventListAppend(MidiEventListADT midiEventList, uint32_t ticks, uint8_t * data, uint32_t length) {
+	MidiEvent * midiEvent = _newMidiEvent(ticks, data, length);
+
+	if (midiEvent == NULL) {
+		return false;
 	}
 
 	if (midiEventList->tail == NULL) {
@@ -65,11 +85,28 @@ bool midiEventListAppend(MidiEventListADT midiEventList, uint32_t ticks, uint8_t
 	}
 
 	midiEventList->count++;
-	
-	if (ticks > midiEventList->lastTick) {
-		midiEventList->lastTick = ticks;
+	_updateLastTick(midiEventList, ticks);
+
+	return true;
+}
+
+bool midiEventListPrepend(MidiEventListADT midiEventList, uint32_t ticks, uint8_t * data, uint32_t length) {
+	MidiEvent * midiEvent = _newMidiEvent(ticks, data, length);
+
+	if (midiEvent == NULL) {
+		return false;
 	}
-	
+
+	midiEvent->next = midiEventList->head;
+	midiEventList->head = midiEvent;
+
+	if (midiEventList->tail == NULL) {
+		midiEventList->tail = midiEvent;
+	}
+
+	midiEventList->count++;
+	_updateLastTick(midiEventList, ticks);
+
 	return true;
 }
 
