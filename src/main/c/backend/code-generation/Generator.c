@@ -121,29 +121,17 @@ static bool _generateAllTracks(FILE * output, DefinitionContext * context) {
 		resources.trackEvents = calloc(resources.exportCount, sizeof(MidiEventListADT));
 		if (resources.trackEvents == NULL) {
 			logError(_logger, "Track events array mem alloc fail.");
-			goto cleanup;
 		}
 	}
 
-	if (!_initConductorTrack(&resources.conductorTrack)) {
-		goto cleanup;
+	if ((resources.exportCount == 0 || resources.trackEvents != NULL)
+	    && _initConductorTrack(&resources.conductorTrack)
+	    && _buildExportTrackEvents(context, resources.trackEvents, resources.exportCount, &maxEndTick)
+	    && _prependGlobalTempo(resources.conductorTrack, context)
+	    && _writeExportTracks(output, resources.conductorTrack, resources.trackEvents, resources.exportCount, maxEndTick)) {
+		succeeded = true;
 	}
 
-	if (!_buildExportTrackEvents(context, resources.trackEvents, resources.exportCount, &maxEndTick)) {
-		goto cleanup;
-	}
-
-	if (!_prependGlobalTempo(resources.conductorTrack, context)) {
-		goto cleanup;
-	}
-
-	if (!_writeExportTracks(output, resources.conductorTrack, resources.trackEvents, resources.exportCount, maxEndTick)) {
-		goto cleanup;
-	}
-
-	succeeded = true;
-
-cleanup:
 	_releaseTrackBuildResources(&resources);
 	return succeeded;
 }
